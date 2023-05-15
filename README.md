@@ -5,29 +5,41 @@ Este repo contiene el backend del proyecto speak-app
 
 1) Manegador de dependencias: maven 3.7.x
 2) Lenguaje: java 11
-3) Frameworks: Spring-Boot, Hibernate
+3) Frameworks: Spring-Boot 2.7.x, Hibernate 5.6.x
+4) Base De datos: postgresql 13.x
+5) Docker
 
-## run app
-Previamente installar docker
+## Run
 Se debe ejecutar el siguiente comando en la raiz del proyecto (hacer cd ./speakapp-backend)
-1) docker-compose -f docker/docker-compose.yml --project-directory ./docker up
+
+* levantar la bbdd y la app \
+```docker-compose -f docker/docker-compose.yml --project-directory ./docker up```
+
+* levantar solo la bbdd \
+```docker-compose -f docker/docker-compose.yml --project-directory ./docker up postgres```
+
+## Stop
+* Parar cualquier service del docker-compose1\
+```docker-compose -f docker/docker-compose.yml --project-directory ./docker down```
+
 
 
 ## Test Example
 
 Crear los careers:
-
+```
 curl --location 'http://localhost:9292/speak-app/careers' \
 --header 'Content-Type: application/json' \
 --data '{
 "name": "martin",
 "description": "description"
 }'
-
+```
 Obtener los careers:
-
+```
 curl --location 'http://localhost:9292/speak-app/careers'
-
+```
 Obtener los careers por nombre martin:
-
+```
 curl --location 'http://localhost:9292/speak-app/careers/martin'
+```
