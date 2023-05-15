@@ -1,0 +1,42 @@
+server:
+  port: 9292
+  servlet:
+    context-path: '/speak-app'
+
+spring:
+  main:
+    banner-mode: 'off'
+  application:
+    name: 'speak-backend'
+  profiles:
+    active: 'dev'
+  datasource:
+    url: jdbc:postgresql://localhost:5432/speak_db?useSSL=false&useFractionalSeconds=true
+    username: sa
+    password: PasswordO1.
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update #en prod validate
+    show-sql: true #en prod false
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    properties:
+      hibernate:
+        cache:
+          use_query_cache: false
+          use_second_level_cache: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+---
+spring:
+  config:
+    activate:
+      on-profile: beta
+  datasource:
+    url: jdbc:postgresql://postgres:5432/speak_db?useSSL=false&useFractionalSeconds=true
