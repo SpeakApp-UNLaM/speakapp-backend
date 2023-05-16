@@ -2,12 +2,12 @@
 Este repo contiene el backend del proyecto speak-app
 
 ## Technologies
-
-1) Manegador de dependencias: maven 3.7.x
-2) Lenguaje: java 11
-3) Frameworks: Spring-Boot 2.7.x, Hibernate 5.6.x
-4) Base De datos: postgresql 13.x
-5) Docker
+1) Instalación IntelliJ IDEA: https://www.jetbrains.com/es-es/idea/download/#section=windows
+2) Manegador de dependencias: maven 3.7.x
+3) Lenguaje: java 11
+4) Frameworks: Spring-Boot 2.7.x, Hibernate 5.6.x
+5) Base De datos: postgresql 13.x
+6) Docker
 
 ## Run
 Se debe ejecutar el siguiente comando en la raiz del proyecto (hacer cd ./speakapp-backend)
