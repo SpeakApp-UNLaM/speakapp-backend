@@ -2,7 +2,7 @@
 Este repo contiene el backend del proyecto speak-app
 
 ## Technologies
-1) Instalación IntelliJ IDEA: https://www.jetbrains.com/es-es/idea/download/#section=windows
+1) Instalación IntelliJ IDEA ultimate for students: [link](https://www.youtube.com/watch?v=cnEJxLxOcds)
 2) Manegador de dependencias: maven 3.7.x
 3) Lenguaje: java 11
 4) Frameworks: Spring-Boot 2.7.x, Hibernate 5.6.x
