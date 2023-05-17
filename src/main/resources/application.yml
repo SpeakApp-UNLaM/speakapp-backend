@@ -39,4 +39,4 @@ spring:
     activate:
       on-profile: beta
   datasource:
-    url: jdbc:postgresql://postgres:5432/speak_db?useSSL=false&useFractionalSeconds=true
+    url: jdbc:postgresql://postgres_speak:5432/speak_db?useSSL=false&useFractionalSeconds=true
