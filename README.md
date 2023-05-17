@@ -6,7 +6,7 @@ Este repo contiene el backend del proyecto speak-app
 2) Manegador de dependencias: maven 3.7.x
 3) Lenguaje: java 11
 4) Frameworks: Spring-Boot 2.7.x, Hibernate 5.6.x
-5) Base De datos: postgresql 13.x
+5) Base De datos: postgresql 15.x
 6) Docker
 
 ## Run
