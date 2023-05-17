@@ -16,7 +16,7 @@ Se debe ejecutar el siguiente comando en la raiz del proyecto (hacer cd ./speaka
 ```docker-compose -f docker/docker-compose.yml --project-directory ./docker up```
 
 * levantar solo la bbdd \
-```docker-compose -f docker/docker-compose.yml --project-directory ./docker up postgres```
+```docker-compose -f docker/docker-compose.yml --project-directory ./docker up postgres_speak```
 
 ## Stop
 * Parar cualquier service del docker-compose1\
