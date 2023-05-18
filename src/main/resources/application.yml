@@ -40,3 +40,15 @@ spring:
       on-profile: beta
   datasource:
     url: jdbc:postgresql://postgres_speak:5432/speak_db?useSSL=false&useFractionalSeconds=true
+---
+openai-service:
+  api-key: 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
+  gpt-model: gpt-3.5-turbo
+  audio-model: whisper-1
+  http-client:
+    read-timeout: 3000
+    connect-timeout: 3000
+  urls:
+    base-url: https://api.openai.com/v1
+    chat-url: /chat/completions
+    create-transcription-url: /audio/transcriptions
