@@ -1,7 +1,14 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.repositories.*;
+import com.guba.spring.speakappbackend.clients.OpenAIClient;
+import com.guba.spring.speakappbackend.clients.WhisperTranscriptionRequest;
+import com.guba.spring.speakappbackend.clients.WhisperTranscriptionResponse;
+import com.guba.spring.speakappbackend.configs.OpenAIConfig;
 import com.guba.spring.speakappbackend.schemas.*;
+import com.guba.spring.speakappbackend.schemas.chatgpt.ChatGPTRequest;
+import com.guba.spring.speakappbackend.schemas.chatgpt.ChatGPTResponse;
+import com.guba.spring.speakappbackend.schemas.chatgpt.ChatRequest;
+import com.guba.spring.speakappbackend.schemas.chatgpt.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +16,10 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-public class OpenAIClientService {
+public class SpeechRecognitionService {
 
     private final OpenAIClient openAIClient;
-    private final OpenAIClientConfig openAIClientConfig;
+    private final OpenAIConfig openAIConfig;
 
     private final static String ROLE_USER = "user";
 
@@ -22,16 +29,18 @@ public class OpenAIClientService {
                 .content(chatRequest.getQuestion())
                 .build();
         ChatGPTRequest chatGPTRequest = ChatGPTRequest.builder()
-                .model(openAIClientConfig.getModel())
+                .model(openAIConfig.getGptModel())
                 .messages(Collections.singletonList(message))
                 .build();
         return openAIClient.chat(chatGPTRequest);
     }
 
-    public WhisperTranscriptionResponse createTranscription(TranscriptionRequest transcriptionRequest){
+    public WhisperTranscriptionResponse getTranscription(TranscriptionRequest transcriptionRequest){
         WhisperTranscriptionRequest whisperTranscriptionRequest = WhisperTranscriptionRequest.builder()
-                .model(openAIClientConfig.getAudioModel())
+                .model(openAIConfig.getAudioModel())
                 .file(transcriptionRequest.getFile())
+                .language("es")
+                .temperature(0)
                 .build();
         return openAIClient.createTranscription(whisperTranscriptionRequest);
     }

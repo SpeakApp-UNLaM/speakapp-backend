@@ -1,4 +1,4 @@
-package com.guba.spring.speakappbackend.schemas;
+package com.guba.spring.speakappbackend.schemas.chatgpt;
 import lombok.Builder;
 import lombok.Data;
 
