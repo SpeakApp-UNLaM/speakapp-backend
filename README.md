@@ -43,3 +43,10 @@ Obtener los careers por nombre martin:
 ```
 curl --location 'http://localhost:9292/speak-app/careers/martin'
 ```
+Obtener el reconocimiento de vos:
+```
+curl --location 'http://localhost:9292/speak-app/speech-recognition/transcription' \
+--form 'file=@"/C:/Users/guidobarra/Downloads/carla.wav"'
+```
+
+![CHEESE!](./doc/images/postman-request-speech-recognition.png)
