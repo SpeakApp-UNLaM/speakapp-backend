@@ -7,13 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.Serializable;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TranscriptionRequest implements Serializable {
-
+public class TranscriptionDTO {
     private MultipartFile file;
 }

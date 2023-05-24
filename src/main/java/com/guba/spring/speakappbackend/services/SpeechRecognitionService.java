@@ -2,7 +2,6 @@ package com.guba.spring.speakappbackend.services;
 
 import com.guba.spring.speakappbackend.clients.OpenAIClient;
 import com.guba.spring.speakappbackend.clients.WhisperTranscriptionRequest;
-import com.guba.spring.speakappbackend.clients.WhisperTranscriptionResponse;
 import com.guba.spring.speakappbackend.configs.OpenAIConfig;
 import com.guba.spring.speakappbackend.schemas.*;
 import com.guba.spring.speakappbackend.schemas.chatgpt.ChatGPTRequest;
@@ -35,13 +34,17 @@ public class SpeechRecognitionService {
         return openAIClient.chat(chatGPTRequest);
     }
 
-    public WhisperTranscriptionResponse getTranscription(TranscriptionRequest transcriptionRequest){
+    public TranscriptionResultDTO getTranscription(TranscriptionDTO transcriptionDTO){
         WhisperTranscriptionRequest whisperTranscriptionRequest = WhisperTranscriptionRequest.builder()
                 .model(openAIConfig.getAudioModel())
-                .file(transcriptionRequest.getFile())
+                .file(transcriptionDTO.getFile())
                 .language("es")
                 .temperature(0)
                 .build();
-        return openAIClient.createTranscription(whisperTranscriptionRequest);
+        var whisperTranscriptionResponse = openAIClient.createTranscription(whisperTranscriptionRequest);
+        return TranscriptionResultDTO
+                .builder()
+                .text(whisperTranscriptionResponse.getText())
+                .build();
     }
 }

@@ -7,16 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.Serializable;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WhisperTranscriptionRequest implements Serializable {
+public class WhisperTranscriptionRequest {
 
     private String model;
     private MultipartFile file;
     private String language;
-    private int temperature;
+    //[0-1]
+    private float temperature;
 }

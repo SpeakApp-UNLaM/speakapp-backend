@@ -1,7 +1,7 @@
 package com.guba.spring.speakappbackend.controllers;
 
-import com.guba.spring.speakappbackend.clients.WhisperTranscriptionResponse;
-import com.guba.spring.speakappbackend.schemas.TranscriptionRequest;
+import com.guba.spring.speakappbackend.schemas.TranscriptionDTO;
+import com.guba.spring.speakappbackend.schemas.TranscriptionResultDTO;
 import com.guba.spring.speakappbackend.schemas.chatgpt.ChatGPTResponse;
 import com.guba.spring.speakappbackend.schemas.chatgpt.ChatRequest;
 import com.guba.spring.speakappbackend.services.SpeechRecognitionService;
@@ -22,7 +22,7 @@ public class SpeechRecognitionController {
     }
 
     @PostMapping(value = "/transcription", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public WhisperTranscriptionResponse getTranscription(@ModelAttribute TranscriptionRequest transcriptionRequest){
-        return openAIService.getTranscription(transcriptionRequest);
+    public TranscriptionResultDTO getTranscription(@ModelAttribute TranscriptionDTO transcriptionDTO){
+        return openAIService.getTranscription(transcriptionDTO);
     }
 }
