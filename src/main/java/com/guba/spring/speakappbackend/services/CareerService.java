@@ -3,7 +3,7 @@ package com.guba.spring.speakappbackend.services;
 import com.guba.spring.speakappbackend.models.Career;
 import com.guba.spring.speakappbackend.repositories.CareerRepository;
 import com.guba.spring.speakappbackend.schemas.CareerDTO;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Log4j2
+@Slf4j
 public class CareerService {
 
     private final CareerRepository careerRepository;

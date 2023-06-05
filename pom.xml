@@ -15,12 +15,15 @@
         <maven.compiler.target>11</maven.compiler.target>
         <app.context-path>/${project.artifactId}</app.context-path>
         <app.name>${project.artifactId}</app.name>
-        <spring-boot.version>2.7.8</spring-boot.version>
+        <spring-boot.version>2.5.8</spring-boot.version>
         <lombok.version>1.18.24</lombok.version>
         <postgresql.version>42.2.2</postgresql.version>
     </properties>
 
     <dependencies>
+
+
+
         <!-- SPRING -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -69,8 +72,28 @@
             <version>2.3.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>ga.rugal</groupId>
+            <artifactId>feign-client-generator</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>3.0.2</version>
+        </dependency>
     </dependencies>
-
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2020.0.3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <build>
         <resources>
             <resource>

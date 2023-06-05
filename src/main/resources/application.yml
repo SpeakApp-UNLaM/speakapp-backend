@@ -27,6 +27,20 @@ spring:
           use_query_cache: false
           use_second_level_cache: false
 
+speak-backend:
+  client:
+    openai:
+      api-key: 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
+      gpt-model: gpt-3.5-turbo
+      audio-model: whisper-1
+      http-client:
+        read-timeout-ms: 3000
+        connect-timeout-ms: 3000
+      urls:
+        base-url: https://api.openai.com/v1
+        chat-url: /chat/completions
+        create-transcription-url: /audio/transcriptions
+
 ---
 spring:
   config:
@@ -40,3 +54,4 @@ spring:
       on-profile: beta
   datasource:
     url: jdbc:postgresql://postgres_speak:5432/speak_db?useSSL=false&useFractionalSeconds=true
+---
