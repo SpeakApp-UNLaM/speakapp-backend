@@ -30,7 +30,7 @@ spring:
 speak-backend:
   client:
     openai:
-      api-key: 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
+      api-key: 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
       gpt-model: gpt-3.5-turbo
       audio-model: whisper-1
       http-client:
