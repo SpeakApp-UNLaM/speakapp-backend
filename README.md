@@ -12,16 +12,34 @@ Este repo contiene el backend del proyecto speak-app
 ## Run
 Se debe ejecutar el siguiente comando en la raiz del proyecto (hacer cd ./speakapp-backend)
 
+* crear la imagen docker de speak_app (solo es necesario cuando se agregan nuevas libs) \
+```docker-compose -f docker/docker-compose.yml --project-directory ./docker build --no-cache```
+
 * levantar la bbdd y la app \
-```docker-compose -f docker/docker-compose.yml --project-directory ./docker up```
+```docker-compose -f docker/docker-compose.yml --project-directory ./docker up -d```
 
 * levantar solo la bbdd \
-```docker-compose -f docker/docker-compose.yml --project-directory ./docker up postgres_speak```
+```docker-compose -f docker/docker-compose.yml --project-directory ./docker up postgres_speak -d```
+
+## Logs
+Para mirar los de un container de docker
+
+*  Mirar logs del postgres\
+  ```docker logs -f -t postgres_speak```
+
+* Mirar logs del backend (app de java)\
+  ```docker logs -f -t speak_app```
+
 
 ## Stop
-* Parar cualquier service del docker-compose1\
+Parar/showdown de los container de docker
+
+* Parar cualquier service del docker-compose\
 ```docker-compose -f docker/docker-compose.yml --project-directory ./docker down```
 
+## SWAGGER
+
+* [link swagger](http://localhost:9292/speak-app/swagger-ui/index.html)
 
 
 ## Test Example
