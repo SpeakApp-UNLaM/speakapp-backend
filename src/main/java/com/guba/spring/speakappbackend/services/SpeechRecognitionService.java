@@ -34,10 +34,10 @@ public class SpeechRecognitionService {
         return openAIClient.chat(chatGPTRequest);
     }
 
-    public TranscriptionResultDTO getTranscription(TranscriptionDTO transcriptionDTO){
+    public TranscriptionResultDTO getTranscription(MultipartFileDTO multipartFileDTO){
         WhisperTranscriptionRequest whisperTranscriptionRequest = WhisperTranscriptionRequest.builder()
                 .model(openAIConfig.getAudioModel())
-                .file(transcriptionDTO.getFile())
+                .file(multipartFileDTO.getFile())
                 .language("es")
                 .temperature(0)
                 .build();

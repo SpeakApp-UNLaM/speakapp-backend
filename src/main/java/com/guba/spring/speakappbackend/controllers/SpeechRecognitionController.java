@@ -1,6 +1,6 @@
 package com.guba.spring.speakappbackend.controllers;
 
-import com.guba.spring.speakappbackend.schemas.TranscriptionDTO;
+import com.guba.spring.speakappbackend.schemas.MultipartFileDTO;
 import com.guba.spring.speakappbackend.schemas.TranscriptionResultDTO;
 import com.guba.spring.speakappbackend.schemas.chatgpt.ChatGPTResponse;
 import com.guba.spring.speakappbackend.schemas.chatgpt.ChatRequest;
@@ -24,8 +24,8 @@ public class SpeechRecognitionController {
     }
 
     @PostMapping(value = "/transcription", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public TranscriptionResultDTO getTranscription(@ModelAttribute TranscriptionDTO transcriptionDTO){
+    public TranscriptionResultDTO getTranscription(@ModelAttribute MultipartFileDTO multipartFileDTO){
         log.info("Reconocimiento de voz en proceso....");
-        return openAIService.getTranscription(transcriptionDTO);
+        return openAIService.getTranscription(multipartFileDTO);
     }
 }

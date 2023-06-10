@@ -27,7 +27,6 @@ CREATE TABLE IF NOT EXISTS public.tm_group_exercise
 (
     id                      BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     word_group_exercise       varchar(10),
-    id_group_exercise         int NOT NULL,
     PRIMARY KEY (id)
     );
 
