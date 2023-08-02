@@ -8,8 +8,8 @@ spring:
     multipart:
       enabled: true # Enable multipart uploads
       file-size-threshold: 2KB # Threshold after which files are written to disk.
-      max-file-size: 5MB # Max file size.
-      max-request-size: 5MB  # Max Request Size
+      max-file-size: 20MB # Max file size.
+      max-request-size: 20MB  # Max Request Size
   main:
     banner-mode: 'off'
   application:
