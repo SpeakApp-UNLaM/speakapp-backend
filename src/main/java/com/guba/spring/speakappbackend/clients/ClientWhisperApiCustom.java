@@ -1,6 +1,5 @@
 package com.guba.spring.speakappbackend.clients;
 
-import com.guba.spring.speakappbackend.configs.OpenAIConfig;
 import com.guba.spring.speakappbackend.schemas.TranscriptionResultDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,7 +37,7 @@ public class ClientWhisperApiCustom {
                 .setReadTimeout(readTimeout)
                 .additionalInterceptors((request, body, execution) -> {
                     request.getHeaders().addAll(headers);
-                    request.getHeaders().add(HttpHeaders.AUTHORIZATION,     OpenAIConfig.BEARER + apiKey);
+                    request.getHeaders().add(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey);
                     return execution.execute(request, body);
                 })
                 .build();

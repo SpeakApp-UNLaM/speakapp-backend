@@ -35,24 +35,13 @@ spring:
 speak-backend:
   client:
     whisper:
-      url: https://5ce4-34-31-213-205.ngrok-free.app/transcription-audio?mode=fast
-      api-key: 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
+      url: https://api.openai.com/v1/audio/transcriptions
+      api-key: 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
       connect-timeout: 100s
       read-timeout: 100s
       headers:
         Content-Type: multipart/form-data
         X-Client: ${spring.profiles.active}-${spring.application.name}
-    openai:
-      api-key: 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
-      gpt-model: gpt-3.5-turbo
-      audio-model: whisper-1
-      http-client:
-        read-timeout-ms: 3000
-        connect-timeout-ms: 3000
-      urls:
-        base-url: https://api.openai.com/v1
-        chat-url: /chat/completions
-        create-transcription-url: /audio/transcriptions
 
 ---
 spring:
