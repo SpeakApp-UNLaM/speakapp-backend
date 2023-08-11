@@ -6,7 +6,7 @@ import java.nio.file.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.guba.spring.speakappbackend.schemas.FileDTO;
+import com.guba.spring.speakappbackend.web.schemas.FileDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

@@ -1,8 +1,8 @@
-package com.guba.spring.speakappbackend.controllers;
+package com.guba.spring.speakappbackend.web.controllers;
 
 import java.util.List;
 
-import com.guba.spring.speakappbackend.schemas.FileDTO;
+import com.guba.spring.speakappbackend.web.schemas.FileDTO;
 import com.guba.spring.speakappbackend.services.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

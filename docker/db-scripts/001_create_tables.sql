@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS public.tm_exercise
     level                       INT NOT NULL,
     category                    varchar(50) NOT NULL,
     type                        varchar(50) NOT NULL,
-    data                        json,
     PRIMARY KEY (id_exercise)
 );
 
@@ -87,13 +86,13 @@ CREATE TABLE IF NOT EXISTS public.tm_patient
 CREATE TABLE IF NOT EXISTS public.tm_task_group
 (
     id_task_group               BIGINT NOT NULL,
-    id_phoneme                  BIGINT NOT NULL,
+    --id_phoneme                  BIGINT NOT NULL,
     id_patient                  BIGINT NOT NULL,
     status                      varchar(150) NOT NULL,
-    level                       INT NOT NULL,
-    category                    varchar(150) NOT NULL,
+    --level                       INT NOT NULL,
+    --category                    varchar(150) NOT NULL,
     PRIMARY KEY (id_task_group),
-    FOREIGN KEY (id_phoneme) REFERENCES tm_phoneme (id_phoneme),
+    --FOREIGN KEY (id_phoneme) REFERENCES tm_phoneme (id_phoneme),
     FOREIGN KEY (id_patient) REFERENCES tm_patient (id_patient)
 );
 

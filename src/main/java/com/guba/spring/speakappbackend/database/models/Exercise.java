@@ -2,7 +2,7 @@ package com.guba.spring.speakappbackend.models;
 
 
 import com.guba.spring.speakappbackend.enums.Category;
-import com.guba.spring.speakappbackend.converters.CategoryJpaConverter;
+import com.guba.spring.speakappbackend.database.converters.CategoryJpaConverter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

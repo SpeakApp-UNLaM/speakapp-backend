@@ -2,8 +2,8 @@ package com.guba.spring.speakappbackend.services;
 
 import com.guba.spring.speakappbackend.clients.ClientWhisperApiCustom;
 import com.guba.spring.speakappbackend.clients.WhisperTranscriptionRequest;
-import com.guba.spring.speakappbackend.schemas.MultipartFileDTO;
-import com.guba.spring.speakappbackend.schemas.TranscriptionResultDTO;
+import com.guba.spring.speakappbackend.web.schemas.MultipartFileDTO;
+import com.guba.spring.speakappbackend.web.schemas.TranscriptionResultDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

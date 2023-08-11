@@ -1,7 +1,7 @@
-package com.guba.spring.speakappbackend.controllers;
+package com.guba.spring.speakappbackend.web.controllers;
 
-import com.guba.spring.speakappbackend.schemas.MultipartFileDTO;
-import com.guba.spring.speakappbackend.schemas.TranscriptionResultDTO;
+import com.guba.spring.speakappbackend.web.schemas.MultipartFileDTO;
+import com.guba.spring.speakappbackend.web.schemas.TranscriptionResultDTO;
 import com.guba.spring.speakappbackend.services.SpeechRecognitionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

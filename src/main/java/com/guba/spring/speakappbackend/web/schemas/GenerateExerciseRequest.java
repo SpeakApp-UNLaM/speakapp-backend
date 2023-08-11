@@ -1,4 +1,4 @@
-package com.guba.spring.speakappbackend.schemas;
+package com.guba.spring.speakappbackend.web.schemas;
 
 import com.guba.spring.speakappbackend.enums.Category;
 import lombok.AllArgsConstructor;

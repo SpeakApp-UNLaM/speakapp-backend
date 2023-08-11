@@ -1,4 +1,4 @@
-package com.guba.spring.speakappbackend.controllers;
+package com.guba.spring.speakappbackend.web.controllers;
 
 import com.guba.spring.speakappbackend.models.Image;
 import com.guba.spring.speakappbackend.models.ImageTemp;

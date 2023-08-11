@@ -1,6 +1,6 @@
 package com.guba.spring.speakappbackend.clients;
 
-import com.guba.spring.speakappbackend.schemas.TranscriptionResultDTO;
+import com.guba.spring.speakappbackend.web.schemas.TranscriptionResultDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

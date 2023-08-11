@@ -1,7 +1,7 @@
-package com.guba.spring.speakappbackend.controllers;
+package com.guba.spring.speakappbackend.web.controllers;
 
-import com.guba.spring.speakappbackend.schemas.GenerateExerciseRequest;
-import com.guba.spring.speakappbackend.schemas.GenerateExerciseResponse;
+import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseRequest;
+import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseResponse;
 import com.guba.spring.speakappbackend.services.GenerateExerciseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

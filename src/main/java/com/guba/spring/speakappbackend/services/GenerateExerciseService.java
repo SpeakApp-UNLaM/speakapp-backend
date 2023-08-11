@@ -4,14 +4,13 @@ import com.guba.spring.speakappbackend.models.Exercise;
 import com.guba.spring.speakappbackend.models.Task;
 import com.guba.spring.speakappbackend.models.TaskItem;
 import com.guba.spring.speakappbackend.repositories.*;
-import com.guba.spring.speakappbackend.schemas.GenerateExerciseRequest;
-import com.guba.spring.speakappbackend.schemas.GenerateExerciseResponse;
+import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseRequest;
+import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
