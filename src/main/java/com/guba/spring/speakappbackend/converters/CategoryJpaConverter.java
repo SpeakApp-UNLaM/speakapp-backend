@@ -13,14 +13,14 @@ public class CategoryJpaConverter implements AttributeConverter<Category, String
    public String convertToDatabaseColumn(Category category) {
        return Optional.of(category)
                .map(Category::getName)
-               .orElse(null);
+               .orElseThrow(IllegalArgumentException::new);
    }
  
    @Override
    public Category convertToEntityAttribute(String code) {
        return Optional.of(code)
                .map(Category::getCategory)
-               .orElse(null);
+               .orElseThrow(IllegalArgumentException::new);
    }
  
 }

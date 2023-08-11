@@ -15,7 +15,7 @@ public class ProcessBatch {
 
     private final ClientWhisperApiCustom clientWhisperApiCustom;
 
-    @Scheduled(initialDelay = 0, fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
+    //@Scheduled(initialDelay = 0, fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     void callApiWhisper() {
         //this.clientWhisperApiCustom.getTranscription();
     }

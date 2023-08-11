@@ -1,5 +1,7 @@
 package com.guba.spring.speakappbackend.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -24,6 +26,7 @@ public enum Category {
         return name;
     }
 
+    @JsonCreator
     public static Category getCategory(String name) {
         return CATEGORY_BY_NAME.get(name);
     }

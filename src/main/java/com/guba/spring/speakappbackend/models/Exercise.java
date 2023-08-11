@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "tm_exercise")
@@ -44,7 +44,16 @@ public class Exercise {
     @JoinTable(name = "tm_image_exercise",
             joinColumns=@JoinColumn(name="id_exercise"),
             inverseJoinColumns=@JoinColumn(name="id_image"))
-    private List<Image> images;
-    //data
+    private Set<Image> images;
+
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.DETACH,
+                    CascadeType.MERGE,
+                    CascadeType.PERSIST,
+                    CascadeType.REFRESH})
+    @JoinTable(name = "tm_exercise_phoneme",
+            joinColumns=@JoinColumn(name="id_exercise"),
+            inverseJoinColumns=@JoinColumn(name="id_phoneme"))
+    private Set<Phoneme> phonemes;
 
 }

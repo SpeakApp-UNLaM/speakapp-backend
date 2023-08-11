@@ -23,7 +23,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update #en prod validate
+      ddl-auto: none #en prod validate
     show-sql: true #en prod false
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     properties:
