@@ -1,9 +1,9 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.models.Exercise;
-import com.guba.spring.speakappbackend.models.Task;
-import com.guba.spring.speakappbackend.models.TaskItem;
-import com.guba.spring.speakappbackend.repositories.*;
+import com.guba.spring.speakappbackend.database.models.Exercise;
+import com.guba.spring.speakappbackend.database.models.Task;
+import com.guba.spring.speakappbackend.database.models.TaskItem;
+import com.guba.spring.speakappbackend.database.repositories.*;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseRequest;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseResponse;
 import lombok.RequiredArgsConstructor;

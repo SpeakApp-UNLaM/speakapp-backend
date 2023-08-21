@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS public.tm_role
 
 CREATE TABLE IF NOT EXISTS public.tm_professional
 (
-    id_professional             BIGINT NOT NULL,
+    id_professional             BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     id_role                     BIGINT NOT NULL,
     first_name                  varchar(150) NOT NULL,
     last_name                   varchar(150) NOT NULL,
@@ -72,15 +72,18 @@ CREATE TABLE IF NOT EXISTS public.tm_professional
 
 CREATE TABLE IF NOT EXISTS public.tm_patient
 (
-    id_patient                  BIGINT NOT NULL,
+    id_patient                  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     id_professional             BIGINT,
     id_role                     BIGINT NOT NULL,
+    username                    varchar(150) NOT NULL,
+    email                       varchar(150) NOT NULL,
+    password                    varchar NOT NULL,
     first_name                  varchar(150) NOT NULL,
     last_name                   varchar(150) NOT NULL,
     age                         INT NOT NULL,
     PRIMARY KEY (id_patient),
-    FOREIGN KEY (id_role) REFERENCES tm_role (id_role),
-    FOREIGN KEY (id_professional) REFERENCES tm_professional (id_professional)
+    CONSTRAINT patient_role_fk FOREIGN KEY (id_role) REFERENCES tm_role (id_role),
+    CONSTRAINT patient_professional_fk FOREIGN KEY (id_professional) REFERENCES tm_professional (id_professional)
 );
 
 CREATE TABLE IF NOT EXISTS public.tm_task_group

@@ -1,5 +1,7 @@
-package com.guba.spring.speakappbackend.models;
+package com.guba.spring.speakappbackend.database.models;
 
+import com.guba.spring.speakappbackend.database.converters.RoleJpaConverter;
+import com.guba.spring.speakappbackend.enums.RoleEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +20,7 @@ public class Role {
     @Column(name = "id_role")
     private Long idRole;
 
+    @Convert(converter = RoleJpaConverter.class)
     @Column(name = "name")
-    private String name;
+    private RoleEnum name;
 }

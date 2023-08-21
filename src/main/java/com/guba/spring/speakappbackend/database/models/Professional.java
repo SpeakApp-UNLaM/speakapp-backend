@@ -1,17 +1,19 @@
-package com.guba.spring.speakappbackend.models;
+package com.guba.spring.speakappbackend.database.models;
 
+import com.guba.spring.speakappbackend.web.schemas.ProfessionalDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "tm_professional")
 @Setter
 @Getter
 @NoArgsConstructor
-public class Professional {
+public class Professional extends UserAbstract {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,12 +24,17 @@ public class Professional {
     @JoinColumn(name="id_role", nullable=false)
     private Role role;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @Column(name = "code")
+    private String code;
 
-    @Column(name = "last_name")
-    private String lastName;
+    @OneToMany
+    @JoinColumn(name = "id_patient")
+    private Set<Patient> patients;
 
-    @Column(name = "age")
-    private int age;
+    public Professional(ProfessionalDTO professionalDTO) {
+        super();
+        this.setFirstName(professionalDTO.getFirstName());
+        this.setLastName(professionalDTO.getLastName());
+        this.setAge(professionalDTO.getAge());
+    }
 }

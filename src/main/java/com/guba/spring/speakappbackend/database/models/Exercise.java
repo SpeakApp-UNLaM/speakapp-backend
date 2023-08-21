@@ -1,8 +1,10 @@
-package com.guba.spring.speakappbackend.models;
+package com.guba.spring.speakappbackend.database.models;
 
 
+import com.guba.spring.speakappbackend.database.converters.TypeExerciseJpaConverter;
 import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.database.converters.CategoryJpaConverter;
+import com.guba.spring.speakappbackend.enums.TypeExercise;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,8 +35,9 @@ public class Exercise {
     @Column(name = "category")
     private Category category;
 
+    @Convert(converter = TypeExerciseJpaConverter.class)
     @Column(name = "type")
-    private String type;
+    private TypeExercise type;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.DETACH,

@@ -1,5 +1,6 @@
-package com.guba.spring.speakappbackend.models;
+package com.guba.spring.speakappbackend.database.models;
 
+import com.guba.spring.speakappbackend.web.schemas.PatientDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Patient {
+public class Patient extends UserAbstract {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,17 +23,7 @@ public class Patient {
     @JoinColumn(name="id_professional", nullable=false)
     private Professional professional;
 
-    @ManyToOne
-    @JoinColumn(name="id_role", nullable=false)
-    private Role role;
-
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name = "age")
-    private int age;
-
+    public Patient(PatientDTO patientDTO) {
+        super();
+    }
 }

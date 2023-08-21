@@ -1,6 +1,7 @@
 package com.guba.spring.speakappbackend.web.schemas;
 
-import com.guba.spring.speakappbackend.models.Exercise;
+import com.guba.spring.speakappbackend.database.models.Exercise;
+import com.guba.spring.speakappbackend.enums.TypeExercise;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class GenerateExerciseResponse {
     private long exerciseId;
-    private String type;//enum EXERCISE_TYPE
+    private TypeExercise type;//enum EXERCISE_TYPE
     private String result;
     private Set<ImageDTO> images;
 
