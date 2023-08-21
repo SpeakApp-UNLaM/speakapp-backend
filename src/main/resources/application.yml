@@ -33,6 +33,10 @@ spring:
           use_second_level_cache: false
 
 speak-backend:
+  jwt:
+    secret-key: secret #$2a$10$x7pFiWQLFVfoBdMmUX4fBedY
+    expiration-token: 1h
+    refresh-expiration-token: 40m
   client:
     whisper:
       url: https://api.openai.com/v1/audio/transcriptions
