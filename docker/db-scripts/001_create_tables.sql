@@ -46,7 +46,6 @@ CREATE TABLE IF NOT EXISTS public.tm_exercise_phoneme
 (
     id_phoneme                  BIGINT NOT NULL,
     id_exercise                 BIGINT NOT NULL,
-    --level                       INT NOT NULL,
     PRIMARY KEY (id_phoneme, id_exercise),
     FOREIGN KEY (id_phoneme) REFERENCES tm_phoneme (id_phoneme),
     FOREIGN KEY (id_exercise) REFERENCES tm_exercise (id_exercise)
@@ -59,6 +58,7 @@ CREATE TABLE IF NOT EXISTS public.tm_role
     PRIMARY KEY (id_role)
 );
 
+/*
 CREATE TABLE IF NOT EXISTS public.tm_professional
 (
     id_professional             BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
@@ -84,18 +84,80 @@ CREATE TABLE IF NOT EXISTS public.tm_patient
     PRIMARY KEY (id_patient),
     CONSTRAINT patient_role_fk FOREIGN KEY (id_role) REFERENCES tm_role (id_role),
     CONSTRAINT patient_professional_fk FOREIGN KEY (id_professional) REFERENCES tm_professional (id_professional)
+);*/
+
+CREATE TABLE IF NOT EXISTS public.tm_professional
+(
+    id_professional             BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+    id_role                     BIGINT NOT NULL,
+    code                        varchar(8) NOT NULL UNIQUE,
+    username                    varchar(150) NOT NULL UNIQUE,
+    email                       varchar(150) NOT NULL UNIQUE,
+    password                    varchar NOT NULL UNIQUE,
+    first_name                  varchar(150) NOT NULL,
+    last_name                   varchar(150) NOT NULL,
+    age                         INT,
+    gender                      varchar(1),
+    image_data                  TEXT,
+    created_at                  TIMESTAMP NOT NULL,
+    updated_at                  TIMESTAMP NOT NULL,
+    PRIMARY KEY (id_professional),
+    CONSTRAINT professional_role_fk FOREIGN KEY (id_role) REFERENCES tm_role (id_role)
 );
 
+CREATE TABLE IF NOT EXISTS public.tm_patient
+(
+    id_patient                  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+    id_professional             BIGINT,
+    id_role                     BIGINT NOT NULL,
+    username                    varchar(150) NOT NULL UNIQUE,
+    email                       varchar(150) NOT NULL UNIQUE,
+    password                    varchar NOT NULL UNIQUE,
+    first_name                  varchar(150) NOT NULL,
+    last_name                   varchar(150) NOT NULL,
+    age                         INT,
+    gender                      varchar(1),
+    image_data                  TEXT,
+    created_at                  TIMESTAMP NOT NULL,
+    updated_at                  TIMESTAMP NOT NULL,
+    PRIMARY KEY (id_patient),
+    CONSTRAINT patient_role_fk FOREIGN KEY (id_role) REFERENCES tm_role (id_role),
+    CONSTRAINT patient_professional_fk FOREIGN KEY (id_professional) REFERENCES tm_professional (id_professional)
+);
+
+CREATE TABLE IF NOT EXISTS public.tm_user
+(
+    id_user                     BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+    id_professional             BIGINT,
+    id_role                     BIGINT NOT NULL,
+    code                        varchar(8) NOT NULL UNIQUE,
+    username                    varchar(150) NOT NULL UNIQUE,
+    email                       varchar(150) NOT NULL UNIQUE,
+    password                    varchar NOT NULL UNIQUE,
+    first_name                  varchar(150) NOT NULL,
+    last_name                   varchar(150) NOT NULL,
+    age                         INT NOT NULL,
+    gender                      varchar(1) NOT NULL,
+    type                        varchar(150) NOT NULL,
+    image_data                  TEXT,
+    created_at                  TIMESTAMP NOT NULL,
+    updated_at                  TIMESTAMP NOT NULL,
+    PRIMARY KEY (id_user),
+    CONSTRAINT user_role_fk FOREIGN KEY (id_role) REFERENCES tm_role (id_role),
+    CONSTRAINT user_user_fk FOREIGN KEY (id_professional) REFERENCES tm_user (id_user)
+);
+
+/*
 CREATE TABLE IF NOT EXISTS public.tm_task_group
 (
     id_task_group               BIGINT NOT NULL,
-    --id_phoneme                  BIGINT NOT NULL,
+    id_phoneme                  BIGINT NOT NULL,
     id_patient                  BIGINT NOT NULL,
     status                      varchar(150) NOT NULL,
-    --level                       INT NOT NULL,
-    --category                    varchar(150) NOT NULL,
+    level                       INT NOT NULL,
+    category                    varchar(150) NOT NULL,
     PRIMARY KEY (id_task_group),
-    --FOREIGN KEY (id_phoneme) REFERENCES tm_phoneme (id_phoneme),
+    FOREIGN KEY (id_phoneme) REFERENCES tm_phoneme (id_phoneme),
     FOREIGN KEY (id_patient) REFERENCES tm_patient (id_patient)
 );
 
@@ -109,7 +171,27 @@ CREATE TABLE IF NOT EXISTS public.tm_task_group_detail
     PRIMARY KEY (id_task),
     FOREIGN KEY (id_task_group) REFERENCES tm_task_group (id_task_group),
     FOREIGN KEY (id_exercise) REFERENCES tm_exercise (id_exercise)
+);*/
+
+CREATE TABLE IF NOT EXISTS public.tm_task_group
+(
+    id_task_group               BIGINT NOT NULL GENERATED BY DEFAULT AS IDENTITY,
+    id_patient                  BIGINT NOT NULL,
+    status                      varchar(150),
+    PRIMARY KEY (id_task_group),
+    FOREIGN KEY (id_patient) REFERENCES tm_patient (id_patient)
 );
 
+CREATE TABLE IF NOT EXISTS public.tm_task_group_detail
+(
+    id_task                     BIGINT NOT NULL GENERATED BY DEFAULT AS IDENTITY,
+    id_task_group               BIGINT NOT NULL,
+    id_exercise                 BIGINT NOT NULL,
+    url_audio                   varchar(250) NOT NULL,--variable?
+    result                      varchar(150) NOT NULL,
+    PRIMARY KEY (id_task),
+    FOREIGN KEY (id_task_group) REFERENCES tm_task_group (id_task_group),
+    FOREIGN KEY (id_exercise) REFERENCES tm_exercise (id_exercise)
+);
 --GENERAR TABLAS PARA CATEGORY (SILABA, PALABRA, FRASE) y LEVEL (1,2,3)?
 
