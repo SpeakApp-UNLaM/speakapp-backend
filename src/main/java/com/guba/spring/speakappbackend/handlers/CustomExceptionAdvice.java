@@ -1,5 +1,7 @@
 package com.guba.spring.speakappbackend.handlers;
 
+import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
+import com.guba.spring.speakappbackend.exceptions.NotSavedElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -39,6 +41,24 @@ public class CustomExceptionAdvice extends ResponseEntityExceptionHandler {
         var responseBody = new ErrorApiResponse(status.value(), LocalDateTime.now(), errorsMessage);
 
         return new ResponseEntity<>(responseBody, headers, status);
+    }
+
+    @ExceptionHandler(NotFoundElementException.class)
+    public ResponseEntity<Object> handleNotFoundElementException(NotFoundElementException e) {
+        log.error("error NotFoundElementException", e);
+        List<String> errorsMessage = List.of(e.getMessage());
+
+        var responseBody = new ErrorApiResponse(HttpStatus.NOT_FOUND.value(), LocalDateTime.now(), errorsMessage);
+        return new ResponseEntity<>(responseBody, null, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NotSavedElementException.class)
+    public ResponseEntity<Object> handleNotSavedElementException(NotSavedElementException e) {
+        log.error("error NotSavedElementException", e);
+        List<String> errorsMessage = List.of(e.getMessage());
+
+        var responseBody = new ErrorApiResponse(HttpStatus.CONFLICT.value(), LocalDateTime.now(), errorsMessage);
+        return new ResponseEntity<>(responseBody, null, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(Exception.class)

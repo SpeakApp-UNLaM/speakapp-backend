@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "generate-exercise")
+@RequestMapping(value = "generate-exercises")
 @Slf4j
 public class GenerateExerciseController {
 

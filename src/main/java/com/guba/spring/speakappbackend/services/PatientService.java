@@ -1,10 +1,14 @@
 package com.guba.spring.speakappbackend.services;
 
 import com.guba.spring.speakappbackend.database.models.Patient;
+import com.guba.spring.speakappbackend.database.models.Professional;
 import com.guba.spring.speakappbackend.database.models.Role;
 import com.guba.spring.speakappbackend.database.repositories.PatientRepository;
+import com.guba.spring.speakappbackend.database.repositories.ProfessionalRepository;
 import com.guba.spring.speakappbackend.database.repositories.RoleRepository;
 import com.guba.spring.speakappbackend.enums.RoleEnum;
+import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
+import com.guba.spring.speakappbackend.exceptions.NotSavedElementException;
 import com.guba.spring.speakappbackend.web.schemas.PatientDTO;
 import com.guba.spring.speakappbackend.security.dtos.SignUpDTO;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +17,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +31,7 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final ProfessionalRepository professionalRepository;
 
     public PatientDTO savePatient(SignUpDTO signUpDTO) {
         final Patient patient = this.patientRepository.findByUsernameOrEmail(signUpDTO.getUsername(), signUpDTO.getEmail());
@@ -33,58 +42,41 @@ public class PatientService {
         final Role role = roleRepository.findByName(RoleEnum.PATIENT);
         final LocalDateTime now = LocalDateTime.now();
 
-        Patient patientSave = new Patient();
-        patientSave.setUsername(signUpDTO.getUsername());
-        patientSave.setEmail(signUpDTO.getEmail());
-        patientSave.setPassword(passEncode);
-        patientSave.setLastName(signUpDTO.getLastName());
-        patientSave.setFirstName(signUpDTO.getFirstName());
-        patientSave.setRole(role);
-        patientSave.setCreatedAt(now);
-        patientSave.setUpdatedAt(now);
-
-        Patient patientSaved = this.patientRepository.save(patientSave);
-
-        return PatientDTO
-                .builder()
-                .idPatient(patientSaved.getIdPatient())
-                .email(patientSaved.getEmail())
-                .username(patientSaved.getUsername())
-                .firstName(patientSaved.getFirstName())
-                .lastName(patientSaved.getLastName())
-                .age(patientSaved.getAge())
-                .imageData(patientSaved.getImageData())
-                .gender(patientSaved.getGender())
-                .build();
+        return Optional
+                .of(new Patient(signUpDTO, passEncode, role, now, now, null))
+                .map(this.patientRepository::save)
+                .map(PatientDTO::create)
+                .orElseThrow(() -> new NotSavedElementException("Not saved Patient " + signUpDTO));
     }
 
     public PatientDTO updatePatient(PatientDTO patientDTO) {
         //TODO OBTENER EL Patient DE LA SESSION
-        Patient patient = new Patient();
+        final Professional professional = this.professionalRepository
+                .findByCode(patientDTO.getCodeProfessional())
+                .orElse(null);
+        final LocalDateTime updateAt = LocalDateTime.now();
 
-        patient.setFirstName(patient.getFirstName());
-        patient.setLastName(patient.getLastName());
-        patient.setAge(patient.getAge());
+        return this.patientRepository
+                .findById(patientDTO.getIdPatient())
+                .map(pOld -> new Patient(patientDTO, pOld.getPassword(), pOld.getRole(), pOld.getCreatedAt(), updateAt, professional))
+                .map(this.patientRepository::save)
+                .map(PatientDTO::create)
+                .orElseThrow(() -> new NotSavedElementException("Not saved Patient " + patientDTO));
+    }
 
-        Patient patientUpdated = this.patientRepository.save(patient);
-
-        return PatientDTO
-                .builder()
-                .firstName(patientUpdated.getFirstName())
-                .lastName(patientUpdated.getLastName())
-                .age(patientUpdated.getAge())
-                .build();
+    public Set<PatientDTO> getPatientAll() {
+        return this.patientRepository
+                .findAll()
+                .stream()
+                .map(PatientDTO::create)
+                .collect(Collectors.toSet());
     }
 
     public PatientDTO getPatient(Long idPatient) {
-        Patient patient = this.patientRepository.getById(idPatient);
-
-        return PatientDTO
-                .builder()
-                .firstName(patient.getFirstName())
-                .lastName(patient.getLastName())
-                .age(patient.getAge())
-                .build();
+        return this.patientRepository
+                .findById(idPatient)
+                .map(PatientDTO::create)
+                .orElseThrow(() -> new NotFoundElementException("Not found patient for the id " + idPatient));
     }
 
     public void removePatient(Long idPatient) {

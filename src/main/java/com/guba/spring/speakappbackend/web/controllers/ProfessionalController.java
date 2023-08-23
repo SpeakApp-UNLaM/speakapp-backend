@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "professionals")
@@ -17,25 +19,40 @@ public class ProfessionalController {
     private final ProfessionalService professionalService;
 
     @PutMapping
-    public ResponseEntity<ProfessionalDTO> updatePatient(@RequestBody ProfessionalDTO professionalDTO) {
+    public ResponseEntity<ProfessionalDTO> updateProfessional(@RequestBody ProfessionalDTO professionalDTO) {
 
-        ProfessionalDTO patientDTOSaved = this.professionalService.updateProfessional(professionalDTO);
+        ProfessionalDTO patientDTOSaved = this.professionalService.updateProfessionalById(professionalDTO);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(patientDTOSaved);
     }
 
-    @GetMapping(value = "/{idProfessional}")
-    public ResponseEntity<ProfessionalDTO> getPatient(@PathVariable Long idProfessional) {
+    @GetMapping
+    public ResponseEntity<Set<ProfessionalDTO>> getProfessionalAll() {
 
-        ProfessionalDTO patientDTOSaved = this.professionalService.getProfessional(idProfessional);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(patientDTOSaved);
+                .body(this.professionalService.getProfessionalAll());
+    }
+
+    @GetMapping(value = "/{codeOrIdProfessional}")
+    public ResponseEntity<ProfessionalDTO> getProfessional(@PathVariable String codeOrIdProfessional) {
+
+        boolean isNumeric = codeOrIdProfessional.matches("-?\\d+(\\.\\d+)?");
+        ProfessionalDTO patientDTO;
+        if (isNumeric) {
+            patientDTO = this.professionalService.getProfessionalById(Long.valueOf(codeOrIdProfessional));
+        } else {
+            patientDTO = this.professionalService.getProfessionalByCode(codeOrIdProfessional);
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(patientDTO);
     }
 
     @DeleteMapping(value = "/{idProfessional}")
-    public ResponseEntity<Void> removePatient(@PathVariable Long idProfessional) {
+    public ResponseEntity<Void> removeProfessional(@PathVariable Long idProfessional) {
 
         this.professionalService.removeProfessional(idProfessional);
         return ResponseEntity

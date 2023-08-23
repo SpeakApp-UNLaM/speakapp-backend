@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "patients")
@@ -16,14 +18,21 @@ public class PatientController {
 
     private final PatientService patientService;
 
-
-    @PutMapping
+    @PutMapping()
     public ResponseEntity<PatientDTO> updatePatient(@RequestBody PatientDTO patientDTO) {
 
         PatientDTO patientDTOSaved = this.patientService.updatePatient(patientDTO);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(patientDTOSaved);
+    }
+
+    @GetMapping
+    public ResponseEntity<Set<PatientDTO>> getPatientAll() {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.patientService.getPatientAll());
     }
 
     @GetMapping(value = "/{idPatient}")
