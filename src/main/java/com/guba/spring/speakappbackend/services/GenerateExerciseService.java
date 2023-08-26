@@ -4,6 +4,7 @@ import com.guba.spring.speakappbackend.database.models.Exercise;
 import com.guba.spring.speakappbackend.database.models.Task;
 import com.guba.spring.speakappbackend.database.models.TaskItem;
 import com.guba.spring.speakappbackend.database.repositories.*;
+import com.guba.spring.speakappbackend.enums.TaskStatus;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseRequest;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class GenerateExerciseService {
     private final TaskRepository taskRepository;
     private final TaskItemRepository taskItemRepository;
     private final PatientRepository patientRepository;
+    private final SelectionService selectionService;
 
 
     @Transactional
@@ -30,12 +32,13 @@ public class GenerateExerciseService {
 
         List<Exercise> exercises = exerciseRepository.findALLByCategoryAndLevelAndPhoneme(request.getCategories(), request.getLevel(), request.getPhonemeId());
 
+        List<Exercise> exerciseSelected = selectionService.selectionExercisesByPhonemeAndLevelAndCategory(exercises);
         Task task = new Task();
         task.setPatient(patientRepository.getById(1L));
-        task.setStatus("status");
+        task.setStatus(TaskStatus.PENDING);
 
         Task taskCreated = taskRepository.save(task);
-        var items = exercises
+        var items = exerciseSelected
                 .stream()
                 .map( exercise -> {
                     TaskItem item = new TaskItem();

@@ -33,6 +33,7 @@ spring:
           use_second_level_cache: false
 
 speak-backend:
+  count-exercise: 5
   jwt:
     secret-key: secret #$2a$10$x7pFiWQLFVfoBdMmUX4fBedY
     expiration-token: 1h

@@ -1,10 +1,13 @@
 package com.guba.spring.speakappbackend.database.models;
 
+import com.guba.spring.speakappbackend.database.converters.TaskStatusJpaConverter;
+import com.guba.spring.speakappbackend.enums.TaskStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -31,8 +34,15 @@ public class Task {
     @JoinColumn(name="id_patient", nullable=false)
     private Patient patient;
 
+    @Convert(converter = TaskStatusJpaConverter.class)
     @Column(name = "status")
-    private String status;
+    private TaskStatus status;
+
+    @Column(name = "start_date", columnDefinition = "DATE")
+    private LocalDate startDate;
+
+    @Column(name = "end_date", columnDefinition = "DATE")
+    private LocalDate endDate;
 
     //@Column(name = "level")
     //private int level;

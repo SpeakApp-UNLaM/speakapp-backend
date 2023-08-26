@@ -5,6 +5,7 @@ import com.guba.spring.speakappbackend.database.converters.TypeExerciseJpaConver
 import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.database.converters.CategoryJpaConverter;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Exercise {
 
     @Id
