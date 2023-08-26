@@ -37,10 +37,10 @@ public class ProfessionalService {
             throw new UsernameNotFoundException("User exists with username or email");
         }
 
-        String code = UUID.randomUUID().toString().replace("-","").substring(0,8);
-        while (this.professionalRepository.findByCode(code) != null) {
-            code = UUID.randomUUID().toString().replace("-","").substring(0,8);
-        }
+        String code;
+        do {
+            code = UUID.randomUUID().toString().replace("-","").substring(0,8).toUpperCase();
+        } while (this.professionalRepository.findByCode(code).isPresent());
 
         final String passEncode = this.passwordEncoder.encode(signUpDTO.getPassword());
         final Role role = this.roleRepository.findByName(RoleEnum.PROFESSIONAL);
