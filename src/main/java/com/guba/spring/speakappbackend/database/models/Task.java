@@ -1,6 +1,8 @@
 package com.guba.spring.speakappbackend.database.models;
 
+import com.guba.spring.speakappbackend.database.converters.CategoryJpaConverter;
 import com.guba.spring.speakappbackend.database.converters.TaskStatusJpaConverter;
+import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.enums.TaskStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,21 +24,24 @@ public class Task {
     @Column(name = "id_task_group")
     private Long idTaskGroup;
 
-    //@ManyToOne
-    //@JoinColumn(name="id_phoneme", nullable=false)
-    //private Phoneme phoneme;
-
-    @OneToMany
-    @JoinColumn(name = "id_task")
-    private Set<TaskItem> taskItems;
-
     @ManyToOne
     @JoinColumn(name="id_patient", nullable=false)
     private Patient patient;
 
-    @Convert(converter = TaskStatusJpaConverter.class)
-    @Column(name = "status")
-    private TaskStatus status;
+    @ManyToOne
+    @JoinColumn(name="id_professional", nullable=false)
+    private Professional professional;
+
+    @ManyToOne
+    @JoinColumn(name="id_phoneme", nullable=false)
+    private Phoneme phoneme;
+
+    @Column(name = "level")
+    private int level;
+
+    @Convert(converter = CategoryJpaConverter.class)
+    @Column(name = "category")
+    private Category category;
 
     @Column(name = "start_date", columnDefinition = "DATE")
     private LocalDate startDate;
@@ -44,10 +49,11 @@ public class Task {
     @Column(name = "end_date", columnDefinition = "DATE")
     private LocalDate endDate;
 
-    //@Column(name = "level")
-    //private int level;
+    @Convert(converter = TaskStatusJpaConverter.class)
+    @Column(name = "status")
+    private TaskStatus status;
 
-    //@Convert(converter = CategoryJpaConverter.class)
-    //@Column(name = "category")
-    //private Category category;
+    @OneToMany
+    @JoinColumn(name = "id_task")
+    private Set<TaskItem> taskItems;
 }

@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public enum TaskStatus {
+    CREATED("created"),
     PENDING("pending"),
     PROGRESSING("progressing"),
     DONE("done");

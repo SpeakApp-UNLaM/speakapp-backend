@@ -1,5 +1,6 @@
 package com.guba.spring.speakappbackend.security.controllers;
 
+import com.guba.spring.speakappbackend.exceptions.AuthenticationException;
 import com.guba.spring.speakappbackend.security.services.JwtService;
 import com.guba.spring.speakappbackend.security.services.CustomUserDetailService;
 import com.guba.spring.speakappbackend.security.dtos.AuthenticationResponse;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,17 +37,15 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> authenticateUser(@RequestBody @Valid LoginDTO loginDTO) {
 
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
+            Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
+            UserDetails userdetails = customUserDetailService.loadUserByUsername(loginDTO.getUsername());
+            String token = jwtService.generateJwt(userdetails);
+            return ResponseEntity.ok(new AuthenticationResponse(token));
         } catch (DisabledException e) {
-            throw new RuntimeException("USER_DISABLED", e);
+            throw new AuthenticationException("the user is disabled", e);
         } catch (BadCredentialsException e) {
-            throw new RuntimeException("INVALID_CREDENTIALS", e);
+            throw new AuthenticationException("the credentials are invalid", e);
         }
-
-        UserDetails userdetails = customUserDetailService.loadUserByUsername(loginDTO.getUsername());
-        String token = jwtService.generateJwt(userdetails);
-        return ResponseEntity.ok(new AuthenticationResponse(token));
-
     }
 
 

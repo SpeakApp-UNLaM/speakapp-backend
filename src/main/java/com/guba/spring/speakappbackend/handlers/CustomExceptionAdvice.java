@@ -1,5 +1,6 @@
 package com.guba.spring.speakappbackend.handlers;
 
+import com.guba.spring.speakappbackend.exceptions.AuthenticationException;
 import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
 import com.guba.spring.speakappbackend.exceptions.NotSavedElementException;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +54,7 @@ public class CustomExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NotSavedElementException.class)
-    public ResponseEntity<Object> handleNotSavedElementException(NotSavedElementException e) {
+    public ResponseEntity<ErrorApiResponse> handleNotSavedElementException(NotSavedElementException e) {
         log.error("error NotSavedElementException", e);
         List<String> errorsMessage = List.of(e.getMessage());
 
@@ -61,9 +62,18 @@ public class CustomExceptionAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(responseBody, null, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorApiResponse> handleNotSavedElementException(AuthenticationException e) {
+        log.error("error AuthenticationException", e);
+        List<String> errorsMessage = List.of(e.getMessage());
+
+        var responseBody = new ErrorApiResponse(HttpStatus.UNAUTHORIZED.value(), LocalDateTime.now(), errorsMessage);
+        return new ResponseEntity<>(responseBody, null, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleMaxSizeException(Exception e) {
-        log.error("error", e);
+    public ResponseEntity<ErrorApiResponse> handleMaxSizeException(Exception e) {
+        log.error("error Exception", e);
         List<String> errorsMessage = List.of(e.getMessage());
 
         var responseBody = new ErrorApiResponse(HttpStatus.CONFLICT.value(), LocalDateTime.now(), errorsMessage);

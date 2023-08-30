@@ -25,4 +25,7 @@ public class Image {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "divided_name")
+    private String dividedName;
 }

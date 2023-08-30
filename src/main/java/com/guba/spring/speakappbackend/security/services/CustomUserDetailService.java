@@ -59,6 +59,30 @@ public class CustomUserDetailService implements UserDetailsService {
         return new User(username, passwordUser, authorities);
     }
 
+    public UserDetails get(String usernameOrEmail) throws UsernameNotFoundException {
+        Patient patient = this.patientRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+        Professional professional = professionalRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+        if (patient == null && professional == null) {
+            throw new UsernameNotFoundException("User not exists by Username or email");
+        }
+        final Role roleUser = Optional
+                .ofNullable(patient)
+                .map(UserAbstract::getRole)
+                .orElseGet(professional::getRole);
+
+        final String passwordUser = Optional
+                .ofNullable(patient)
+                .map(UserAbstract::getPassword)
+                .orElseGet(professional::getPassword);
+
+        Set<GrantedAuthority> authorities = Stream.of(roleUser)
+                .map(role -> new SimpleGrantedAuthority(role.getName().getName()))
+                .collect(Collectors.toSet());
+
+        //return new User(username, passwordUser, authorities);
+        return null;
+    }
+
     public void save(SignUpDTO signUpDTO) {
 
         if (signUpDTO.getType() == RoleEnum.PROFESSIONAL) {
