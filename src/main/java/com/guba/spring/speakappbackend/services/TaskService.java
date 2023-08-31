@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class GenerateExerciseService {
+public class TaskService {
 
     private final ExerciseRepository exerciseRepository;
     private final TaskRepository taskRepository;
@@ -26,43 +26,6 @@ public class GenerateExerciseService {
     private final ProfessionalRepository professionalRepository;
 
     private final SelectionService selectionService;
-
-
-    @Transactional
-    public List<GenerateExerciseResponse> generateExercise(GenerateExerciseRequest request) {
-
-        List<Exercise> exercises = exerciseRepository.findALLByCategoryAndLevelAndPhoneme(request.getCategories(), request.getLevel(), request.getPhonemeId());
-
-        this.taskRepository.findAllByPatientAndStatusAndBetween(1L, TaskStatus.CREATED, LocalDate.now())
-                .stream()
-                .filter(t -> request.getCategories().contains(t.getCategory()))
-                .filter(t -> t.getLevel() == request.getLevel())
-                .collect(Collectors.toList());
-        List<Exercise> exerciseSelected = selectionService.selectionExercisesByPhonemeAndLevelAndCategory(exercises);
-        Task task = new Task();
-        task.setPatient(patientRepository.getById(1L));
-        task.setStatus(TaskStatus.PROGRESSING);
-
-        Task taskCreated = taskRepository.save(task);
-        var items = exerciseSelected
-                .stream()
-                .map( exercise -> {
-                    TaskItem item = new TaskItem();
-                    item.setExercise(exercise);
-                    item.setTask(taskCreated);
-                    item.setUrlAudio("url");
-                    item.setResult("result");
-                    return item;
-                })
-                .collect(Collectors.toSet());
-        taskItemRepository.saveAll(items);
-
-
-        return exercises
-                .stream()
-                .map(GenerateExerciseResponse::new)
-                .collect(Collectors.toList());
-    }
 
     @Transactional
     public void createTask(GenerateExerciseRequest request) {
@@ -91,9 +54,54 @@ public class GenerateExerciseService {
         taskRepository.saveAll(tasks);
     }
 
-    public void getTask(Long idPatient) {
+    @Transactional
+    public List<GenerateExerciseResponse> createTaskItems(GenerateExerciseRequest request) {
+
+        List<Exercise> exercises = exerciseRepository.findAllByCategoriesAndLevelAndPhoneme(request.getCategories(), request.getLevel(), request.getPhonemeId());
+
+        List<Exercise> exerciseSelected = selectionService.selectionExercisesByPhonemeAndLevelAndCategory(exercises);
+
+        List<Task> tasks = this.taskRepository.findAllByPatientAndStatusAndBetween(1L, TaskStatus.CREATED, LocalDate.now())
+                .stream()
+                .filter(t -> request.getPhonemeId() == t.getPhoneme().getIdPhoneme())
+                .filter(t -> request.getCategories().contains(t.getCategory()))
+                .filter(t -> request.getLevel() == t.getLevel())
+                .collect(Collectors.toList());
+
+        var items = exerciseSelected
+                .stream()
+                .map(e -> {
+                    var taskFound = tasks.stream()
+                            .filter(t -> e.getCategory() == t.getCategory())
+                            .filter(t -> e.getPhonemes().contains(t.getPhoneme()))
+                            .filter(t -> e.getLevel() == t.getLevel())
+                            .findFirst()
+                            .orElseThrow(IllegalArgumentException::new);
+                    TaskItem item = new TaskItem();
+                    item.setExercise(e);
+                    item.setTask(taskFound);
+                    item.setUrlAudio("url");
+                    item.setResult("result");
+                    return item;
+                })
+                .collect(Collectors.toSet());
+        taskItemRepository.saveAll(items);
+
+        return exerciseSelected
+                .stream()
+                .map(GenerateExerciseResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<GenerateExerciseResponse> getTaskItems(Long idPatient) {
 
         List<Task> tasks = this.taskRepository.findAllByPatientAndStatusAndBetween(idPatient, TaskStatus.CREATED, LocalDate.now());
 
+        return tasks
+                .stream()
+                .flatMap(t -> t.getTaskItems().stream())
+                .map(TaskItem::getExercise)
+                .map(GenerateExerciseResponse::new)
+                .collect(Collectors.toList());
     }
 }

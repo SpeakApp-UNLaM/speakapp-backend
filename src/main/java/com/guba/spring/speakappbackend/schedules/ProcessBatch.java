@@ -20,6 +20,6 @@ public class ProcessBatch {
 
     @Scheduled(initialDelay = 0, fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     void callApiWhisper() throws FileNotFoundException {
-        this.imageService.loadImagesToDatabase();
+        //this.imageService.loadImagesToDatabase();
     }
 }

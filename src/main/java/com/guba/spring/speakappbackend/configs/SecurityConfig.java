@@ -54,8 +54,8 @@ public class SecurityConfig {
                         authorize
                                 .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
                                 .requestMatchers(URL_SWAGGER).permitAll()
-                                //.anyRequest().permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
+                                //.anyRequest().authenticated()
 
                 )
                 //.authenticationProvider(auth)

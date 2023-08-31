@@ -15,5 +15,5 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
 
     @Query(value = "SELECT e FROM Exercise e JOIN e.phonemes p " +
             "WHERE e.category IN (:categories) AND e.level = :level AND p.idPhoneme = :idPhoneme")
-    List<Exercise> findALLByCategoryAndLevelAndPhoneme(@Param("categories") Set<Category> categories, @Param("level") int level, @Param("idPhoneme") long idPhoneme);
+    List<Exercise> findAllByCategoriesAndLevelAndPhoneme(@Param("categories") Set<Category> categories, @Param("level") int level, @Param("idPhoneme") long idPhoneme);
 }

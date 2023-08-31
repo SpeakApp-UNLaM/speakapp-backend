@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS public.tm_image_exercise
 (
     id_image                    BIGINT NOT NULL,
     id_exercise                 BIGINT NOT NULL,
+    incorrect                   varchar(50),
     PRIMARY KEY (id_image, id_exercise),
     CONSTRAINT image_exercise_image_fk FOREIGN KEY (id_image) REFERENCES tm_image (id_image),
     CONSTRAINT image_exercise_exercise_fk FOREIGN KEY (id_exercise) REFERENCES tm_exercise (id_exercise)

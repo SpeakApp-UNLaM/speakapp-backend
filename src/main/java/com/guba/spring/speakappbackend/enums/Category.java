@@ -8,9 +8,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public enum Category {
-    SYLLABLE("silaba"),
-    WORD("palabra"),
-    PHRASE("frase");
+    SYLLABLE("syllable"),
+    WORD("word"),
+    PHRASE("phrase");
 
     private static final Map<String, Category> CATEGORY_BY_NAME = Arrays
             .stream(Category.values())

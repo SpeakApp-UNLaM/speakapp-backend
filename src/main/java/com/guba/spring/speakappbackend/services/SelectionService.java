@@ -80,16 +80,16 @@ public class SelectionService {
                 .stream().filter(e-> e.getType() != TypeExercise.SPEAK)
                 .collect(Collectors.toList());
 
-        Set<Exercise> selectionExercisesTypeSpeak = getExerciseRandom(seed, countExerciseTypeSpeak, exercisesTypeSpeak);
+        Set<Exercise> selectionExercisesTypeSpeak = getExercisesRandom(seed, countExerciseTypeSpeak, exercisesTypeSpeak);
 
-        Set<Exercise> selectionExercisesTypeOther = getExerciseRandom(seed, countExerciseTypeOther, exercisesTypeOther);
+        Set<Exercise> selectionExercisesTypeOther = getExercisesRandom(seed, countExerciseTypeOther, exercisesTypeOther);
 
         return Stream
                 .concat(selectionExercisesTypeSpeak.stream(), selectionExercisesTypeOther.stream())
                 .collect(Collectors.toList());
     }
 
-    private Set<Exercise> getExerciseRandom(long seed, int limit, List<Exercise> exercises) {
+    private Set<Exercise> getExercisesRandom(long seed, int limit, List<Exercise> exercises) {
         return new Random(seed)
                 .ints(0, exercises.size())
                 .distinct()
