@@ -1,5 +1,6 @@
 package com.guba.spring.speakappbackend.database.repositories;
 
+import com.guba.spring.speakappbackend.database.models.Phoneme;
 import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.database.models.Exercise;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,9 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
     @Query(value = "SELECT e FROM Exercise e JOIN e.phonemes p " +
             "WHERE e.category IN (:categories) AND e.level = :level AND p.idPhoneme = :idPhoneme")
     List<Exercise> findAllByCategoriesAndLevelAndPhoneme(@Param("categories") Set<Category> categories, @Param("level") int level, @Param("idPhoneme") long idPhoneme);
+
+    @Query(value = "SELECT e FROM Exercise e JOIN e.phonemes p " +
+            "WHERE p.idPhoneme = :idPhoneme")
+    List<Exercise> findAllByPhoneme(@Param("idPhoneme") long idPhoneme);
+
 }
