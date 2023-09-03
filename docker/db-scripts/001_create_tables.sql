@@ -1,3 +1,4 @@
+/*
 --
 CREATE TABLE IF NOT EXISTS public.tm_exercise
 (
@@ -176,4 +177,4 @@ CREATE TABLE IF NOT EXISTS public.tm_task_group_detail
     CONSTRAINT task_group_detail_exercise_fk FOREIGN KEY (id_exercise) REFERENCES tm_exercise (id_exercise)
 );
 --GENERAR TABLAS PARA CATEGORY (SILABA, PALABRA, FRASE) y LEVEL (1,2,3)?
-
+*/
