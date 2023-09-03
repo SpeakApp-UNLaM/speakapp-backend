@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class GenerateExerciseResponse {
     private long exerciseId;
-    private TypeExercise type;//enum EXERCISE_TYPE
+    private TypeExercise type;
     private String result;
     private Set<ImageDTO> images;
 

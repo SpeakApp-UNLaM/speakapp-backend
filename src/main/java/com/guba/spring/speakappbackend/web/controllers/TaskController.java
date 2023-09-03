@@ -32,7 +32,7 @@ public class TaskController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping(path = "/{idPatient}",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{idPatient}")
     public ResponseEntity<List<GenerateExerciseResponse>> getTask(@PathVariable Long idPatient) {
         var response = taskService.getTaskItems(idPatient);
         return ResponseEntity.ok(response);

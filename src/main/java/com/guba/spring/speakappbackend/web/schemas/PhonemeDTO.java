@@ -1,6 +1,5 @@
 package com.guba.spring.speakappbackend.web.schemas;
 
-import com.guba.spring.speakappbackend.database.models.Exercise;
 import com.guba.spring.speakappbackend.database.models.Phoneme;
 import com.guba.spring.speakappbackend.enums.Category;
 import lombok.AllArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -25,6 +23,7 @@ public class PhonemeDTO {
     public PhonemeDTO(Phoneme p) {
         this.idPhoneme = p.getIdPhoneme();
         this.phoneme = p.getPhoneme();
+        this.categoriesDTO = Set.of();
     }
 
     public PhonemeDTO(Phoneme p, Set<CategoryDTO> categoriesDTO) {

@@ -24,7 +24,6 @@ public class TaskService {
     private final TaskItemRepository taskItemRepository;
     private final PatientRepository patientRepository;
     private final ProfessionalRepository professionalRepository;
-
     private final SelectionService selectionService;
 
     @Transactional
@@ -93,6 +92,7 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public List<GenerateExerciseResponse> getTaskItems(Long idPatient) {
 
         List<Task> tasks = this.taskRepository.findAllByPatientAndStatusAndBetween(idPatient, TaskStatus.CREATED, LocalDate.now());

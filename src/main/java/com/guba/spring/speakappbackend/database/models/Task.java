@@ -53,7 +53,6 @@ public class Task {
     @Column(name = "status")
     private TaskStatus status;
 
-    @OneToMany
-    @JoinColumn(name = "id_task")
+    @OneToMany(mappedBy="task")
     private Set<TaskItem> taskItems;
 }
