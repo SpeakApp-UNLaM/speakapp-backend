@@ -18,12 +18,11 @@
         <spring-boot.version>2.5.8</spring-boot.version>
         <lombok.version>1.18.24</lombok.version>
         <postgresql.version>42.2.2</postgresql.version>
+        <swagger-starter.version>2.1.0</swagger-starter.version>
+        <openapi-ui.version>1.7.0</openapi-ui.version>
     </properties>
 
     <dependencies>
-
-
-
         <!-- SPRING -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -48,6 +47,18 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <version>${spring-boot.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${openapi-ui.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+            <version>${swagger-starter.version}</version>
         </dependency>
 
         <!-- POSTGRESQL -->
