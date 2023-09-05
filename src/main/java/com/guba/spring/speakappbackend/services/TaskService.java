@@ -5,6 +5,7 @@ import com.guba.spring.speakappbackend.database.repositories.*;
 import com.guba.spring.speakappbackend.enums.TaskStatus;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseRequest;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseResponse;
+import com.guba.spring.speakappbackend.web.schemas.PhonemeCategoryDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.guba.spring.speakappbackend.web.schemas.PhonemeCategoryDTO.CategoryDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +31,7 @@ public class TaskService {
     private final SelectionService selectionService;
 
     @Transactional
-    public void createTask(GenerateExerciseRequest request) {
+    public Set<PhonemeCategoryDTO> createTask(GenerateExerciseRequest request) {
         Patient patient = this.patientRepository.findById(1L).orElseThrow(IllegalAccessError::new);
         Professional professional = this.professionalRepository.findById(1L).orElseThrow(IllegalAccessError::new);
         LocalDate now = LocalDate.now();
@@ -50,7 +54,17 @@ public class TaskService {
                     return task;
                 }).collect(Collectors.toList());
 
-        taskRepository.saveAll(tasks);
+        return taskRepository
+                .saveAll(tasks)
+                .stream()
+                .collect(Collectors.groupingBy(
+                        Task::getPhoneme,
+                        Collectors.toList()
+                ))
+                .entrySet()
+                .stream()
+                .map(entry -> converterToPhonemeCategoryDTO(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toSet());
     }
 
     @Transactional
@@ -93,15 +107,40 @@ public class TaskService {
     }
 
     @Transactional
-    public List<GenerateExerciseResponse> getTaskItems(Long idPatient) {
-
-        List<Task> tasks = this.taskRepository.findAllByPatientAndStatusAndBetween(idPatient, TaskStatus.CREATED, LocalDate.now());
-
-        return tasks
+    public List<GenerateExerciseResponse> getTaskItemsByPhoneme(Long idPatient, Long idPhoneme) {
+        return this.taskRepository
+                .findAllByPatientAndStatusAndBetween(idPatient, TaskStatus.CREATED, LocalDate.now())
                 .stream()
+                .filter(task -> idPhoneme.equals(task.getPhoneme().getIdPhoneme()))
                 .flatMap(t -> t.getTaskItems().stream())
                 .map(TaskItem::getExercise)
                 .map(GenerateExerciseResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    public Set<PhonemeCategoryDTO> getTasksPhoneme(Long idPatient) {
+        return this.taskRepository
+                .findAllByPatientAndStatusAndBetween(idPatient, TaskStatus.CREATED, LocalDate.now())
+                .stream()
+                .collect(Collectors.groupingBy(
+                        Task::getPhoneme,
+                        Collectors.toList()
+                ))
+                .entrySet()
+                .stream()
+                .map(entry -> converterToPhonemeCategoryDTO(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toSet());
+    }
+
+    private PhonemeCategoryDTO converterToPhonemeCategoryDTO(Phoneme phoneme, List<Task> tasks) {
+        var categories = tasks
+                .stream()
+                .map(task -> CategoryDTO
+                        .builder()
+                        .category(task.getCategory())
+                        .level(task.getLevel())
+                        .build())
+                .collect(Collectors.toSet());
+        return new PhonemeCategoryDTO(phoneme, categories);
     }
 }

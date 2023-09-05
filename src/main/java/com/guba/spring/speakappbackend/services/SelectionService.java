@@ -60,7 +60,7 @@ public class SelectionService {
                 .getPhonemes()
                 .stream()
                 .findFirst()
-                .map(Phoneme::getPhoneme)
+                .map(Phoneme::getNamePhoneme)
                 .orElseThrow(IllegalArgumentException::new);
         return new Aggregation(phoneme, e.getLevel(), e.getCategory());
     }

@@ -1,13 +1,10 @@
 package com.guba.spring.speakappbackend.web.controllers;
 
 import com.guba.spring.speakappbackend.services.PhonemeService;
-import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseRequest;
-import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseResponse;
 import com.guba.spring.speakappbackend.web.schemas.PhonemeDTO;
+import com.guba.spring.speakappbackend.web.schemas.PhonemeCategoryDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +19,7 @@ public class PhonemeController {
     private final PhonemeService phonemeService;
 
     @GetMapping(path = "{idPhoneme}")
-    public ResponseEntity<PhonemeDTO> getById(@PathVariable Long idPhoneme) {
+    public ResponseEntity<PhonemeCategoryDTO> getById(@PathVariable Long idPhoneme) {
         var response = phonemeService.getById(idPhoneme);
         return ResponseEntity.ok(response);
     }

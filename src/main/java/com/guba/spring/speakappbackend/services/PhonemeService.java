@@ -4,6 +4,7 @@ import com.guba.spring.speakappbackend.database.repositories.ExerciseRepository;
 import com.guba.spring.speakappbackend.database.repositories.PhonemeRepository;
 import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
 import com.guba.spring.speakappbackend.web.schemas.PhonemeDTO;
+import com.guba.spring.speakappbackend.web.schemas.PhonemeCategoryDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.guba.spring.speakappbackend.web.schemas.PhonemeDTO.CategoryDTO;
+import static com.guba.spring.speakappbackend.web.schemas.PhonemeCategoryDTO.CategoryDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class PhonemeService {
                 .collect(Collectors.toList());
     }
 
-    public PhonemeDTO getById(Long idPhoneme) {
+    public PhonemeCategoryDTO getById(Long idPhoneme) {
         return this.phonemeRepository
                 .findById(idPhoneme)
                 .map(p -> {
@@ -43,7 +44,7 @@ public class PhonemeService {
                                     .level(e.getLevel())
                                     .build())
                             .collect(Collectors.toSet());
-                    return new PhonemeDTO(p, categoriesDTOS);
+                    return new PhonemeCategoryDTO(p, categoriesDTOS);
                 })
                 .orElseThrow( () -> new NotFoundElementException("Not found Phoneme for the id " + idPhoneme));
     }

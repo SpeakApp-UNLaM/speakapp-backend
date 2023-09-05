@@ -19,5 +19,5 @@ public class Phoneme {
     private Long idPhoneme;
 
     @Column(name = "phoneme")
-    private String phoneme;
+    private String namePhoneme;
 }
