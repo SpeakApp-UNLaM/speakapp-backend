@@ -1,6 +1,7 @@
 package com.guba.spring.speakappbackend.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -22,6 +23,7 @@ public enum RoleEnum {
         this.name = name;
     }
 
+    @JsonValue
     public String getName() {
         return name;
     }
@@ -29,6 +31,11 @@ public enum RoleEnum {
     @JsonCreator
     public static RoleEnum getRole(String name) {
         return ROLE_BY_NAME.get(name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
 }

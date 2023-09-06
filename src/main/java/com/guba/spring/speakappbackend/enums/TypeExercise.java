@@ -1,6 +1,7 @@
 package com.guba.spring.speakappbackend.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -29,6 +30,7 @@ public enum TypeExercise {
         this.name = name;
     }
 
+    @JsonValue
     public String getName() {
         return this.name;
     }
@@ -36,5 +38,10 @@ public enum TypeExercise {
     @JsonCreator
     public static TypeExercise getTypeExercise(String name) {
         return TYPE_EXERCISE_BY_NAME.get(name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

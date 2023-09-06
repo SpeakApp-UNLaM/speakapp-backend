@@ -1,6 +1,7 @@
 package com.guba.spring.speakappbackend.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -23,6 +24,7 @@ public enum TaskStatus {
         this.name = name;
     }
 
+    @JsonValue
     public String getName() {
         return name;
     }
@@ -30,5 +32,10 @@ public enum TaskStatus {
     @JsonCreator
     public static TaskStatus getTaskStatus(String name) {
         return TASK_STATUS_BY_NAME.get(name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

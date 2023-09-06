@@ -18,5 +18,6 @@ public class ImageDTO {
     public ImageDTO(Image image) {
         this.name = image.getName();
         this.imageData = image.getImageData();
+        this.dividedName = image.getDividedName();
     }
 }
