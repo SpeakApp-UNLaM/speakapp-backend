@@ -7,6 +7,7 @@ import com.guba.spring.speakappbackend.database.models.UserAbstract;
 import com.guba.spring.speakappbackend.database.repositories.PatientRepository;
 import com.guba.spring.speakappbackend.database.repositories.ProfessionalRepository;
 import com.guba.spring.speakappbackend.enums.RoleEnum;
+import com.guba.spring.speakappbackend.security.dtos.LoginResponse;
 import com.guba.spring.speakappbackend.services.PatientService;
 import com.guba.spring.speakappbackend.services.ProfessionalService;
 import com.guba.spring.speakappbackend.security.dtos.SignUpDTO;
@@ -34,6 +35,7 @@ public class CustomUserDetailService implements UserDetailsService {
     private final ProfessionalRepository professionalRepository;
     private final PatientService patientService;
     private final ProfessionalService professionalService;
+    private final JwtService jwtService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -59,28 +61,33 @@ public class CustomUserDetailService implements UserDetailsService {
         return new User(username, passwordUser, authorities);
     }
 
-    public UserDetails get(String usernameOrEmail) throws UsernameNotFoundException {
+    public LoginResponse getUserWithJWT(String usernameOrEmail) throws UsernameNotFoundException {
         Patient patient = this.patientRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
         Professional professional = professionalRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
         if (patient == null && professional == null) {
             throw new UsernameNotFoundException("User not exists by Username or email");
         }
-        final Role roleUser = Optional
+        UserDetails userdetails = this.loadUserByUsername(usernameOrEmail);
+        String token = jwtService.generateJwt(userdetails);
+
+        final Long idUser = Optional
                 .ofNullable(patient)
-                .map(UserAbstract::getRole)
-                .orElseGet(professional::getRole);
+                .map(Patient::getIdPatient)
+                .orElseGet(professional::getIdProfessional);
+        final UserAbstract user = Optional
+                .ofNullable((UserAbstract) patient)
+                .orElse(professional);
 
-        final String passwordUser = Optional
-                .ofNullable(patient)
-                .map(UserAbstract::getPassword)
-                .orElseGet(professional::getPassword);
-
-        Set<GrantedAuthority> authorities = Stream.of(roleUser)
-                .map(role -> new SimpleGrantedAuthority(role.getName().getName()))
-                .collect(Collectors.toSet());
-
-        //return new User(username, passwordUser, authorities);
-        return null;
+        return LoginResponse
+                .builder()
+                .idUser(idUser)
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .imageData(user.getImageData())
+                .token(token)
+                .build();
     }
 
     public void save(SignUpDTO signUpDTO) {

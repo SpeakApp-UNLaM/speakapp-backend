@@ -18,8 +18,6 @@ public class Image {
     @Column(name = "id_image")
     private Long idImage;
 
-    //@Lob
-    //@Type(type = "org.hibernate.type.ImageType")
     @Column(name = "image_data", columnDefinition = "TEXT")
     private String imageData;
 
