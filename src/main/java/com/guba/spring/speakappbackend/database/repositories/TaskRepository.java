@@ -15,8 +15,15 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("Select t From Task t " +
             "Where t.patient.idPatient = :idPatient " +
+            "and t.phoneme.idPhoneme = :idPhoneme " +
             "and t.status = :status " +
             "and :now BETWEEN t.startDate and t.endDate")
-    List<Task> findAllByPatientAndStatusAndBetween(@Param("idPatient") Long idPatient, @Param("status") TaskStatus status, @Param("now") LocalDate now);
+    List<Task> findAllByPatientAndPhonemeStatusAndBetween(@Param("idPatient") Long idPatient, @Param("idPhoneme") Long idPhoneme,  @Param("status") TaskStatus status, @Param("now") LocalDate now);
+
+    @Query("Select t From Task t " +
+            "Where t.patient.idPatient = :idPatient " +
+            "and t.status = :status " +
+            "and :now BETWEEN t.startDate and t.endDate")
+    List<Task> findAllByPatientAndStatusAndBetween(@Param("idPatient") Long idPatient,  @Param("status") TaskStatus status, @Param("now") LocalDate now);
 
 }

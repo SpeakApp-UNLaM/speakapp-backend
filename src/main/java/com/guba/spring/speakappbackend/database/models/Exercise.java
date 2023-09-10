@@ -51,14 +51,8 @@ public class Exercise {
             inverseJoinColumns=@JoinColumn(name="id_image"))
     private Set<Image> images;
 
-    @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.DETACH,
-                    CascadeType.MERGE,
-                    CascadeType.PERSIST,
-                    CascadeType.REFRESH})
-    @JoinTable(name = "tm_exercise_phoneme",
-            joinColumns=@JoinColumn(name="id_exercise"),
-            inverseJoinColumns=@JoinColumn(name="id_phoneme"))
-    private Set<Phoneme> phonemes;
+    @ManyToOne
+    @JoinColumn(name="id_phoneme", nullable=false)
+    private Phoneme phoneme;
 
 }

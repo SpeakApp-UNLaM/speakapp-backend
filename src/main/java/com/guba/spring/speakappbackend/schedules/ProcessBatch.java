@@ -1,6 +1,7 @@
 package com.guba.spring.speakappbackend.schedules;
 
 import com.guba.spring.speakappbackend.clients.ClientWhisperApiCustom;
+import com.guba.spring.speakappbackend.database.repositories.ExerciseRepository;
 import com.guba.spring.speakappbackend.services.ImageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +18,11 @@ public class ProcessBatch {
 
     private final ClientWhisperApiCustom clientWhisperApiCustom;
     private final ImageService imageService;
+    private final ExerciseRepository exerciseRepository;
 
     @Scheduled(initialDelay = 0, fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     void callApiWhisper() throws FileNotFoundException {
+        log.info("batch");
         //this.imageService.loadImagesToDatabase();
     }
 }

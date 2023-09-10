@@ -1,7 +1,6 @@
 package com.guba.spring.speakappbackend.services;
 
 import com.guba.spring.speakappbackend.database.models.Exercise;
-import com.guba.spring.speakappbackend.database.models.Phoneme;
 import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import lombok.Builder;
@@ -26,25 +25,9 @@ public class SelectionService {
 
     private int countExercise;
 
-    //por fonema, nivel y categorya
-
     public List<Exercise> selectionExercisesByPhonemeAndLevelAndCategory(List<Exercise> exercises) {
         return exercises
                 .stream()
-                .flatMap(exercise -> exercise
-                        .getPhonemes()
-                        .stream()
-                        .map(phoneme -> {
-                            var newExercise = new Exercise();
-                            newExercise.setIdExercise(exercise.getIdExercise());
-                            newExercise.setPhonemes(Set.of(phoneme));
-                            newExercise.setCategory(exercise.getCategory());
-                            newExercise.setLevel(exercise.getLevel());
-                            newExercise.setImages(exercise.getImages());
-                            newExercise.setType(exercise.getType());
-                            newExercise.setResultExpected(exercise.getResultExpected());
-                            return newExercise;
-                        }))
                 .collect(Collectors.groupingBy(
                         this::makeGrouping,
                         Collectors.toList()
@@ -57,11 +40,8 @@ public class SelectionService {
 
     private Aggregation makeGrouping(Exercise e) {
         String phoneme =  e
-                .getPhonemes()
-                .stream()
-                .findFirst()
-                .map(Phoneme::getNamePhoneme)
-                .orElseThrow(IllegalArgumentException::new);
+                .getPhoneme()
+                .getNamePhoneme();
         return new Aggregation(phoneme, e.getLevel(), e.getCategory());
     }
 

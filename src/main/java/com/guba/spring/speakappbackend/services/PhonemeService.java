@@ -22,7 +22,6 @@ public class PhonemeService {
     private final PhonemeRepository phonemeRepository;
     private final ExerciseRepository exerciseRepository;
 
-
     public List<PhonemeDTO> getAll() {
         return phonemeRepository
                 .findAll()
