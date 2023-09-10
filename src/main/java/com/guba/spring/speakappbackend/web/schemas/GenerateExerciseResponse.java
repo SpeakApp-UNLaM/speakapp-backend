@@ -1,6 +1,7 @@
 package com.guba.spring.speakappbackend.web.schemas;
 
 import com.guba.spring.speakappbackend.database.models.Exercise;
+import com.guba.spring.speakappbackend.database.models.TaskItem;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,16 +16,19 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenerateExerciseResponse {
-    private long exerciseId;
+    private Long idTaskItem;
     private TypeExercise type;
     private String result;
+    private String incorrect;
     private Set<ImageDTO> images;
 
-    public GenerateExerciseResponse(Exercise exercise) {
-        this.exerciseId = exercise.getIdExercise();
-        this.result = exercise.getResultExpected();
-        this.type = exercise.getType();
-        this.images = exercise
+    public GenerateExerciseResponse(TaskItem taskItem) {
+        this.idTaskItem = taskItem.getIdTask();
+        final Exercise e = taskItem.getExercise();
+        this.result = e.getResultExpected();
+        this.type = e.getType();
+        this.incorrect = e.getIncorrect();
+        this.images = e
                 .getImages()
                 .stream()
                 .map(ImageDTO::new)

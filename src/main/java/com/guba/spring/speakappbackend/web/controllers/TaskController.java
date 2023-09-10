@@ -22,9 +22,9 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<PhonemeCategoryDTO>> createTask(@RequestBody GenerateExerciseRequest requests) {
-        var response = taskService.createTask(requests);
+    @PostMapping(path = "/{idPatient}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Set<PhonemeCategoryDTO>> createTask(@PathVariable Long idPatient, @RequestBody GenerateExerciseRequest requests) {
+        var response = taskService.createTask(idPatient, requests);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

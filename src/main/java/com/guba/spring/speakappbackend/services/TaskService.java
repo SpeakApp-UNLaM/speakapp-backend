@@ -32,8 +32,7 @@ public class TaskService {
     private final SelectionService selectionService;
 
     @Transactional
-    public Set<PhonemeCategoryDTO> createTask(GenerateExerciseRequest request) {
-        final Long idPatient = request.getIdPatient();
+    public Set<PhonemeCategoryDTO> createTask(Long idPatient, GenerateExerciseRequest request) {
         Patient patient = this.patientRepository
                 .findById(idPatient)
                 .orElseThrow( () -> new NotFoundElementException("Not found patient for the id " + idPatient));
@@ -107,7 +106,7 @@ public class TaskService {
                 .collect(Collectors.toSet());
         taskItemRepository.saveAll(items);
 
-        return exerciseSelected
+        return items
                 .stream()
                 .map(GenerateExerciseResponse::new)
                 .collect(Collectors.toList());
@@ -118,9 +117,7 @@ public class TaskService {
         return this.taskRepository
                 .findAllByPatientAndPhonemeStatusAndBetween(idPatient, idPhoneme, TaskStatus.CREATED, LocalDate.now())
                 .stream()
-                .filter(task -> idPhoneme.equals(task.getPhoneme().getIdPhoneme()))
                 .flatMap(t -> t.getTaskItems().stream())
-                .map(TaskItem::getExercise)
                 .map(GenerateExerciseResponse::new)
                 .collect(Collectors.toList());
     }

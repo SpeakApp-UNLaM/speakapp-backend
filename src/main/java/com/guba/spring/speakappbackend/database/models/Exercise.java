@@ -29,6 +29,9 @@ public class Exercise {
     @Column(name = "result_expected")
     private String resultExpected;
 
+    @Column(name = "incorrect")
+    private String incorrect;
+
     @Column(name = "level")
     private int level;
 
