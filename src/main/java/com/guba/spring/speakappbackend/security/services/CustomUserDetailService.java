@@ -47,12 +47,12 @@ public class CustomUserDetailService implements UserDetailsService {
         final Role roleUser = Optional
                 .ofNullable(patient)
                 .map(UserAbstract::getRole)
-                .orElseGet(professional::getRole);
+                .orElseGet(() -> professional.getRole());
 
         final String passwordUser = Optional
                 .ofNullable(patient)
                 .map(UserAbstract::getPassword)
-                .orElseGet(professional::getPassword);
+                .orElseGet(() -> professional.getPassword());
 
         Set<GrantedAuthority> authorities = Stream.of(roleUser)
                 .map(role -> new SimpleGrantedAuthority(role.getName().getName()))
@@ -73,7 +73,7 @@ public class CustomUserDetailService implements UserDetailsService {
         final Long idUser = Optional
                 .ofNullable(patient)
                 .map(Patient::getIdPatient)
-                .orElseGet(professional::getIdProfessional);
+                .orElseGet(() -> professional.getIdProfessional());
         final UserAbstract user = Optional
                 .ofNullable((UserAbstract) patient)
                 .orElse(professional);
