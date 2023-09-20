@@ -1,3 +1,7 @@
 412:1: ERROR: duplicate key value violates unique constraint "tm_image_exercise_pkey"   Detail: Key (id_image, id_exercise)=(46, 433) already exists.
 733:1: ERROR: duplicate key value violates unique constraint "tm_image_exercise_pkey"   Detail: Key (id_image, id_exercise)=(131, 597) already exists.
 736:1: ERROR: duplicate key value violates unique constraint "tm_image_exercise_pkey"   Detail: Key (id_image, id_exercise)=(243, 598) already exists.
+
+id_exercise
+551
+547
