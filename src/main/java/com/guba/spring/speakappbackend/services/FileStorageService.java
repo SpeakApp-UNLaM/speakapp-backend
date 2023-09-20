@@ -40,6 +40,18 @@ public class FileStorageService {
         }
     }
 
+    public void save(byte[] file, String folder, String filename) {
+        try {
+            createDirectoriesIfNotExist(folder);
+            var dir = Path.of(rootFolder.toAbsolutePath().toString(), folder, filename);
+            Files.write(dir, file);
+        } catch (FileAlreadyExistsException e) {
+            throw new RuntimeException("A file of that name already exists.");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Resource load(String filename) {
         try {
             Path file = this.rootFolder.resolve(filename);
@@ -77,6 +89,12 @@ public class FileStorageService {
         } catch (IOException e) {
             throw new RuntimeException("Could not load the files!");
         }
+    }
+
+    private void createDirectoriesIfNotExist(String directories) throws IOException {
+        var rootWithDirectories = Path.of(rootFolder.toAbsolutePath().toString(), directories);
+        if (!Files.exists(rootWithDirectories))
+            Files.createDirectories(rootWithDirectories);
     }
 
 }

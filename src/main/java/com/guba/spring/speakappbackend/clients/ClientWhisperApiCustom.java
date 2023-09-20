@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -43,12 +44,12 @@ public class ClientWhisperApiCustom {
                 .build();
     }
 
-    public TranscriptionResultDTO getTranscription(WhisperTranscriptionRequest request) {
+    public TranscriptionResultDTO getTranscription(Resource resourceData) {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("model", request.getModel());
-        body.add("file", request.getFile().getResource());
-        body.add("language", request.getLanguage());
-        body.add("temperature", request.getTemperature());
+        body.add("model", "whisper-1");
+        body.add("file", resourceData);
+        body.add("language", "es");
+        body.add("temperature", 0);
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         return restTemplate.postForObject(url, requestEntity,  TranscriptionResultDTO.class);

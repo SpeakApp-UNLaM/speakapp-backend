@@ -1,7 +1,10 @@
 package com.guba.spring.speakappbackend.services.algorithm;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Arrays;
 
+@Component
 public class MatchingAlgorithmCustom implements MatchingAlgorithm {
 
 

@@ -38,7 +38,8 @@ speak-backend:
     refresh-expiration-token: 40m
   client:
     whisper:
-      url: https://api.openai.com/v1/audio/transcriptions
+      url: https://32c5-104-198-107-50.ngrok-free.app/transcription-audio
+      #url: https://api.openai.com/v1/audio/transcriptions
       api-key: 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
       connect-timeout: 100s
       read-timeout: 100s
