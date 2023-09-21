@@ -24,7 +24,7 @@ public class ResolveSpeak implements ResolveStrategy {
     private final FileStorageService fileStorageService;
 
     @Override
-    public String resolve(TaskItem taskItem, ResultExerciseDTO resultExerciseDTO) {
+    public TaskItem resolve(TaskItem taskItem, ResultExerciseDTO resultExerciseDTO) {
         //save audio
         final Exercise exercise = taskItem.getExercise();
         final byte[] byteAudio = Base64
@@ -33,22 +33,22 @@ public class ResolveSpeak implements ResolveStrategy {
 
         //TODO FALTA LA CARPETA DEL USERNAME, EXAMPLE dir: {username}/{taskId}/{filename}
         final String folder = taskItem.getTask().getIdTaskGroup().toString();
-        final String filename = String.format("%s-%s-%s.wav", taskItem.getIdTask(), exercise.getIdExercise(), exercise.getResultExpected());
+        final String filename = String.format("%s-%s-%s.ogg", taskItem.getIdTask(), exercise.getIdExercise(), exercise.getResultExpected());
+        final String dirRelativeAudio = Path.of(folder, filename).toString();
         this.fileStorageService.save(byteAudio, folder, filename);
 
         //call api whisper
-        Resource resourceData = this.fileStorageService.load(filename);
+        Resource resourceData = this.fileStorageService.load(dirRelativeAudio);
         var transcription = this.clientWhisper.getTranscription(resourceData);
 
         //match result
-        var resultMatch = this.matchingAlgorithm.getMatchPercentage(transcription.getText(), exercise.getResultExpected());
-        final String dirRelativeAudio = Path.of(folder, filename).toString();
+        var resultMatch = this.matchingAlgorithm.getMatchPercentage(transcription.getText().toLowerCase(), exercise.getResultExpected().toLowerCase());
         ResultExercise resultExercise = ResultExercise.NO_SUCCESS;
-        if (resultMatch.getPercentageMatch() == 1D )
+        if (resultMatch.getPercentageMatch() > 0.8D )
             resultExercise = ResultExercise.SUCCESS;
 
         taskItem.setUrlAudio(dirRelativeAudio);
         taskItem.setResult(resultExercise.name());
-        return null;
+        return taskItem;
     }
 }

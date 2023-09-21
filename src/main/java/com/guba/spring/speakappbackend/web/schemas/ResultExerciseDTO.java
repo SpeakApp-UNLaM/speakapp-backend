@@ -14,14 +14,14 @@ import java.util.List;
 public class ResultExerciseDTO {
     private Long idTaskItem;
     private String audio;
-    private List<ImageResultDTO> imagesResultDTO;
+    private List<SelectionImage> selectionImages;
 
     @Data
     @Builder
     @AllArgsConstructor
-    @NoArgsConstructor//SelectionImage
-    public static class ImageResultDTO {
-        private Long id;
-        private String nameAudio;
+    @NoArgsConstructor
+    public static class SelectionImage {
+        private Long idImage;
+        private String name;
     }
 }

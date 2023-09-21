@@ -1,5 +1,6 @@
 package com.guba.spring.speakappbackend.services;
 
+import com.guba.spring.speakappbackend.database.models.TaskItem;
 import com.guba.spring.speakappbackend.database.repositories.TaskItemRepository;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import com.guba.spring.speakappbackend.services.strategies.ResolveStrategy;
@@ -19,19 +20,21 @@ public class ResolveExerciseService {
     private final TaskItemRepository taskItemRepository;
 
     public void resolve(List<ResultExerciseDTO> exercisesDTO) {
-        exercisesDTO
+        List<TaskItem> taskItemsResolved = exercisesDTO
                 .stream()
                 .map(this::resolveExercise)
                 .collect(Collectors.toList());
+
+        this.taskItemRepository.saveAll(taskItemsResolved);
     }
 
-    private String resolveExercise(ResultExerciseDTO resultExerciseDTO) {
+    private TaskItem resolveExercise(ResultExerciseDTO resultExerciseDTO) {
         return taskItemRepository
                 .findById(resultExerciseDTO.getIdTaskItem())
                 .map( taskItem -> {
                     TypeExercise type = taskItem.getExercise().getType();
                     return resolveStrategyByType.get(type).resolve(taskItem, resultExerciseDTO);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("no puede haber taskitem vacio"));
     }
 }

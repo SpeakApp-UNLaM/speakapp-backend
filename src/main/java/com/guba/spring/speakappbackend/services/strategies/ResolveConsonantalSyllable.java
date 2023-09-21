@@ -1,6 +1,7 @@
 package com.guba.spring.speakappbackend.services.strategies;
 
 import com.guba.spring.speakappbackend.database.models.TaskItem;
+import com.guba.spring.speakappbackend.enums.ResultExercise;
 import com.guba.spring.speakappbackend.web.schemas.ResultExerciseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,14 +11,20 @@ import org.springframework.stereotype.Component;
 public class ResolveConsonantalSyllable implements ResolveStrategy {
 
     @Override
-    public String resolve(TaskItem taskItem, ResultExerciseDTO resultExerciseDTO) {
+    public TaskItem resolve(TaskItem taskItem, ResultExerciseDTO resultExerciseDTO) {
         final String resultExpected = taskItem.getExercise().getResultExpected();
 
-        return resultExerciseDTO
-                .getImagesResultDTO()
+        boolean isResolveSuccess = resultExerciseDTO
+                .getSelectionImages()
                 .stream()
-                .allMatch(e -> resultExpected.equalsIgnoreCase(e.getNameAudio()))
-                ? "OK_EJERCICIO": "NO_EJERCICIO";
+                .allMatch(imageSelected -> resultExpected.equalsIgnoreCase(imageSelected.getName()));
+
+        ResultExercise resultExercise = ResultExercise.NO_SUCCESS;
+        if (isResolveSuccess)
+            resultExercise = ResultExercise.SUCCESS;
+
+        taskItem.setResult(resultExercise.name());
+        return taskItem;
     }
 
 }
