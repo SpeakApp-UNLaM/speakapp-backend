@@ -3,6 +3,7 @@ package com.guba.spring.speakappbackend.clients;
 import com.guba.spring.speakappbackend.web.schemas.TranscriptionResultDTO;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.io.Resource;
@@ -15,11 +16,13 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
+import java.util.Optional;
 
 @Component
 @ConfigurationProperties("speak-backend.client.whisper")
 @Setter
 @Getter
+@Slf4j
 public class ClientWhisperApiCustom {
 
     private RestTemplate restTemplate;
@@ -52,7 +55,19 @@ public class ClientWhisperApiCustom {
         body.add("temperature", 0);
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        return restTemplate.postForObject(url, requestEntity,  TranscriptionResultDTO.class);
+
+        try {
+            var transcription = restTemplate.postForObject(url, requestEntity,  TranscriptionResultDTO.class);
+            String resultTranscriptionText = Optional
+                    .ofNullable(transcription)
+                    .map(TranscriptionResultDTO::getText)
+                    .orElse(null);
+            log.info("result api whisper: {}", resultTranscriptionText);
+            return transcription;
+        } catch (Exception e) {
+            log.error("ERROR with api whisper:", e);
+            return null;
+        }
     }
 
 }
