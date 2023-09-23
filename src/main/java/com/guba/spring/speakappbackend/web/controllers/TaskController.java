@@ -1,5 +1,7 @@
 package com.guba.spring.speakappbackend.web.controllers;
 
+import com.guba.spring.speakappbackend.enums.Category;
+import com.guba.spring.speakappbackend.enums.TypeExercise;
 import com.guba.spring.speakappbackend.services.TaskService;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseRequest;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseResponse;
@@ -44,5 +46,16 @@ public class TaskController {
     public ResponseEntity<Set<PhonemeCategoryDTO>> getTasksPhoneme(@PathVariable Long idPatient) {
         var response = taskService.getTasksPhoneme(idPatient);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/generate-custom")
+    public ResponseEntity<List<GenerateExerciseResponse>> createTaskAllTypeExercise(
+            @RequestParam(name = "typesExercise") Set<TypeExercise> typesExercise,
+            @RequestParam(name = "idsPhoneme") Set<Long> idsPhoneme,
+            @RequestParam(name = "categories") Set<Category> categories,
+            @RequestParam(name = "levels") Set<Integer> levels
+    ) {
+        var response = taskService.createTaskItems(typesExercise, levels, idsPhoneme, categories);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

@@ -2,7 +2,9 @@ package com.guba.spring.speakappbackend.services;
 
 import com.guba.spring.speakappbackend.database.models.*;
 import com.guba.spring.speakappbackend.database.repositories.*;
+import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.enums.TaskStatus;
+import com.guba.spring.speakappbackend.enums.TypeExercise;
 import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseRequest;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseResponse;
@@ -15,6 +17,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.guba.spring.speakappbackend.web.schemas.PhonemeCategoryDTO.CategoryDTO;
@@ -146,5 +149,76 @@ public class TaskService {
                         .build())
                 .collect(Collectors.toSet());
         return new PhonemeCategoryDTO(phoneme, categories);
+    }
+
+    public List<GenerateExerciseResponse> createTaskItems(Set<TypeExercise> typesExercise, Set<Integer> levels, Set<Long> idsPhoneme, Set<Category> categories) {
+        Patient patient = this.patientRepository
+                .findById(1L)
+                .orElseThrow( () -> new NotFoundElementException("Not found patient for the id " + 1));
+
+        Professional professional = this.professionalRepository.findById(1L).orElseThrow(IllegalAccessError::new);
+        LocalDate now = LocalDate.now();
+        List<Exercise> exercises = this.exerciseRepository
+                .findAllByCategoriesAndPhonemesAndTypes(categories, idsPhoneme, typesExercise)
+                .stream()
+                .filter(exercise -> levels.contains(exercise.getLevel()))
+                .collect(Collectors.toList());
+
+        Function<Exercise, String> generateKey = e -> e.getType().getName() + e.getCategory().getName() + e.getPhoneme().getIdPhoneme() + e.getLevel();
+
+        var oneExerciseSelectedByTypeCategoryLevelPhoneme = exercises
+                .stream()
+                .collect(Collectors.toMap(
+                        generateKey,
+                        Function.identity(),
+                        (e1, e2) -> e2
+                ));
+
+        Set<Task> taskGenerated = oneExerciseSelectedByTypeCategoryLevelPhoneme
+                .values()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        e -> {
+                            Task task = new Task();
+                            task.setPatient(patient);
+                            task.setProfessional(professional);
+                            task.setLevel(e.getLevel());
+                            task.setCategory(e.getCategory());
+                            task.setPhoneme(e.getPhoneme());
+                            task.setStatus(TaskStatus.CREATED);
+                            task.setStartDate(now);
+                            task.setEndDate(now.plusWeeks(2));
+
+                            return task;
+                        },
+                        Collectors.toSet()
+                ))
+                .entrySet()
+                .stream()
+                .map(entry-> {
+                    var taskCreated = this.taskRepository.save(entry.getKey());
+                    var taskItems = entry
+                            .getValue()
+                            .stream()
+                            .map(e-> {
+                                TaskItem item = new TaskItem();
+                                item.setExercise(e);
+                                item.setTask(taskCreated);
+                                item.setUrlAudio("url");
+                                item.setResult("result");
+                                return item;
+                            })
+                            .collect(Collectors.toSet());
+                    taskCreated.setTaskItems(taskItems);
+                    this.taskItemRepository.saveAll(taskItems);
+                    return taskCreated;
+                })
+                .collect(Collectors.toSet());
+
+        return taskGenerated
+                .stream()
+                .flatMap(t->t.getTaskItems().stream())
+                .map(GenerateExerciseResponse::new)
+                .collect(Collectors.toList());
     }
 }
