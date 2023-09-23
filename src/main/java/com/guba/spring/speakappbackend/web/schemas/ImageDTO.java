@@ -1,6 +1,6 @@
 package com.guba.spring.speakappbackend.web.schemas;
 
-import com.guba.spring.speakappbackend.database.models.Image;
+import com.guba.spring.speakappbackend.repositories.database.models.Image;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

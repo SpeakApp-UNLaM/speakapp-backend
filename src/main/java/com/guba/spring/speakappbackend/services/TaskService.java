@@ -1,11 +1,11 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.database.models.*;
-import com.guba.spring.speakappbackend.database.repositories.*;
 import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.enums.TaskStatus;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
+import com.guba.spring.speakappbackend.repositories.database.models.*;
+import com.guba.spring.speakappbackend.repositories.database.repositories.*;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseRequest;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseResponse;
 import com.guba.spring.speakappbackend.web.schemas.PhonemeCategoryDTO;

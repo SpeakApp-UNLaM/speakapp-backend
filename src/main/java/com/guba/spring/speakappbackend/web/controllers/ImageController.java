@@ -1,11 +1,11 @@
 package com.guba.spring.speakappbackend.web.controllers;
 
-import com.guba.spring.speakappbackend.database.models.Image;
-import com.guba.spring.speakappbackend.database.models.ImageTemp;
-import com.guba.spring.speakappbackend.database.repositories.ExerciseRepository;
-import com.guba.spring.speakappbackend.database.repositories.ImageRepository;
-import com.guba.spring.speakappbackend.database.repositories.ImageTempRepository;
-import com.guba.spring.speakappbackend.database.repositories.PhonemeRepository;
+import com.guba.spring.speakappbackend.repositories.database.models.Image;
+import com.guba.spring.speakappbackend.repositories.database.models.ImageTemp;
+import com.guba.spring.speakappbackend.repositories.database.repositories.ExerciseRepository;
+import com.guba.spring.speakappbackend.repositories.database.repositories.ImageRepository;
+import com.guba.spring.speakappbackend.repositories.database.repositories.ImageTempRepository;
+import com.guba.spring.speakappbackend.repositories.database.repositories.PhonemeRepository;
 import com.guba.spring.speakappbackend.services.ConverterImage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

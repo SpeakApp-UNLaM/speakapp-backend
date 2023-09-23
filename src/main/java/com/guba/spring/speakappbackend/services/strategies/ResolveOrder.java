@@ -1,7 +1,7 @@
 package com.guba.spring.speakappbackend.services.strategies;
 
-import com.guba.spring.speakappbackend.database.models.Image;
-import com.guba.spring.speakappbackend.database.models.TaskItem;
+import com.guba.spring.speakappbackend.repositories.database.models.Image;
+import com.guba.spring.speakappbackend.repositories.database.models.TaskItem;
 import com.guba.spring.speakappbackend.enums.ResultExercise;
 import com.guba.spring.speakappbackend.web.schemas.ResultExerciseDTO;
 import lombok.RequiredArgsConstructor;

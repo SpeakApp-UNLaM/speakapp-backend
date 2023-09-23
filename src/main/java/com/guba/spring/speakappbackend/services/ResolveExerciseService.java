@@ -1,7 +1,7 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.database.models.TaskItem;
-import com.guba.spring.speakappbackend.database.repositories.TaskItemRepository;
+import com.guba.spring.speakappbackend.repositories.database.models.TaskItem;
+import com.guba.spring.speakappbackend.repositories.database.repositories.TaskItemRepository;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import com.guba.spring.speakappbackend.services.strategies.ResolveStrategy;
 import com.guba.spring.speakappbackend.web.schemas.ResultExerciseDTO;

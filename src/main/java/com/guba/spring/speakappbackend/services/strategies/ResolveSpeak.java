@@ -1,8 +1,8 @@
 package com.guba.spring.speakappbackend.services.strategies;
 
 import com.guba.spring.speakappbackend.clients.ClientWhisperApiCustom;
-import com.guba.spring.speakappbackend.database.models.Exercise;
-import com.guba.spring.speakappbackend.database.models.TaskItem;
+import com.guba.spring.speakappbackend.repositories.database.models.Exercise;
+import com.guba.spring.speakappbackend.repositories.database.models.TaskItem;
 import com.guba.spring.speakappbackend.enums.ResultExercise;
 import com.guba.spring.speakappbackend.services.FileStorageService;
 import com.guba.spring.speakappbackend.services.algorithm.MatchingAlgorithm;

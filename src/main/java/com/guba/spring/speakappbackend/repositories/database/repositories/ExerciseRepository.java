@@ -1,7 +1,7 @@
-package com.guba.spring.speakappbackend.database.repositories;
+package com.guba.spring.speakappbackend.repositories.database.repositories;
 
 import com.guba.spring.speakappbackend.enums.Category;
-import com.guba.spring.speakappbackend.database.models.Exercise;
+import com.guba.spring.speakappbackend.repositories.database.models.Exercise;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

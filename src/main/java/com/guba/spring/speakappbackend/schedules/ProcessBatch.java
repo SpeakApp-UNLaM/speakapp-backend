@@ -1,7 +1,7 @@
 package com.guba.spring.speakappbackend.schedules;
 
 import com.guba.spring.speakappbackend.clients.ClientWhisperApiCustom;
-import com.guba.spring.speakappbackend.database.repositories.ExerciseRepository;
+import com.guba.spring.speakappbackend.repositories.database.repositories.ExerciseRepository;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import com.guba.spring.speakappbackend.services.FileStorageService;
 import com.guba.spring.speakappbackend.services.ImageService;

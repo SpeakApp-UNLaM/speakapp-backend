@@ -1,6 +1,6 @@
-package com.guba.spring.speakappbackend.database.models;
+package com.guba.spring.speakappbackend.repositories.database.models;
 
-import com.guba.spring.speakappbackend.database.converters.RoleJpaConverter;
+import com.guba.spring.speakappbackend.repositories.database.converters.RoleJpaConverter;
 import com.guba.spring.speakappbackend.enums.RoleEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.guba.spring.speakappbackend.database.converters;
+package com.guba.spring.speakappbackend.repositories.database.converters;
 
 import com.guba.spring.speakappbackend.enums.Category;
 

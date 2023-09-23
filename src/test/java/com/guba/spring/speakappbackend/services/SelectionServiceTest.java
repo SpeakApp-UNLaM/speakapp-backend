@@ -1,12 +1,11 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.database.models.Exercise;
-import com.guba.spring.speakappbackend.database.models.Phoneme;
+import com.guba.spring.speakappbackend.repositories.database.models.Exercise;
+import com.guba.spring.speakappbackend.repositories.database.models.Phoneme;
 import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,9 +1,9 @@
-package com.guba.spring.speakappbackend.database.models;
+package com.guba.spring.speakappbackend.repositories.database.models;
 
 
-import com.guba.spring.speakappbackend.database.converters.TypeExerciseJpaConverter;
+import com.guba.spring.speakappbackend.repositories.database.converters.TypeExerciseJpaConverter;
 import com.guba.spring.speakappbackend.enums.Category;
-import com.guba.spring.speakappbackend.database.converters.CategoryJpaConverter;
+import com.guba.spring.speakappbackend.repositories.database.converters.CategoryJpaConverter;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

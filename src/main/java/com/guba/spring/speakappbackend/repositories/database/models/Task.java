@@ -1,7 +1,7 @@
-package com.guba.spring.speakappbackend.database.models;
+package com.guba.spring.speakappbackend.repositories.database.models;
 
-import com.guba.spring.speakappbackend.database.converters.CategoryJpaConverter;
-import com.guba.spring.speakappbackend.database.converters.TaskStatusJpaConverter;
+import com.guba.spring.speakappbackend.repositories.database.converters.CategoryJpaConverter;
+import com.guba.spring.speakappbackend.repositories.database.converters.TaskStatusJpaConverter;
 import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.enums.TaskStatus;
 import lombok.Getter;
