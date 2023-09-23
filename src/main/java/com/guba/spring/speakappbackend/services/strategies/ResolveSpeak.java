@@ -4,7 +4,7 @@ import com.guba.spring.speakappbackend.clients.ClientWhisperApiCustom;
 import com.guba.spring.speakappbackend.repositories.database.models.Exercise;
 import com.guba.spring.speakappbackend.repositories.database.models.TaskItem;
 import com.guba.spring.speakappbackend.enums.ResultExercise;
-import com.guba.spring.speakappbackend.services.FileStorageService;
+import com.guba.spring.speakappbackend.repositories.filesystems.AudioStorageRepository;
 import com.guba.spring.speakappbackend.services.algorithm.MatchingAlgorithm;
 import com.guba.spring.speakappbackend.web.schemas.ResultExerciseDTO;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +19,8 @@ import java.util.Base64;
 public class ResolveSpeak implements ResolveStrategy {
 
     private final ClientWhisperApiCustom clientWhisper;
-
     private final MatchingAlgorithm matchingAlgorithm;
-    private final FileStorageService fileStorageService;
+    private final AudioStorageRepository audioStorageRepository;
 
     @Override
     public TaskItem resolve(TaskItem taskItem, ResultExerciseDTO resultExerciseDTO) {
@@ -35,10 +34,10 @@ public class ResolveSpeak implements ResolveStrategy {
         final String folder = taskItem.getTask().getIdTaskGroup().toString();
         final String filename = String.format("%s-%s-%s.ogg", taskItem.getIdTask(), exercise.getIdExercise(), exercise.getResultExpected());
         final String dirRelativeAudio = Path.of(folder, filename).toString();
-        this.fileStorageService.save(byteAudio, folder, filename);
+        this.audioStorageRepository.save(byteAudio, folder, filename);
 
         //call api whisper
-        Resource resourceData = this.fileStorageService.load(dirRelativeAudio);
+        Resource resourceData = this.audioStorageRepository.getAudioByFilename(dirRelativeAudio);
         var transcription = this.clientWhisper.getTranscription(resourceData);
 
         //match result
