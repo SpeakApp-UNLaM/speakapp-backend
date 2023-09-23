@@ -1,47 +1,26 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.clients.OpenAIClient;
+import com.guba.spring.speakappbackend.clients.ClientWhisperApiCustom;
 import com.guba.spring.speakappbackend.clients.WhisperTranscriptionRequest;
-import com.guba.spring.speakappbackend.configs.OpenAIConfig;
-import com.guba.spring.speakappbackend.schemas.*;
-import com.guba.spring.speakappbackend.schemas.chatgpt.ChatGPTRequest;
-import com.guba.spring.speakappbackend.schemas.chatgpt.ChatGPTResponse;
-import com.guba.spring.speakappbackend.schemas.chatgpt.ChatRequest;
-import com.guba.spring.speakappbackend.schemas.chatgpt.Message;
+import com.guba.spring.speakappbackend.web.schemas.MultipartFileDTO;
+import com.guba.spring.speakappbackend.web.schemas.TranscriptionResultDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
 public class SpeechRecognitionService {
 
-    private final OpenAIClient openAIClient;
-    private final OpenAIConfig openAIConfig;
-
-    private final static String ROLE_USER = "user";
-
-    public ChatGPTResponse chat(ChatRequest chatRequest){
-        Message message = Message.builder()
-                .role(ROLE_USER)
-                .content(chatRequest.getQuestion())
-                .build();
-        ChatGPTRequest chatGPTRequest = ChatGPTRequest.builder()
-                .model(openAIConfig.getGptModel())
-                .messages(Collections.singletonList(message))
-                .build();
-        return openAIClient.chat(chatGPTRequest);
-    }
+    private final ClientWhisperApiCustom clientWhisperApiCustom;
 
     public TranscriptionResultDTO getTranscription(MultipartFileDTO multipartFileDTO){
         WhisperTranscriptionRequest whisperTranscriptionRequest = WhisperTranscriptionRequest.builder()
-                .model(openAIConfig.getAudioModel())
+                .model("whisper-1")
                 .file(multipartFileDTO.getFile())
                 .language("es")
                 .temperature(0)
                 .build();
-        var whisperTranscriptionResponse = openAIClient.createTranscription(whisperTranscriptionRequest);
+        var whisperTranscriptionResponse = clientWhisperApiCustom.getTranscription(whisperTranscriptionRequest);
         return TranscriptionResultDTO
                 .builder()
                 .text(whisperTranscriptionResponse.getText())

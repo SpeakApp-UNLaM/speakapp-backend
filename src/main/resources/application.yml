@@ -8,10 +8,8 @@ spring:
     multipart:
       enabled: true # Enable multipart uploads
       file-size-threshold: 2KB # Threshold after which files are written to disk.
-      max-file-size: 5MB # Max file size.
-      max-request-size: 5MB  # Max Request Size
-  main:
-    banner-mode: 'off'
+      max-file-size: 20MB # Max file size.
+      max-request-size: 20MB  # Max Request Size
   application:
     name: 'speak-backend'
   profiles:
@@ -23,7 +21,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update #en prod validate
+      ddl-auto: none #en prod validate
     show-sql: true #en prod false
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     properties:
@@ -33,18 +31,20 @@ spring:
           use_second_level_cache: false
 
 speak-backend:
+  count-exercise: 5
+  jwt:
+    secret-key: secret #$2a$10$x7pFiWQLFVfoBdMmUX4fBedY
+    expiration-token: 1h
+    refresh-expiration-token: 40m
   client:
-    openai:
-      api-key: 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
-      gpt-model: gpt-3.5-turbo
-      audio-model: whisper-1
-      http-client:
-        read-timeout-ms: 3000
-        connect-timeout-ms: 3000
-      urls:
-        base-url: https://api.openai.com/v1
-        chat-url: /chat/completions
-        create-transcription-url: /audio/transcriptions
+    whisper:
+      url: https://api.openai.com/v1/audio/transcriptions
+      api-key: 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
+      connect-timeout: 100s
+      read-timeout: 100s
+      headers:
+        Content-Type: multipart/form-data
+        X-Client: ${spring.profiles.active}-${spring.application.name}
 
 ---
 spring:
