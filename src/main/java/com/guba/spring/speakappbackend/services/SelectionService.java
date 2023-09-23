@@ -10,10 +10,7 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -69,7 +66,10 @@ public class SelectionService {
                 .collect(Collectors.toList());
     }
 
-    private Set<Exercise> getExercisesRandom(long seed, int limit, List<Exercise> exercises) {
+    private Set<Exercise> getExercisesRandom(long seed, int countExercise, List<Exercise> exercises) {
+        int limit = countExercise;
+        if (limit > exercises.size())
+            limit = exercises.size();
         return new Random(seed)
                 .ints(0, exercises.size())
                 .distinct()
