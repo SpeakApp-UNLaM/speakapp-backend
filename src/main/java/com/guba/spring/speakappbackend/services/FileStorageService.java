@@ -6,6 +6,7 @@ import java.nio.file.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.guba.spring.speakappbackend.exceptions.FileStoreException;
 import com.guba.spring.speakappbackend.web.schemas.FileDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -34,9 +35,10 @@ public class FileStorageService {
         try {
             Files.copy(file.getInputStream(), this.rootFolder.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
         } catch (FileAlreadyExistsException e) {
-            throw new RuntimeException("A file of that name already exists.");
+            throw new FileStoreException("A file of that name already exists.");
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            String msj = String.format("Error in save file in filename=%s", file.getOriginalFilename());
+            throw new FileStoreException(msj, e);
         }
     }
 
@@ -46,9 +48,10 @@ public class FileStorageService {
             var dir = Path.of(rootFolder.toAbsolutePath().toString(), folder, filename);
             Files.write(dir, file);
         } catch (FileAlreadyExistsException e) {
-            throw new RuntimeException("A file of that name already exists.");
+            throw new FileStoreException("A file of that name already exists.");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            String msj = String.format("Error in save file in folder=%s and filename=%s", folder, filename);
+            throw new FileStoreException(msj, e);
         }
     }
 
@@ -61,9 +64,9 @@ public class FileStorageService {
                 return resource;
             }
         } catch (MalformedURLException e) {
-            throw new RuntimeException("Error: " + e.getMessage());
+            throw new FileStoreException("Error malformed url for filename " + filename, e);
         }
-        throw new RuntimeException("Could not read the file!");
+        throw new FileStoreException("Could not read the file!");
     }
 
     public void save(List<MultipartFile> files) {
@@ -87,7 +90,7 @@ public class FileStorageService {
                         return new FileDTO(filename, path.toUri().getPath());
                     }).collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException("Could not load the files!");
+            throw new FileStoreException("Could not load the files!");
         }
     }
 
