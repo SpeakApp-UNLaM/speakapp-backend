@@ -125,7 +125,7 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
-    public Set<PhonemeCategoryDTO> getTasksPhoneme(Long idPatient) {
+    public Set<PhonemeCategoryDTO> getTasksByPatient(Long idPatient) {
         return this.taskRepository
                 .findAllByPatientAndStatusAndBetween(idPatient, TaskStatus.CREATED, LocalDate.now())
                 .stream()
@@ -144,6 +144,7 @@ public class TaskService {
                 .stream()
                 .map(task -> CategoryDTO
                         .builder()
+                        .idTask(task.getIdTaskGroup())
                         .category(task.getCategory())
                         .level(task.getLevel())
                         .build())
@@ -220,5 +221,22 @@ public class TaskService {
                 .flatMap(t->t.getTaskItems().stream())
                 .map(GenerateExerciseResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    public void deleteTask(Long idTask) {
+        this.taskRepository
+                .findById(idTask)
+                .ifPresent(task -> {
+                    taskItemRepository.deleteAll(task.getTaskItems());
+                    this.taskRepository.delete(task);
+                });
+    }
+
+    public PhonemeCategoryDTO getTaskByPatientAndPhoneme(Long idPatient, Long idPhoneme) {
+        return this.getTasksByPatient(idPatient)
+                .stream()
+                .filter(t -> t.getPhoneme().getIdPhoneme().equals(idPhoneme))
+                .findFirst()
+                .orElseThrow(()-> new NotFoundElementException("Not found task for patient " + idPatient + " and phoneme {}" +idPatient));
     }
 }

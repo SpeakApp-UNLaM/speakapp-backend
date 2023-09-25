@@ -30,6 +30,26 @@ public class TaskController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @GetMapping(path = "/{idPatient}")
+    public ResponseEntity<Set<PhonemeCategoryDTO>> getTasks(@PathVariable Long idPatient) {
+        var response = taskService.getTasksByPatient(idPatient);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping(path = "/{idTask}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long idTask) {
+        taskService.deleteTask(idTask);
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @GetMapping(path = "change-url/{idPatient}/{idPhoneme}")
+    public ResponseEntity<PhonemeCategoryDTO> getTaskByPhoneme(@PathVariable Long idPatient, @PathVariable Long idPhoneme) {
+        var response = taskService.getTaskByPatientAndPhoneme(idPatient, idPhoneme);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping(path = "/items", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GenerateExerciseResponse>> createTaskItems(@RequestBody GenerateExerciseRequest request) {
         var response = taskService.createTaskItems(request);
@@ -39,12 +59,6 @@ public class TaskController {
     @GetMapping(path = "/{idPatient}/{idPhoneme}")
     public ResponseEntity<List<GenerateExerciseResponse>> getTaskItemsByPhoneme(@PathVariable Long idPatient, @PathVariable Long idPhoneme) {
         var response = taskService.getTaskItemsByPhoneme(idPatient, idPhoneme);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping(path = "/{idPatient}")
-    public ResponseEntity<Set<PhonemeCategoryDTO>> getTasksPhoneme(@PathVariable Long idPatient) {
-        var response = taskService.getTasksPhoneme(idPatient);
         return ResponseEntity.ok(response);
     }
 

@@ -28,6 +28,7 @@ public class PhonemeCategoryDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CategoryDTO {
+        private Long idTask;
         private Category category;
         private int level;
     }
