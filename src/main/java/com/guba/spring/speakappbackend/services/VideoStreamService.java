@@ -1,6 +1,6 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.repositories.filesystems.VideoArticulationStorageRepository;
+import com.guba.spring.speakappbackend.storages.filesystems.VideoArticulationStorageRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

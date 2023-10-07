@@ -1,7 +1,7 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.repositories.database.repositories.ExerciseRepository;
-import com.guba.spring.speakappbackend.repositories.database.repositories.PhonemeRepository;
+import com.guba.spring.speakappbackend.storages.database.repositories.ExerciseRepository;
+import com.guba.spring.speakappbackend.storages.database.repositories.PhonemeRepository;
 import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
 import com.guba.spring.speakappbackend.web.schemas.PhonemeDTO;
 import com.guba.spring.speakappbackend.web.schemas.PhonemeCategoryDTO;

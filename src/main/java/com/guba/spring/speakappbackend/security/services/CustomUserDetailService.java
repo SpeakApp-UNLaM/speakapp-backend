@@ -1,11 +1,9 @@
-package com.guba.spring.speakappbackend.security.services;
-
-import com.guba.spring.speakappbackend.repositories.database.models.Patient;
-import com.guba.spring.speakappbackend.repositories.database.models.Professional;
-import com.guba.spring.speakappbackend.repositories.database.models.Role;
-import com.guba.spring.speakappbackend.repositories.database.models.UserAbstract;
-import com.guba.spring.speakappbackend.repositories.database.repositories.PatientRepository;
-import com.guba.spring.speakappbackend.repositories.database.repositories.ProfessionalRepository;
+package com.guba.spring.speakappbackend.security.services;import com.guba.spring.speakappbackend.storages.database.models.Patient;
+import com.guba.spring.speakappbackend.storages.database.models.Professional;
+import com.guba.spring.speakappbackend.storages.database.models.Role;
+import com.guba.spring.speakappbackend.storages.database.models.UserAbstract;
+import com.guba.spring.speakappbackend.storages.database.repositories.PatientRepository;
+import com.guba.spring.speakappbackend.storages.database.repositories.ProfessionalRepository;
 import com.guba.spring.speakappbackend.enums.RoleEnum;
 import com.guba.spring.speakappbackend.security.dtos.LoginResponse;
 import com.guba.spring.speakappbackend.services.PatientService;

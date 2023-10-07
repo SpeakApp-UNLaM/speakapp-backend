@@ -1,11 +1,11 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.repositories.database.models.Patient;
-import com.guba.spring.speakappbackend.repositories.database.models.Professional;
-import com.guba.spring.speakappbackend.repositories.database.models.Role;
-import com.guba.spring.speakappbackend.repositories.database.repositories.PatientRepository;
-import com.guba.spring.speakappbackend.repositories.database.repositories.ProfessionalRepository;
-import com.guba.spring.speakappbackend.repositories.database.repositories.RoleRepository;
+import com.guba.spring.speakappbackend.storages.database.models.Patient;
+import com.guba.spring.speakappbackend.storages.database.models.Professional;
+import com.guba.spring.speakappbackend.storages.database.models.Role;
+import com.guba.spring.speakappbackend.storages.database.repositories.PatientRepository;
+import com.guba.spring.speakappbackend.storages.database.repositories.ProfessionalRepository;
+import com.guba.spring.speakappbackend.storages.database.repositories.RoleRepository;
 import com.guba.spring.speakappbackend.enums.RoleEnum;
 import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
 import com.guba.spring.speakappbackend.exceptions.NotSavedElementException;

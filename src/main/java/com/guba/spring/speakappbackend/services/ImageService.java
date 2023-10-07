@@ -1,7 +1,7 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.repositories.database.models.Image;
-import com.guba.spring.speakappbackend.repositories.database.repositories.ImageRepository;
+import com.guba.spring.speakappbackend.storages.database.models.Image;
+import com.guba.spring.speakappbackend.storages.database.repositories.ImageRepository;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.Getter;

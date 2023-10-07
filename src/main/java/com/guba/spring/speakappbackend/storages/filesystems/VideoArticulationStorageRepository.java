@@ -1,4 +1,4 @@
-package com.guba.spring.speakappbackend.repositories.filesystems;
+package com.guba.spring.speakappbackend.storages.filesystems;
 
 import com.guba.spring.speakappbackend.exceptions.FileStoreException;
 import lombok.extern.slf4j.Slf4j;

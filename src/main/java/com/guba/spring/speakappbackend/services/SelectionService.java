@@ -1,6 +1,6 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.repositories.database.models.Exercise;
+import com.guba.spring.speakappbackend.storages.database.models.Exercise;
 import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.guba.spring.speakappbackend.repositories.database.converters;
+package com.guba.spring.speakappbackend.storages.database.converters;
 
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 

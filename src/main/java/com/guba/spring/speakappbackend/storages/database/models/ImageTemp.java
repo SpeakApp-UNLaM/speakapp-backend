@@ -1,4 +1,4 @@
-package com.guba.spring.speakappbackend.repositories.database.models;
+package com.guba.spring.speakappbackend.storages.database.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,7 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.repositories.database.models.Exercise;
-import com.guba.spring.speakappbackend.repositories.database.models.Phoneme;
+import com.guba.spring.speakappbackend.storages.database.models.Exercise;
+import com.guba.spring.speakappbackend.storages.database.models.Phoneme;
 import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import org.junit.jupiter.api.BeforeEach;

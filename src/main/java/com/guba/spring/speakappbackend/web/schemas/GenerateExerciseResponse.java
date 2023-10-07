@@ -1,7 +1,7 @@
 package com.guba.spring.speakappbackend.web.schemas;
 
-import com.guba.spring.speakappbackend.repositories.database.models.Exercise;
-import com.guba.spring.speakappbackend.repositories.database.models.TaskItem;
+import com.guba.spring.speakappbackend.storages.database.models.Exercise;
+import com.guba.spring.speakappbackend.storages.database.models.TaskItem;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

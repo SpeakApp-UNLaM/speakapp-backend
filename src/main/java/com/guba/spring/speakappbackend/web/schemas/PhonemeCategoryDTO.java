@@ -1,6 +1,6 @@
 package com.guba.spring.speakappbackend.web.schemas;
 
-import com.guba.spring.speakappbackend.repositories.database.models.Phoneme;
+import com.guba.spring.speakappbackend.storages.database.models.Phoneme;
 import com.guba.spring.speakappbackend.enums.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

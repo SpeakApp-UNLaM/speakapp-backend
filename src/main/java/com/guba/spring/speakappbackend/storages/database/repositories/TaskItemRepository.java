@@ -1,6 +1,6 @@
-package com.guba.spring.speakappbackend.repositories.database.repositories;
+package com.guba.spring.speakappbackend.storages.database.repositories;
 
-import com.guba.spring.speakappbackend.repositories.database.models.TaskItem;
+import com.guba.spring.speakappbackend.storages.database.models.TaskItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

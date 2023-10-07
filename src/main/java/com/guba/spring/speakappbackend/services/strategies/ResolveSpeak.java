@@ -1,10 +1,10 @@
 package com.guba.spring.speakappbackend.services.strategies;
 
 import com.guba.spring.speakappbackend.clients.ClientWhisperApiCustom;
-import com.guba.spring.speakappbackend.repositories.database.models.Exercise;
-import com.guba.spring.speakappbackend.repositories.database.models.TaskItem;
+import com.guba.spring.speakappbackend.storages.database.models.Exercise;
+import com.guba.spring.speakappbackend.storages.database.models.TaskItem;
 import com.guba.spring.speakappbackend.enums.ResultExercise;
-import com.guba.spring.speakappbackend.repositories.filesystems.AudioStorageRepository;
+import com.guba.spring.speakappbackend.storages.filesystems.AudioStorageRepository;
 import com.guba.spring.speakappbackend.services.algorithm.MatchingAlgorithm;
 import com.guba.spring.speakappbackend.web.schemas.ResultExerciseDTO;
 import lombok.RequiredArgsConstructor;
