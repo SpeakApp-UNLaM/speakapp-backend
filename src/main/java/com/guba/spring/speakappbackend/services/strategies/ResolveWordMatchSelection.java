@@ -33,7 +33,7 @@ public class ResolveWordMatchSelection implements ResolveStrategy {
                 .collect(Collectors.toList());
 
         boolean isResolveSuccess = result.stream().allMatch(r -> r);
-        ResultExercise resultExercise = ResultExercise.NO_SUCCESS;
+        ResultExercise resultExercise = ResultExercise.FAILURE;
         if (isResolveSuccess)
             resultExercise = ResultExercise.SUCCESS;
 

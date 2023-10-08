@@ -32,7 +32,7 @@ public class ResolveSingleSelection implements ResolveStrategy {
                 .orElseThrow(() -> new IllegalArgumentException("The resul exercise have not image"));
 
         boolean isResolveSuccess = resultExpected.equalsIgnoreCase(imageSelected.getName());
-        ResultExercise resultExercise = ResultExercise.NO_SUCCESS;
+        ResultExercise resultExercise = ResultExercise.FAILURE;
         if (isResolveSuccess)
             resultExercise = ResultExercise.SUCCESS;
 

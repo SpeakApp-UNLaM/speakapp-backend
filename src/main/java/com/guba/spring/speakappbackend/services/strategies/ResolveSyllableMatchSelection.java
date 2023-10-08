@@ -33,7 +33,7 @@ public class ResolveSyllableMatchSelection implements ResolveStrategy {
 
         //TODAS LAS IMAGES SELECCIONADAS SON CORRECTAS Y LA CANTIDAD DE CORRECTAS ES EXPERADA
         boolean isResolveSuccess = result.stream().allMatch(r -> r) && result.size() == idsImageCorrect.size();
-        ResultExercise resultExercise = ResultExercise.NO_SUCCESS;
+        ResultExercise resultExercise = ResultExercise.FAILURE;
         if (isResolveSuccess)
             resultExercise = ResultExercise.SUCCESS;
 

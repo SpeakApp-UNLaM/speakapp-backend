@@ -19,7 +19,7 @@ public class ResolveConsonantalSyllable implements ResolveStrategy {
                 .stream()
                 .allMatch(imageSelected -> resultExpected.equalsIgnoreCase(imageSelected.getName()));
 
-        ResultExercise resultExercise = ResultExercise.NO_SUCCESS;
+        ResultExercise resultExercise = ResultExercise.FAILURE;
         if (isResolveSuccess)
             resultExercise = ResultExercise.SUCCESS;
 

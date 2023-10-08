@@ -21,7 +21,7 @@ public class ResolveOrder implements ResolveStrategy {
                 .orElseThrow(() -> new IllegalArgumentException("The exercise have not images"));
 
         boolean isResolveSuccess = image.getDividedName().equalsIgnoreCase(resultExerciseDTO.getAudio());
-        ResultExercise resultExercise = ResultExercise.NO_SUCCESS;
+        ResultExercise resultExercise = ResultExercise.FAILURE;
         if (isResolveSuccess)
             resultExercise = ResultExercise.SUCCESS;
 

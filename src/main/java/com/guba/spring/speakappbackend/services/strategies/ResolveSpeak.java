@@ -42,7 +42,7 @@ public class ResolveSpeak implements ResolveStrategy {
 
         //match result
         var resultMatch = this.matchingAlgorithm.getMatchPercentage(transcription.getText().toLowerCase(), exercise.getResultExpected().toLowerCase());
-        ResultExercise resultExercise = ResultExercise.NO_SUCCESS;
+        ResultExercise resultExercise = ResultExercise.FAILURE;
         if (resultMatch.getPercentageMatch() > 0.8D )
             resultExercise = ResultExercise.SUCCESS;
 

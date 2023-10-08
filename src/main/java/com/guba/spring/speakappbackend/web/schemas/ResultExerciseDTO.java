@@ -1,14 +1,12 @@
 package com.guba.spring.speakappbackend.web.schemas;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Data
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResultExerciseDTO {
