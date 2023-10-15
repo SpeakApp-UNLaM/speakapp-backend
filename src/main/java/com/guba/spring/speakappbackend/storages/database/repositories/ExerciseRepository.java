@@ -3,6 +3,7 @@ package com.guba.spring.speakappbackend.storages.database.repositories;
 import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.storages.database.models.Exercise;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
+import com.guba.spring.speakappbackend.storages.database.models.Phoneme;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,5 +27,11 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
     //        "WHERE p.idPhoneme = :idPhoneme")
     @Query(value = "SELECT e FROM Exercise e WHERE e.phoneme.idPhoneme = :idPhoneme")
     List<Exercise> findAllByPhoneme(@Param("idPhoneme") long idPhoneme);
+
+    @Query(value = "SELECT e.category, e.level, e.type FROM Exercise e WHERE e.phoneme.idPhoneme = :idPhoneme GROUP BY 1,2,3")
+    List<Object[]> findAllByPhonemeGroupByCategoryAndLevelAndType(@Param("idPhoneme") long idPhoneme);
+
+    @Query(value = "SELECT distinct e.phoneme FROM Exercise e ")
+    List<Phoneme> findAllPhonemeDistinct();
 
 }
