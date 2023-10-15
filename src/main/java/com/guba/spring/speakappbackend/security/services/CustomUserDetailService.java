@@ -65,8 +65,6 @@ public class CustomUserDetailService implements UserDetailsService {
         if (patient == null && professional == null) {
             throw new UsernameNotFoundException("User not exists by Username or email");
         }
-        UserDetails userdetails = this.loadUserByUsername(usernameOrEmail);
-        String token = jwtService.generateJwt(userdetails);
 
         final Long idUser = Optional
                 .ofNullable(patient)
@@ -75,6 +73,9 @@ public class CustomUserDetailService implements UserDetailsService {
         final UserAbstract user = Optional
                 .ofNullable((UserAbstract) patient)
                 .orElse(professional);
+
+        UserDetails userdetails = this.loadUserByUsername(usernameOrEmail);
+        String token = jwtService.generateJwt(userdetails, user.getRole());
 
         return LoginResponse
                 .builder()
