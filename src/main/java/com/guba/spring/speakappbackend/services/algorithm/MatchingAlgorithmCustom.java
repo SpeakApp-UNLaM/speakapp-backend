@@ -1,6 +1,7 @@
 package com.guba.spring.speakappbackend.services.algorithm;
 
 import com.guba.spring.speakappbackend.services.transforms.TransformerText;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Component
+@Slf4j
 public class MatchingAlgorithmCustom implements MatchingAlgorithm {
 
     private final TransformerText transformerText;
@@ -23,12 +25,13 @@ public class MatchingAlgorithmCustom implements MatchingAlgorithm {
      * */
     @Override
     public ResultMatchDTO getMatchPercentage(String wordCalculate, String wordExpected) {
-
+        log.info("MatchingAlgorithmCustom inputs: wordCalculate {}, wordExpected {}", wordCalculate, wordExpected);
         double percentageMatch;
-        String wordTransformer = this.transformerText.transform(wordCalculate);
-        String wordExpectedTransformer = this.transformerText.transform(wordExpected);
+        wordCalculate = this.transformerText.transform(wordCalculate);
+        wordExpected = this.transformerText.transform(wordExpected);
 
-        Optional<ResultMatchDTO> resultCaseBasic = caseBasic(wordTransformer, wordExpectedTransformer);
+        log.info("MatchingAlgorithmCustom then transformer text: wordCalculate {}, wordExpected {}", wordCalculate, wordExpected);
+        Optional<ResultMatchDTO> resultCaseBasic = caseBasic(wordCalculate, wordExpected);
         if (resultCaseBasic.isPresent())
             return resultCaseBasic.get();
 
