@@ -2,6 +2,8 @@ package com.guba.spring.speakappbackend.configs;
 
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import com.guba.spring.speakappbackend.services.strategies.*;
+import com.guba.spring.speakappbackend.services.transforms.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -39,4 +41,23 @@ public class SpeakAppConfig {
                                 .orElseThrow(IllegalArgumentException::new)
                 ));
     }
+
+    @Bean
+    @Qualifier("transformLowerCase")
+    TransformerText transformLowerCase() { // Injected automatically
+        return new TransformLowerCase();
+    }
+
+    @Bean
+    @Qualifier("removeComaTransformerDecorator")
+    TransformerTextDecorator removeComaTransformerDecorator(@Qualifier("transformLowerCase") final TransformerText transformerText) {
+        return new FilterAlfaNumericDecorator(transformerText);
+    }
+
+    @Bean
+    @Qualifier("removeTransformerDecorator")
+    TransformerTextDecorator removeTransformerDecorator(@Qualifier("removeComaTransformerDecorator") final TransformerText transformerText) {
+        return new ReplaceAccentDecorator(transformerText);
+    }
+
 }
