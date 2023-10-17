@@ -60,4 +60,10 @@ public class SpeakAppConfig {
         return new ReplaceAccentDecorator(transformerText);
     }
 
+    @Bean
+    @Qualifier("replaceMoreTwoConsecutiveCharacterDecorator")
+    TransformerTextDecorator replaceMoreTwoConsecutiveCharacterDecorator(@Qualifier("replaceMoreTwoConsecutiveCharacterDecorator") final TransformerText transformerText) {
+        return new ReplaceMoreTwoConsecutiveCharacterDecorator(transformerText);
+    }
+
 }

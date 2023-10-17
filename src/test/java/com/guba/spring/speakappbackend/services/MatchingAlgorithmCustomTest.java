@@ -4,6 +4,7 @@ import com.guba.spring.speakappbackend.services.algorithm.MatchingAlgorithm;
 import com.guba.spring.speakappbackend.services.algorithm.MatchingAlgorithmCustom;
 import com.guba.spring.speakappbackend.services.transforms.FilterAlfaNumericDecorator;
 import com.guba.spring.speakappbackend.services.transforms.ReplaceAccentDecorator;
+import com.guba.spring.speakappbackend.services.transforms.ReplaceMoreTwoConsecutiveCharacterDecorator;
 import com.guba.spring.speakappbackend.services.transforms.TransformLowerCase;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,11 +22,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MatchingAlgorithmCustomTest {
 
     private final MatchingAlgorithm matchingAlgorithm = new MatchingAlgorithmCustom(
-            new ReplaceAccentDecorator(
-                    new FilterAlfaNumericDecorator(
-                            new TransformLowerCase()
-                    )
-            )
+           new ReplaceMoreTwoConsecutiveCharacterDecorator(
+                   new ReplaceAccentDecorator(
+                           new FilterAlfaNumericDecorator(
+                                   new TransformLowerCase()
+                           )
+                   )
+           )
     );
 
     @ParameterizedTest
