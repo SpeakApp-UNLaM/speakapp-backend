@@ -62,7 +62,7 @@ public class SpeakAppConfig {
 
     @Bean
     @Qualifier("replaceMoreTwoConsecutiveCharacterDecorator")
-    TransformerTextDecorator replaceMoreTwoConsecutiveCharacterDecorator(@Qualifier("replaceMoreTwoConsecutiveCharacterDecorator") final TransformerText transformerText) {
+    TransformerTextDecorator replaceMoreTwoConsecutiveCharacterDecorator(@Qualifier("removeTransformerDecorator") final TransformerText transformerText) {
         return new ReplaceMoreTwoConsecutiveCharacterDecorator(transformerText);
     }
 
