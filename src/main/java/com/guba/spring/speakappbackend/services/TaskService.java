@@ -4,6 +4,7 @@ import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.enums.TaskStatus;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
+import com.guba.spring.speakappbackend.security.services.CustomUserDetailService;
 import com.guba.spring.speakappbackend.storages.database.models.*;
 import com.guba.spring.speakappbackend.storages.database.repositories.*;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseRequest;
@@ -33,6 +34,7 @@ public class TaskService {
     private final PatientRepository patientRepository;
     private final ProfessionalRepository professionalRepository;
     private final SelectionService selectionService;
+    private final CustomUserDetailService customUserDetailService;
 
     @Transactional
     public Set<PhonemeCategoryDTO> createTask(Long idPatient, GenerateExerciseRequest request) {
@@ -40,7 +42,9 @@ public class TaskService {
                 .findById(idPatient)
                 .orElseThrow( () -> new NotFoundElementException("Not found patient for the id " + idPatient));
 
-        Professional professional = this.professionalRepository.findById(1L).orElseThrow(IllegalAccessError::new);
+        UserAbstract user = this.customUserDetailService.getUserCurrent();
+        Professional professional = (Professional) user;
+        professional.setIdProfessional(user.getId());
         LocalDate now = LocalDate.now();
 
         var tasks = request
@@ -80,8 +84,9 @@ public class TaskService {
         List<Exercise> exercises = exerciseRepository.findAllByCategoriesAndLevelAndPhoneme(request.getCategories(), request.getLevel(), request.getIdPhoneme());
 
         List<Exercise> exerciseSelected = selectionService.selectionExercisesByPhonemeAndLevelAndCategory(exercises);
+        UserAbstract patient = this.customUserDetailService.getUserCurrent();
 
-        List<Task> tasks = this.taskRepository.findAllByPatientAndPhonemeStatusAndBetween(1L, request.getIdPhoneme(), TaskStatus.CREATED, LocalDate.now())
+        List<Task> tasks = this.taskRepository.findAllByPatientAndPhonemeStatusAndBetween(patient.getId(), request.getIdPhoneme(), TaskStatus.CREATED, LocalDate.now())
                 .stream()
                 .filter(t -> request.getCategories().contains(t.getCategory()))
                 .filter(t -> request.getLevel() == t.getLevel())
@@ -153,11 +158,14 @@ public class TaskService {
     }
 
     public List<GenerateExerciseResponse> createTaskItems(Set<TypeExercise> typesExercise, Set<Integer> levels, Set<Long> idsPhoneme, Set<Category> categories) {
+        //TODO FIXED
         Patient patient = this.patientRepository
                 .findById(1L)
                 .orElseThrow( () -> new NotFoundElementException("Not found patient for the id " + 1));
 
-        Professional professional = this.professionalRepository.findById(1L).orElseThrow(IllegalAccessError::new);
+        UserAbstract user = this.customUserDetailService.getUserCurrent();
+        Professional professional = (Professional) user;
+        professional.setIdProfessional(user.getId());
         LocalDate now = LocalDate.now();
         List<Exercise> exercises = this.exerciseRepository
                 .findAllByCategoriesAndPhonemesAndTypes(categories, idsPhoneme, typesExercise)

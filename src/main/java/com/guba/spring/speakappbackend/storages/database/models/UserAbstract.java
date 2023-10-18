@@ -3,16 +3,16 @@ package com.guba.spring.speakappbackend.storages.database.models;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Setter
 @Getter
 @MappedSuperclass
 public abstract class UserAbstract {
+
+    @Transient//this field not exist in table
+    private Long id;
 
     @Column(name = "username")
     private String username;
