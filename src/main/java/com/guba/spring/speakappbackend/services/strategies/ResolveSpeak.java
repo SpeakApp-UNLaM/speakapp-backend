@@ -30,8 +30,10 @@ public class ResolveSpeak implements ResolveStrategy {
                 .getDecoder()
                 .decode(resultExerciseDTO.getAudio());
 
-        //TODO FALTA LA CARPETA DEL USERNAME, EXAMPLE dir: {username}/{taskId}/{filename}
-        final String folder = taskItem.getTask().getIdTaskGroup().toString();
+        //folder example: username/taskId/filename
+        final String username = taskItem.getTask().getPatient().getUsername();
+        final String idTask = taskItem.getTask().getIdTaskGroup().toString();
+        final String folder = Path.of(username, idTask).toString();
         final String filename = String.format("%s-%s-%s.ogg", taskItem.getIdTask(), exercise.getIdExercise(), exercise.getResultExpected());
         final String dirRelativeAudio = Path.of(folder, filename).toString();
         this.audioStorageRepository.save(byteAudio, folder, filename);
