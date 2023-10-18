@@ -9,8 +9,8 @@ public class FilterAlfaNumericDecorator extends TransformerTextDecorator {
     @Override
     public String transform(String text) {
 
-        //String textWithOut = text.replaceAll("[^A-Za-z0-9áéíóúÁÉÍÓÚ ]", "");
-        String textWithOut = text.replaceAll("[^A-Za-z0-9áéíóúÁÉÍÓÚ ]", "#");
+        String textWithOut = text.replaceAll("[^A-Za-z0-9áéíóúÁÉÍÓÚ ]", "");
+        //String textWithOut = text.replaceAll("[^A-Za-z0-9áéíóúÁÉÍÓÚ ]", "#");
         return super.transform(textWithOut);
     }
 }
