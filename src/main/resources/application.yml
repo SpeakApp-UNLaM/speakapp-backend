@@ -38,7 +38,7 @@ speak-backend:
     refresh-expiration-token: 40m
   client:
     whisper:
-      url: https://32c5-104-198-107-50.ngrok-free.app/transcription-audio
+      url: ${URL_WHISPER_API}
       #url: https://api.openai.com/v1/audio/transcriptions
       api-key: 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
       connect-timeout: 100s
@@ -52,6 +52,11 @@ spring:
   config:
     activate:
       on-profile: dev
+
+speak-backend:
+  client:
+    whisper:
+      url: https://32c5-104-198-107-50.ngrok-free.app/transcription-audio
 
 ---
 spring:
