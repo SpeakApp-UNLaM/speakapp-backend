@@ -22,7 +22,7 @@ public class Patient extends UserAbstract {
     private Long idPatient;
 
     @ManyToOne
-    @JoinColumn(name="id_professional", nullable=false)
+    @JoinColumn(name="id_professional")
     private Professional professional;
 
     public Patient(PatientDTO p, String password, Role role, LocalDateTime createdAt, LocalDateTime updateAt, Professional professional) {

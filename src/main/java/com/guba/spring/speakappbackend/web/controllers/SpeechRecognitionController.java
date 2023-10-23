@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.Base64;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "speech-recognition")
@@ -17,8 +20,11 @@ public class SpeechRecognitionController {
     private final SpeechRecognitionService openAIService;
 
     @PostMapping(value = "/transcription", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public TranscriptionResultDTO getTranscription(@ModelAttribute MultipartFileDTO multipartFileDTO){
+    public TranscriptionResultDTO getTranscription(@ModelAttribute MultipartFileDTO multipartFileDTO) throws IOException {
         log.info("Reconocimiento de voz en proceso....");
+        Base64
+                .getEncoder()
+                .encodeToString(multipartFileDTO.getFile().getBytes());
         return openAIService.getTranscription(multipartFileDTO);
     }
 }

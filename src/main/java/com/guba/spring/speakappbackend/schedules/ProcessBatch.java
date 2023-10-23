@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -34,11 +35,12 @@ public class ProcessBatch {
     private final Map<TypeExercise, ResolveStrategy> resolveStrategyByType;
     private final FileStorageService fileStorageService;
     private final RFIRepository rfiRepository;
-
+    private final Environment env;
 
     @Scheduled(initialDelay = 0, fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     void callApiWhisper() throws FileNotFoundException {
         log.info("batch");
+        log.info("url whisper api {}", env.getProperty("speak-backend.client.whisper.url"));
 
         //this.fileStorageService.save("hola".getBytes(), "12/folder-new", "hola.txt");
         //this.imageService.loadImagesToDatabase();
