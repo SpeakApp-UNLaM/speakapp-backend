@@ -39,7 +39,7 @@ public class RFIService {
                 .stream()
                 .map(rfiResolution -> new RegisterPhonologicalInducedDTO(
                         rfiResolution.getIdRfi(),
-                        rfiResolution.getRfi().getImage().getImageData(),
+                        null,
                         rfiResolution.getRfi().getImage().getName(),
                         rfiResolution.getStatusResolution()))
                 .collect(Collectors.toList());

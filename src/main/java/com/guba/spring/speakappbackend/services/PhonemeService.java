@@ -57,7 +57,7 @@ public class PhonemeService {
                             .collect(Collectors.toSet());
                     return new PhonemeCategoryDTO(p, categoriesDTOS);
                 })
-                .orElseThrow( () -> new NotFoundElementException("Not found Phoneme for the id " + idPhoneme));
+                .orElse(new PhonemeCategoryDTO());
     }
 
     public List<CategoryAvailableDTO> getCategoryAvailableByIdPhoneme(Long idPhoneme) {
