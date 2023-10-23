@@ -70,7 +70,8 @@ class MatchingAlgorithmCustomTest {
             "rrrobootttt, robot",
             "baarrrraaa, barra",
             "baarrrr, bar",
-            "llllaaavee, llave"
+            "llllaaavee, llave",
+            "  Arr , ar"
     })
     void getMatchPercentage100WithTest(String wordCalculate, String word) {
         final double percentageExcepted = 1;

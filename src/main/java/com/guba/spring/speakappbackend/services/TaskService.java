@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -167,6 +166,7 @@ public class TaskService {
 
         Function<Exercise, String> generateKey = e -> e.getType().getName() + e.getCategory().getName() + e.getPhoneme().getIdPhoneme() + e.getLevel();
 
+        Collections.shuffle(exercises);
         var oneExerciseSelectedByTypeCategoryLevelPhoneme = exercises
                 .stream()
                 .collect(Collectors.toMap(

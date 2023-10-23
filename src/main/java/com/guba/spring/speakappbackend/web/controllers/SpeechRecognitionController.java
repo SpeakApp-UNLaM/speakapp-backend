@@ -1,5 +1,6 @@
 package com.guba.spring.speakappbackend.web.controllers;
 
+import com.guba.spring.speakappbackend.clients.ModeSpeak;
 import com.guba.spring.speakappbackend.web.schemas.MultipartFileDTO;
 import com.guba.spring.speakappbackend.web.schemas.TranscriptionResultDTO;
 import com.guba.spring.speakappbackend.services.SpeechRecognitionService;
@@ -20,11 +21,14 @@ public class SpeechRecognitionController {
     private final SpeechRecognitionService openAIService;
 
     @PostMapping(value = "/transcription", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public TranscriptionResultDTO getTranscription(@ModelAttribute MultipartFileDTO multipartFileDTO) throws IOException {
+    public TranscriptionResultDTO getTranscription(
+            @ModelAttribute MultipartFileDTO multipartFileDTO,
+            @RequestParam(required = false, defaultValue = "SLOW") ModeSpeak mode
+    ) throws IOException {
         log.info("Reconocimiento de voz en proceso....");
         Base64
                 .getEncoder()
                 .encodeToString(multipartFileDTO.getFile().getBytes());
-        return openAIService.getTranscription(multipartFileDTO);
+        return openAIService.getTranscription(multipartFileDTO, mode);
     }
 }

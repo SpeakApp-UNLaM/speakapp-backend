@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
@@ -20,7 +20,7 @@ public class GenerateExerciseResponse {
     private TypeExercise type;
     private String result;
     private String incorrect;
-    private Set<ImageDTO> images;
+    private List<ImageDTO> images = new ArrayList<>();
 
     public GenerateExerciseResponse(TaskItem taskItem) {
         this.idTaskItem = taskItem.getIdTask();
@@ -32,6 +32,7 @@ public class GenerateExerciseResponse {
                 .getImages()
                 .stream()
                 .map(ImageDTO::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
+        Collections.shuffle(this.images);
     }
 }

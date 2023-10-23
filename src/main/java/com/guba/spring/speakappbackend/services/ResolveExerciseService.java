@@ -32,6 +32,7 @@ public class ResolveExerciseService {
     public void resolve(List<ResultExerciseDTO> exercisesDTO) {
         List<TaskItem> taskItemsResolved = exercisesDTO
                 .stream()
+                .parallel()
                 .map(this::resolveExercise)
                 .collect(Collectors.toList());
 

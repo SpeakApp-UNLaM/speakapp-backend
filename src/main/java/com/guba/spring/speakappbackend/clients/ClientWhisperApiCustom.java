@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
@@ -47,7 +48,7 @@ public class ClientWhisperApiCustom {
                 .build();
     }
 
-    public TranscriptionResultDTO getTranscription(Resource resourceData) {
+    public TranscriptionResultDTO getTranscription(Resource resourceData, ModeSpeak mode) {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("model", "whisper-1");
         body.add("file", resourceData);
@@ -55,14 +56,18 @@ public class ClientWhisperApiCustom {
         body.add("temperature", 0);
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-
+        final String urlWithMode = UriComponentsBuilder
+                .fromUriString(this.url)
+                .queryParam("mode", mode.name().toLowerCase())
+                .build()
+                .toString();
         try {
-            var transcription = restTemplate.postForObject(url, requestEntity,  TranscriptionResultDTO.class);
+            var transcription = restTemplate.postForObject(urlWithMode, requestEntity,  TranscriptionResultDTO.class);
             String resultTranscriptionText = Optional
                     .ofNullable(transcription)
                     .map(TranscriptionResultDTO::getText)
                     .orElse(null);
-            log.info("result api whisper: {}", resultTranscriptionText);
+            log.info("whisper api result={}, mode={}", resultTranscriptionText, mode.name());
             return transcription;
         } catch (Exception e) {
             log.error("ERROR with api whisper:", e);
