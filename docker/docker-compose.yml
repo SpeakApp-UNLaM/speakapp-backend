@@ -32,7 +32,7 @@ services:
       context: ../
       dockerfile: ./docker/Dockerfile
     environment:
-      URL_WHISPER_API: "https://32c5-104-198-107-50.ngrok-free.app/transcription-audio"
+      URL_WHISPER_API: "https://0216-34-41-214-222.ngrok-free.app/transcription-audio"
     ports:
       - "9292:9292"
     volumes:

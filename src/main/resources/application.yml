@@ -56,7 +56,7 @@ spring:
 speak-backend:
   client:
     whisper:
-      url: https://32c5-104-198-107-50.ngrok-free.app/transcription-audio
+      url: https://0216-34-41-214-222.ngrok-free.app/transcription-audio
 
 ---
 spring:

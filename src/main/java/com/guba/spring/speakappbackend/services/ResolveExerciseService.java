@@ -10,11 +10,14 @@ import com.guba.spring.speakappbackend.storages.database.repositories.TaskItemRe
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import com.guba.spring.speakappbackend.services.strategies.ResolveStrategy;
 import com.guba.spring.speakappbackend.storages.database.repositories.TaskRepository;
+import com.guba.spring.speakappbackend.storages.filesystems.AudioStorageRepository;
 import com.guba.spring.speakappbackend.web.schemas.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,7 +30,8 @@ public class ResolveExerciseService {
     private final Map<TypeExercise, ResolveStrategy> resolveStrategyByType;
     private final TaskItemRepository taskItemRepository;
     private final TaskRepository taskRepository;
-
+    private final AudioStorageRepository audioStorageRepository;
+    private final ConverterImage converterImage;
 
     public void resolve(List<ResultExerciseDTO> exercisesDTO) {
         List<TaskItem> taskItemsResolved = exercisesDTO
@@ -91,7 +95,18 @@ public class ResolveExerciseService {
                 .findById(idTask)
                 .stream()
                 .flatMap(task -> task.getTaskItems().stream())
-                .map(taskItem -> new TaskItemDTO(taskItem.getIdTask(), taskItem.getResult(), taskItem.getExercise().getType()))
+                .map(taskItem -> {
+                    String audioBase64 = "";
+                    try {
+                        if (taskItem.getExercise().getType() == TypeExercise.SPEAK) {
+                            Resource resource = this.audioStorageRepository.getAudioByFilename(taskItem.getUrlAudio());
+                            audioBase64 = this.converterImage.getEncoded(resource.getInputStream().readAllBytes());
+                        }
+                    } catch (IOException e) {
+                        audioBase64 = "";
+                    }
+                    return new TaskItemDTO(taskItem.getIdTask(), taskItem.getResult(), taskItem.getExercise().getType(), audioBase64);
+                })
                 .collect(Collectors.toList());
     }
 

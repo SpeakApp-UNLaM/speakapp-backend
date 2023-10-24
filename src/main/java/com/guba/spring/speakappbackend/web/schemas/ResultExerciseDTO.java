@@ -6,7 +6,6 @@ import java.util.List;
 
 @Data
 @Builder
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResultExerciseDTO {
@@ -18,8 +17,17 @@ public class ResultExerciseDTO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    @ToString
     public static class SelectionImage {
         private Long idImage;
         private String name;
+    }
+
+    @Override
+    public String toString() {
+        return "ResultExerciseDTO{" +
+                "idTaskItem=" + idTaskItem +
+                ", selectionImages=" + selectionImages +
+                '}';
     }
 }
