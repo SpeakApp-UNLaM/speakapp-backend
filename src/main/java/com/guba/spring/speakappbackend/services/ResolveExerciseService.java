@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -102,7 +101,7 @@ public class ResolveExerciseService {
                             Resource resource = this.audioStorageRepository.getAudioByFilename(taskItem.getUrlAudio());
                             audioBase64 = this.converterImage.getEncoded(resource.getInputStream().readAllBytes());
                         }
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         audioBase64 = "";
                     }
                     return new TaskItemDTO(taskItem.getIdTask(), taskItem.getResult(), taskItem.getExercise().getType(), audioBase64);

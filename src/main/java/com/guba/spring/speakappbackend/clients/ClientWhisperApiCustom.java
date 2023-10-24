@@ -71,7 +71,10 @@ public class ClientWhisperApiCustom {
             return transcription;
         } catch (Exception e) {
             log.error("ERROR with api whisper:", e);
-            return null;
+            return TranscriptionResultDTO
+                    .builder()
+                    .text("")
+                    .build();
         }
     }
 
