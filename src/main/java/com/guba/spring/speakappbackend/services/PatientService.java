@@ -13,6 +13,9 @@ import com.guba.spring.speakappbackend.web.schemas.PatientDTO;
 import com.guba.spring.speakappbackend.security.dtos.SignUpDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -65,11 +68,17 @@ public class PatientService {
     }
 
     public Set<PatientDTO> getPatientAll() {
-        return this.patientRepository
-                .findAll()
+        return Optional
+                .ofNullable(SecurityContextHolder.getContext())
+                .map(SecurityContext::getAuthentication)
+                .map(auth -> (UserDetails) auth.getPrincipal())
+                .map(UserDetails::getUsername)
+                .map(username -> this.professionalRepository.findByUsernameOrEmail(username, null))
                 .stream()
+                .flatMap(p -> p.getPatients().stream())
                 .map(PatientDTO::create)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet())
+                ;
     }
 
     public PatientDTO getPatient(Long idPatient) {
