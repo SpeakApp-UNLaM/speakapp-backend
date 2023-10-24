@@ -245,6 +245,7 @@ public class TaskService {
                 .stream()
                 .filter(t -> t.getPhoneme().getIdPhoneme().equals(idPhoneme))
                 .findFirst()
-                .orElseThrow(()-> new NotFoundElementException("Not found task for patient " + idPatient + " and phoneme {}" +idPatient));
+                .orElse(new PhonemeCategoryDTO());
+                //.orElseThrow(()-> new NotFoundElementException("Not found task for patient " + idPatient + " and phoneme {}" +idPatient));
     }
 }
