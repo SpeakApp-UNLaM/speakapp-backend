@@ -1,6 +1,8 @@
 package com.guba.spring.speakappbackend.security.services;
 
 
+import com.guba.spring.speakappbackend.enums.RoleEnum;
+import com.guba.spring.speakappbackend.storages.database.models.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,7 +15,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
+
+import static java.lang.Boolean.TRUE;
+import static java.lang.Boolean.FALSE;
+
 
 @Service
 @Slf4j
@@ -40,10 +48,18 @@ public class JwtService {
         return isUserValid && !isJwtExpirated;
     }
 
-    public String generateJwt(UserDetails u) {
+    public String generateJwt(UserDetails u, Role role) {
+        Map<String, Object> claims;
+        if (role.getName() == RoleEnum.PROFESSIONAL )
+            claims = new HashMap<>(Map.of("is_professional", TRUE, "is_patient", FALSE));
+        else if (role.getName() == RoleEnum.PATIENT )
+            claims = new HashMap<>(Map.of("is_professional", FALSE, "is_patient", TRUE));
+        else
+            throw new IllegalArgumentException("The user have not role");
+
         return Jwts
                 .builder()
-                //.setClaims(Map.of("a", "HOLA"))
+                .setClaims(claims)
                 .setSubject(u.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + getExpirationToken().toMillis()))

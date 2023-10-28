@@ -1,6 +1,6 @@
 package com.guba.spring.speakappbackend.web.schemas;
 
-import com.guba.spring.speakappbackend.database.models.Phoneme;
+import com.guba.spring.speakappbackend.storages.database.models.Phoneme;
 import com.guba.spring.speakappbackend.enums.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +28,7 @@ public class PhonemeCategoryDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CategoryDTO {
+        private Long idTask;
         private Category category;
         private int level;
     }

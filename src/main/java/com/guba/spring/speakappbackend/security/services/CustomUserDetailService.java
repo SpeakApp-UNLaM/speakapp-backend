@@ -1,11 +1,9 @@
 package com.guba.spring.speakappbackend.security.services;
-
-import com.guba.spring.speakappbackend.database.models.Patient;
-import com.guba.spring.speakappbackend.database.models.Professional;
-import com.guba.spring.speakappbackend.database.models.Role;
-import com.guba.spring.speakappbackend.database.models.UserAbstract;
-import com.guba.spring.speakappbackend.database.repositories.PatientRepository;
-import com.guba.spring.speakappbackend.database.repositories.ProfessionalRepository;
+import com.guba.spring.speakappbackend.storages.database.models.Patient;
+import com.guba.spring.speakappbackend.storages.database.models.Professional;
+import com.guba.spring.speakappbackend.storages.database.models.UserAbstract;
+import com.guba.spring.speakappbackend.storages.database.repositories.PatientRepository;
+import com.guba.spring.speakappbackend.storages.database.repositories.ProfessionalRepository;
 import com.guba.spring.speakappbackend.enums.RoleEnum;
 import com.guba.spring.speakappbackend.security.dtos.LoginResponse;
 import com.guba.spring.speakappbackend.services.PatientService;
@@ -15,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,48 +39,24 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Patient patient = this.patientRepository.findByUsernameOrEmail(username, username);
-        Professional professional = professionalRepository.findByUsernameOrEmail(username, username);
-        if (patient == null && professional == null) {
-            throw new UsernameNotFoundException("User not exists by Username or email");
-        }
-        final Role roleUser = Optional
-                .ofNullable(patient)
-                .map(UserAbstract::getRole)
-                .orElseGet(() -> professional.getRole());
+        final UserAbstract user = getUser(username, username);
 
-        final String passwordUser = Optional
-                .ofNullable(patient)
-                .map(UserAbstract::getPassword)
-                .orElseGet(() -> professional.getPassword());
-
-        Set<GrantedAuthority> authorities = Stream.of(roleUser)
+        Set<GrantedAuthority> authorities = Stream.of(user.getRole())
                 .map(role -> new SimpleGrantedAuthority(role.getName().getName()))
                 .collect(Collectors.toSet());
 
-        return new User(username, passwordUser, authorities);
+        return new User(username, user.getPassword(), authorities);
     }
 
     public LoginResponse getUserWithJWT(String usernameOrEmail) throws UsernameNotFoundException {
-        Patient patient = this.patientRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-        Professional professional = professionalRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-        if (patient == null && professional == null) {
-            throw new UsernameNotFoundException("User not exists by Username or email");
-        }
-        UserDetails userdetails = this.loadUserByUsername(usernameOrEmail);
-        String token = jwtService.generateJwt(userdetails);
+        final UserAbstract user = getUser(usernameOrEmail, usernameOrEmail);
 
-        final Long idUser = Optional
-                .ofNullable(patient)
-                .map(Patient::getIdPatient)
-                .orElseGet(() -> professional.getIdProfessional());
-        final UserAbstract user = Optional
-                .ofNullable((UserAbstract) patient)
-                .orElse(professional);
+        UserDetails userdetails = this.loadUserByUsername(usernameOrEmail);
+        String token = jwtService.generateJwt(userdetails, user.getRole());
 
         return LoginResponse
                 .builder()
-                .idUser(idUser)
+                .idUser(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
@@ -99,5 +75,34 @@ public class CustomUserDetailService implements UserDetailsService {
         } else {
             throw new IllegalArgumentException("the type no is professional o patient");
         }
+    }
+
+    public UserAbstract getUserCurrent() {
+        return Optional
+                .ofNullable(SecurityContextHolder.getContext())
+                .map(SecurityContext::getAuthentication)
+                .map(auth -> (UserDetails) auth.getPrincipal())
+                .map(UserDetails::getUsername)
+                .map(username -> this.getUser(username, null))
+                .orElseThrow(() -> new IllegalArgumentException("The user current are not exist"));//throw Exception?
+    }
+
+    private UserAbstract getUser(String username, String email) {
+        Patient patient = this.patientRepository.findByUsernameOrEmail(username, email);
+        Professional professional = professionalRepository.findByUsernameOrEmail(username, email);
+        if (patient == null && professional == null) {
+            throw new UsernameNotFoundException("User not exists by Username or email");
+        }
+        final Long idUser = Optional
+                .ofNullable(patient)
+                .map(Patient::getIdPatient)
+                .orElseGet(() -> professional.getIdProfessional());
+
+        UserAbstract user = Optional
+                .ofNullable((UserAbstract) patient)
+                .orElse(professional);
+
+        user.setId(idUser);
+        return user;
     }
 }

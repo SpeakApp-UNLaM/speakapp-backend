@@ -1,9 +1,12 @@
 package com.guba.spring.speakappbackend.services;
 
-import com.guba.spring.speakappbackend.database.models.*;
-import com.guba.spring.speakappbackend.database.repositories.*;
+import com.guba.spring.speakappbackend.enums.Category;
 import com.guba.spring.speakappbackend.enums.TaskStatus;
+import com.guba.spring.speakappbackend.enums.TypeExercise;
 import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
+import com.guba.spring.speakappbackend.security.services.CustomUserDetailService;
+import com.guba.spring.speakappbackend.storages.database.models.*;
+import com.guba.spring.speakappbackend.storages.database.repositories.*;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseRequest;
 import com.guba.spring.speakappbackend.web.schemas.GenerateExerciseResponse;
 import com.guba.spring.speakappbackend.web.schemas.PhonemeCategoryDTO;
@@ -13,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.guba.spring.speakappbackend.web.schemas.PhonemeCategoryDTO.CategoryDTO;
@@ -30,6 +33,7 @@ public class TaskService {
     private final PatientRepository patientRepository;
     private final ProfessionalRepository professionalRepository;
     private final SelectionService selectionService;
+    private final CustomUserDetailService customUserDetailService;
 
     @Transactional
     public Set<PhonemeCategoryDTO> createTask(Long idPatient, GenerateExerciseRequest request) {
@@ -37,7 +41,9 @@ public class TaskService {
                 .findById(idPatient)
                 .orElseThrow( () -> new NotFoundElementException("Not found patient for the id " + idPatient));
 
-        Professional professional = this.professionalRepository.findById(1L).orElseThrow(IllegalAccessError::new);
+        UserAbstract user = this.customUserDetailService.getUserCurrent();
+        Professional professional = (Professional) user;
+        professional.setIdProfessional(user.getId());
         LocalDate now = LocalDate.now();
 
         var tasks = request
@@ -77,8 +83,9 @@ public class TaskService {
         List<Exercise> exercises = exerciseRepository.findAllByCategoriesAndLevelAndPhoneme(request.getCategories(), request.getLevel(), request.getIdPhoneme());
 
         List<Exercise> exerciseSelected = selectionService.selectionExercisesByPhonemeAndLevelAndCategory(exercises);
+        UserAbstract patient = this.customUserDetailService.getUserCurrent();
 
-        List<Task> tasks = this.taskRepository.findAllByPatientAndPhonemeStatusAndBetween(1L, request.getIdPhoneme(), TaskStatus.CREATED, LocalDate.now())
+        List<Task> tasks = this.taskRepository.findAllByPatientAndPhonemeStatusAndBetween(patient.getId(), request.getIdPhoneme(), TaskStatus.CREATED, LocalDate.now())
                 .stream()
                 .filter(t -> request.getCategories().contains(t.getCategory()))
                 .filter(t -> request.getLevel() == t.getLevel())
@@ -122,7 +129,7 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
-    public Set<PhonemeCategoryDTO> getTasksPhoneme(Long idPatient) {
+    public Set<PhonemeCategoryDTO> getTasksByPatient(Long idPatient) {
         return this.taskRepository
                 .findAllByPatientAndStatusAndBetween(idPatient, TaskStatus.CREATED, LocalDate.now())
                 .stream()
@@ -141,10 +148,104 @@ public class TaskService {
                 .stream()
                 .map(task -> CategoryDTO
                         .builder()
+                        .idTask(task.getIdTaskGroup())
                         .category(task.getCategory())
                         .level(task.getLevel())
                         .build())
                 .collect(Collectors.toSet());
         return new PhonemeCategoryDTO(phoneme, categories);
+    }
+
+    public List<GenerateExerciseResponse> createTaskItems(Set<TypeExercise> typesExercise, Set<Integer> levels, Set<Long> idsPhoneme, Set<Category> categories) {
+        //TODO FIXED
+        Patient patient = this.patientRepository
+                .findById(1L)
+                .orElseThrow( () -> new NotFoundElementException("Not found patient for the id " + 1));
+
+        UserAbstract user = this.customUserDetailService.getUserCurrent();
+        Professional professional = (Professional) user;
+        professional.setIdProfessional(user.getId());
+        LocalDate now = LocalDate.now();
+        List<Exercise> exercises = this.exerciseRepository
+                .findAllByCategoriesAndPhonemesAndTypes(categories, idsPhoneme, typesExercise)
+                .stream()
+                .filter(exercise -> levels.contains(exercise.getLevel()))
+                .collect(Collectors.toList());
+
+        Function<Exercise, String> generateKey = e -> e.getType().getName() + e.getCategory().getName() + e.getPhoneme().getIdPhoneme() + e.getLevel();
+
+        Collections.shuffle(exercises);
+        var oneExerciseSelectedByTypeCategoryLevelPhoneme = exercises
+                .stream()
+                .collect(Collectors.toMap(
+                        generateKey,
+                        Function.identity(),
+                        (e1, e2) -> e2
+                ));
+
+        Set<Task> taskGenerated = oneExerciseSelectedByTypeCategoryLevelPhoneme
+                .values()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        e -> {
+                            Task task = new Task();
+                            task.setPatient(patient);
+                            task.setProfessional(professional);
+                            task.setLevel(e.getLevel());
+                            task.setCategory(e.getCategory());
+                            task.setPhoneme(e.getPhoneme());
+                            task.setStatus(TaskStatus.CREATED);
+                            task.setStartDate(now);
+                            task.setEndDate(now.plusWeeks(2));
+
+                            return task;
+                        },
+                        Collectors.toSet()
+                ))
+                .entrySet()
+                .stream()
+                .map(entry-> {
+                    var taskCreated = this.taskRepository.save(entry.getKey());
+                    var taskItems = entry
+                            .getValue()
+                            .stream()
+                            .map(e-> {
+                                TaskItem item = new TaskItem();
+                                item.setExercise(e);
+                                item.setTask(taskCreated);
+                                item.setUrlAudio("url");
+                                item.setResult("result");
+                                return item;
+                            })
+                            .collect(Collectors.toSet());
+                    taskCreated.setTaskItems(taskItems);
+                    this.taskItemRepository.saveAll(taskItems);
+                    return taskCreated;
+                })
+                .collect(Collectors.toSet());
+
+        return taskGenerated
+                .stream()
+                .flatMap(t->t.getTaskItems().stream())
+                .map(GenerateExerciseResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    public void deleteTask(Long idTask) {
+        this.taskRepository
+                .findById(idTask)
+                .ifPresent(task -> {
+                    taskItemRepository.deleteAll(task.getTaskItems());
+                    this.taskRepository.delete(task);
+                });
+    }
+
+    public PhonemeCategoryDTO getTaskByPatientAndPhoneme(Long idPatient, Long idPhoneme) {
+        return this.getTasksByPatient(idPatient)
+                .stream()
+                .filter(t -> t.getPhoneme().getIdPhoneme().equals(idPhoneme))
+                .findFirst()
+                .orElse(new PhonemeCategoryDTO());
+                //.orElseThrow(()-> new NotFoundElementException("Not found task for patient " + idPatient + " and phoneme {}" +idPatient));
     }
 }

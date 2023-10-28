@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
 
 @Data
 @Builder
@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class WhisperTranscriptionRequest {
 
     private String model;
-    private MultipartFile file;
+    private Resource resourceData;
     private String language;
     //[0-1]
     private float temperature;

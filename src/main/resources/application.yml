@@ -22,7 +22,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none #en prod validate
-    show-sql: true #en prod false
+    show-sql: false #en prod false
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     properties:
       hibernate:
@@ -34,11 +34,12 @@ speak-backend:
   count-exercise: 5
   jwt:
     secret-key: secret #$2a$10$x7pFiWQLFVfoBdMmUX4fBedY
-    expiration-token: 1h
-    refresh-expiration-token: 40m
+    expiration-token: 7d
+    refresh-expiration-token: 7d
   client:
     whisper:
-      url: https://api.openai.com/v1/audio/transcriptions
+      url: ${URL_WHISPER_API}
+      #url: https://api.openai.com/v1/audio/transcriptions
       api-key: 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
       connect-timeout: 100s
       read-timeout: 100s
@@ -51,6 +52,11 @@ spring:
   config:
     activate:
       on-profile: dev
+
+speak-backend:
+  client:
+    whisper:
+      url: https://0216-34-41-214-222.ngrok-free.app/transcription-audio
 
 ---
 spring:

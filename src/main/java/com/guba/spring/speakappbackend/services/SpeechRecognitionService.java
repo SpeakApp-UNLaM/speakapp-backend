@@ -1,7 +1,7 @@
 package com.guba.spring.speakappbackend.services;
 
 import com.guba.spring.speakappbackend.clients.ClientWhisperApiCustom;
-import com.guba.spring.speakappbackend.clients.WhisperTranscriptionRequest;
+import com.guba.spring.speakappbackend.clients.ModeSpeak;
 import com.guba.spring.speakappbackend.web.schemas.MultipartFileDTO;
 import com.guba.spring.speakappbackend.web.schemas.TranscriptionResultDTO;
 import lombok.RequiredArgsConstructor;
@@ -13,14 +13,8 @@ public class SpeechRecognitionService {
 
     private final ClientWhisperApiCustom clientWhisperApiCustom;
 
-    public TranscriptionResultDTO getTranscription(MultipartFileDTO multipartFileDTO){
-        WhisperTranscriptionRequest whisperTranscriptionRequest = WhisperTranscriptionRequest.builder()
-                .model("whisper-1")
-                .file(multipartFileDTO.getFile())
-                .language("es")
-                .temperature(0)
-                .build();
-        var whisperTranscriptionResponse = clientWhisperApiCustom.getTranscription(whisperTranscriptionRequest);
+    public TranscriptionResultDTO getTranscription(MultipartFileDTO multipartFileDTO, ModeSpeak mode){
+        var whisperTranscriptionResponse = clientWhisperApiCustom.getTranscription(multipartFileDTO.getFile().getResource(), mode);
         return TranscriptionResultDTO
                 .builder()
                 .text(whisperTranscriptionResponse.getText())

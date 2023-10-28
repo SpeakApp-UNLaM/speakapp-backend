@@ -1,8 +1,11 @@
 package com.guba.spring.speakappbackend.services;
 
 import com.guba.spring.speakappbackend.services.algorithm.MatchingAlgorithm;
-import com.guba.spring.speakappbackend.services.algorithm.MatchingAlgorithmApache;
 import com.guba.spring.speakappbackend.services.algorithm.MatchingAlgorithmCustom;
+import com.guba.spring.speakappbackend.services.transforms.FilterAlfaNumericDecorator;
+import com.guba.spring.speakappbackend.services.transforms.ReplaceAccentDecorator;
+import com.guba.spring.speakappbackend.services.transforms.ReplaceMoreTwoConsecutiveCharacterDecorator;
+import com.guba.spring.speakappbackend.services.transforms.TransformLowerCase;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -18,7 +21,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith({MockitoExtension.class})
 class MatchingAlgorithmCustomTest {
 
-    private MatchingAlgorithm matchingAlgorithm = new MatchingAlgorithmCustom();
+    private final MatchingAlgorithm matchingAlgorithm = new MatchingAlgorithmCustom(
+           new ReplaceMoreTwoConsecutiveCharacterDecorator(
+                   new ReplaceAccentDecorator(
+                           new FilterAlfaNumericDecorator(
+                                   new TransformLowerCase()
+                           )
+                   )
+           )
+    );
 
     @ParameterizedTest
     @CsvSource({
@@ -29,7 +40,15 @@ class MatchingAlgorithmCustomTest {
             "flan, flan",
             "globo, globo",
             "robot, robot",
-            "barra, barra"
+            "barra, barra",
+            "ARBOL, arBOL",
+            "ISLA, iSLa",
+            "ARCO, aRCo",
+            "CARAMELO, caRaMelO",
+            "FLAN, FLan",
+            "GLOBO, glOBo",
+            "ROBOT, roBOt",
+            "BARRA, bARra"
     })
     void getMatchPercentage100Test(String wordCalculate, String word) {
         final double percentageExcepted = 1;
@@ -51,7 +70,8 @@ class MatchingAlgorithmCustomTest {
             "rrrobootttt, robot",
             "baarrrraaa, barra",
             "baarrrr, bar",
-            "llllaaavee, llave"
+            "llllaaavee, llave",
+            "  Arr , ar"
     })
     void getMatchPercentage100WithTest(String wordCalculate, String word) {
         final double percentageExcepted = 1;

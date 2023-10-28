@@ -5,6 +5,7 @@ import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
 import com.guba.spring.speakappbackend.exceptions.NotSavedElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /*
@@ -69,6 +71,16 @@ public class CustomExceptionAdvice extends ResponseEntityExceptionHandler {
 
         var responseBody = new ErrorApiResponse(HttpStatus.UNAUTHORIZED.value(), LocalDateTime.now(), errorsMessage);
         return new ResponseEntity<>(responseBody, null, HttpStatus.UNAUTHORIZED);
+    }
+
+    //TODO REVISAR, NO PASA POR ACA
+    @ExceptionHandler(ConversionFailedException.class)
+    public ResponseEntity<ErrorApiResponse> handleConverterEnumException(RuntimeException e) {
+        log.error("error ConversionFailedException", e);
+        List<String> errorsMessage = List.of(Objects.requireNonNull(e.getMessage()));
+
+        var responseBody = new ErrorApiResponse(HttpStatus.BAD_REQUEST.value(), LocalDateTime.now(), errorsMessage);
+        return new ResponseEntity<>(responseBody, null, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

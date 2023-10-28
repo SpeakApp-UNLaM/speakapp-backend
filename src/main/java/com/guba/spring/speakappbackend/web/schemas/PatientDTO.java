@@ -1,7 +1,7 @@
 package com.guba.spring.speakappbackend.web.schemas;
 
-import com.guba.spring.speakappbackend.database.models.Patient;
-import com.guba.spring.speakappbackend.database.models.Professional;
+import com.guba.spring.speakappbackend.storages.database.models.Patient;
+import com.guba.spring.speakappbackend.storages.database.models.Professional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

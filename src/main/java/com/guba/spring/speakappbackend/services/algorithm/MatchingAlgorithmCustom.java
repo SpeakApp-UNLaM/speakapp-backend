@@ -1,9 +1,23 @@
 package com.guba.spring.speakappbackend.services.algorithm;
 
-import java.util.Arrays;
+import com.guba.spring.speakappbackend.services.transforms.TransformerText;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.IntStream;
+
+@Component
+@Slf4j
 public class MatchingAlgorithmCustom implements MatchingAlgorithm {
 
+    private final TransformerText transformerText;
+
+    public MatchingAlgorithmCustom(@Qualifier("removeTransformerDecorator") TransformerText transformerText) {
+        this.transformerText = transformerText;
+    }
 
     /**
      *
@@ -11,24 +25,15 @@ public class MatchingAlgorithmCustom implements MatchingAlgorithm {
      * */
     @Override
     public ResultMatchDTO getMatchPercentage(String wordCalculate, String wordExpected) {
+        log.info("MatchingAlgorithmCustom inputs: wordCalculate {}, wordExpected {}", wordCalculate, wordExpected);
+        double percentageMatch;
+        wordCalculate = this.transformerText.transform(wordCalculate);
+        wordExpected = this.transformerText.transform(wordExpected);
 
-        double percentageMatch = 2.0;
-        if (wordCalculate == null && wordExpected == null) {
-            percentageMatch = 1.0;
-        } else if (wordCalculate == null || wordExpected == null) {
-            percentageMatch = 0.0;
-        } else if (wordExpected.equalsIgnoreCase(wordCalculate)) {
-            percentageMatch = 1.0;
-        }
-
-        if (percentageMatch != 2.0) {
-            return ResultMatchDTO
-                    .builder()
-                    .percentageMatch(percentageMatch)
-                    .wordCalculate(wordCalculate)
-                    .wordExpected(wordExpected)
-                    .build();
-        }
+        log.info("MatchingAlgorithmCustom then transformer text: wordCalculate {}, wordExpected {}", wordCalculate, wordExpected);
+        Optional<ResultMatchDTO> resultCaseBasic = caseBasic(wordCalculate, wordExpected);
+        if (resultCaseBasic.isPresent())
+            return resultCaseBasic.get();
 
         int [] result = new int[wordExpected.length()];
         int indexStartCalculate = 0;
@@ -64,12 +69,24 @@ public class MatchingAlgorithmCustom implements MatchingAlgorithm {
         }
 
         percentageMatch = Arrays.stream(result).asDoubleStream().sum() / wordExpected.length();
-        return ResultMatchDTO
-                .builder()
-                .percentageMatch(percentageMatch)
-                .charMatch(result)
-                .wordCalculate(wordCalculate)
-                .wordExpected(wordExpected)
-                .build();
+        return new ResultMatchDTO(wordCalculate, wordExpected, percentageMatch, result);
+    }
+
+    private Optional<ResultMatchDTO> caseBasic(String wordCalculate, String wordExpected) {
+        double percentageMatch;
+        int size = Optional.ofNullable(wordExpected).map(String::length).orElse(0);
+        int [] result = IntStream.generate(() -> 1).limit(size).toArray();
+        if (wordCalculate == null && wordExpected == null) {
+            percentageMatch = 1.0;
+        } else if (wordCalculate == null || wordExpected == null) {
+            percentageMatch = 0.0;
+            result = IntStream.generate(() -> 0).limit(size).toArray();
+        } else if (wordExpected.equalsIgnoreCase(wordCalculate)) {
+            percentageMatch = 1.0;
+        } else {
+            return Optional.empty();
+        }
+
+        return Optional.of(new ResultMatchDTO(wordCalculate, wordExpected, percentageMatch, result));
     }
 }
