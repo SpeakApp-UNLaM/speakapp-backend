@@ -1,5 +1,6 @@
 package com.guba.spring.speakappbackend.web.controllers;
 
+import com.guba.spring.speakappbackend.enums.ResultExercise;
 import com.guba.spring.speakappbackend.services.ResolveExerciseService;
 import com.guba.spring.speakappbackend.web.schemas.PhonemeDTO;
 import com.guba.spring.speakappbackend.web.schemas.ResolutionTaskDTO;
@@ -25,6 +26,17 @@ public class ResolveExerciseController {
     public ResponseEntity<Void> resolveExercises(@RequestBody List<ResultExerciseDTO> resolveExercises) {
         log.info("resolve exercises: {}", resolveExercises);
         resolveExerciseService.resolve(resolveExercises);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    @PutMapping(path = "/{idTaskItem}")
+    public ResponseEntity<Void> manualCorrectionExercises(
+            @PathVariable Long idTaskItem,
+            @RequestParam(name = "result") ResultExercise result) {
+        log.info("manual Correction exercises: {}", idTaskItem);
+        resolveExerciseService.manualCorrection(idTaskItem, result);
         return ResponseEntity
                 .ok()
                 .build();

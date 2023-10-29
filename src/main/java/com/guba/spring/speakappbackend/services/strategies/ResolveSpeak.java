@@ -20,6 +20,7 @@ import java.util.stream.IntStream;
 
 import static com.guba.spring.speakappbackend.clients.ModeSpeak.FAST;
 import static com.guba.spring.speakappbackend.clients.ModeSpeak.SLOW;
+import static com.guba.spring.speakappbackend.enums.ResultExercise.*;
 
 @Component
 @RequiredArgsConstructor
@@ -50,7 +51,7 @@ public class ResolveSpeak implements ResolveStrategy {
         var resultExercise = getMajorResult(resourceData, exercise.getResultExpected());
 
         taskItem.setUrlAudio(dirRelativeAudio);
-        taskItem.setResult(resultExercise.name());
+        taskItem.setResult(resultExercise);
         return taskItem;
     }
 
@@ -60,9 +61,9 @@ public class ResolveSpeak implements ResolveStrategy {
 
         //match result
         var resultMatch = this.matchingAlgorithm.getMatchPercentage(transcription.getText(), resultExcepted);
-        ResultExercise resultExercise = ResultExercise.FAILURE;
+        ResultExercise resultExercise = FAILURE;
         if (resultMatch.getPercentageMatch() > 0.8D )
-            resultExercise = ResultExercise.SUCCESS;
+            resultExercise = SUCCESS;
         return resultExercise;
     }
 
@@ -82,11 +83,11 @@ public class ResolveSpeak implements ResolveStrategy {
         var isSuccess = completableFutures
                 .stream()
                 .map(CompletableFuture::join)
-                .anyMatch(resultExercise -> resultExercise == ResultExercise.SUCCESS)
+                .anyMatch(resultExercise -> resultExercise == SUCCESS)
                 ;
 
         if (isSuccess)
-            return ResultExercise.SUCCESS;
-        return ResultExercise.FAILURE;
+            return SUCCESS;
+        return FAILURE;
     }
 }

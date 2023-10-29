@@ -100,12 +100,7 @@ public class TaskService {
                             .filter(t -> e.getLevel() == t.getLevel())
                             .findFirst()
                             .orElseThrow(IllegalArgumentException::new);
-                    TaskItem item = new TaskItem();
-                    item.setExercise(e);
-                    item.setTask(taskFound);
-                    item.setUrlAudio("url");
-                    item.setResult("result");
-                    return item;
+                    return new TaskItem(taskFound, e, null, null);
                 })
                 .collect(Collectors.toSet());
         taskItemRepository.saveAll(items);
@@ -204,7 +199,7 @@ public class TaskService {
                     var taskItems = entry
                             .getValue()
                             .stream()
-                            .map(e-> new TaskItem(taskCreated, e, "url", "result"))
+                            .map(e-> new TaskItem(taskCreated, e, null, null))
                             .collect(Collectors.toSet());
                     taskCreated.setTaskItems(taskItems);
                     this.taskItemRepository.saveAll(taskItems);

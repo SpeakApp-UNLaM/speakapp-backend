@@ -20,6 +20,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.guba.spring.speakappbackend.enums.ResultExercise.*;
+import static com.guba.spring.speakappbackend.enums.TaskStatus.*;
+import static com.guba.spring.speakappbackend.enums.TypeExercise.SPEAK;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,7 +36,7 @@ public class ResolveExerciseService {
 
     public void resolve(List<ResultExerciseDTO> exercisesDTO) {
         //task, set taskStatus to PROGRESSING
-        setTaskStatus(exercisesDTO, TaskStatus.PROGRESSING);
+        setTaskStatus(exercisesDTO, PROGRESSING);
 
         //resolve exercises
         List<TaskItem> taskItemsResolved = exercisesDTO
@@ -43,14 +47,14 @@ public class ResolveExerciseService {
         this.taskItemRepository.saveAll(taskItemsResolved);
 
         //task, set taskStatus to DONE
-        setTaskStatus(exercisesDTO, TaskStatus.DONE);
+        setTaskStatus(exercisesDTO, DONE);
     }
 
     private TaskItem resolveExercise(ResultExerciseDTO resultExerciseDTO) {
         return taskItemRepository
                 .findById(resultExerciseDTO.getIdTaskItem())
                 .map(taskItem -> {
-                    taskItem.setResult(ResultExercise.FAILURE.name());
+                    taskItem.setResult(FAILURE);
                     TypeExercise type = taskItem.getExercise().getType();
                     try {
                         return resolveStrategyByType.get(type).resolve(taskItem, resultExerciseDTO);
@@ -64,7 +68,7 @@ public class ResolveExerciseService {
 
     public List<PhonemeDTO> getPhonemesResolvedByPatient(Long idPatient) {
         return this.taskRepository
-                .findAllByPatientAndStatus(idPatient, TaskStatus.DONE)
+                .findAllByPatientAndStatus(idPatient, DONE)
                 .stream()
                 .map(task -> new PhonemeDTO(task.getPhoneme()))
                 .distinct()
@@ -74,7 +78,7 @@ public class ResolveExerciseService {
 
     public ResolutionTaskDTO getExercisesResolvedByPatientAndPhoneme(Long idPatient, Long idPhoneme) {
         return this.taskRepository
-                .findAllByPatientAndStatus(idPatient, TaskStatus.DONE)
+                .findAllByPatientAndStatus(idPatient, DONE)
                 .stream()
                 .filter(task -> task.getPhoneme().getIdPhoneme().equals(idPhoneme))
                 .collect(Collectors.groupingBy(
@@ -95,10 +99,10 @@ public class ResolveExerciseService {
                 .map(taskItem -> {
                     String audioBase64 = Optional
                             .of(taskItem.getExercise())
-                            .filter(e -> e.getType() == TypeExercise.SPEAK)
+                            .filter(e -> e.getType() == SPEAK)
                             .map(e -> this.audioStorageRepository.getAudioBase64ByFilename(taskItem.getUrlAudio()))
                             .orElse("");
-                    return new TaskItemDTO(taskItem.getIdTask(), taskItem.getResult(), taskItem.getExercise().getType(), audioBase64, taskItem.getResult());
+                    return new TaskItemDTO(taskItem.getIdTask(), taskItem.getResult(), taskItem.getExercise().getType(), audioBase64, taskItem.getExercise().getResultExpected());
                 })
                 .collect(Collectors.toList());
     }
@@ -107,7 +111,7 @@ public class ResolveExerciseService {
         List<TaskDTO> tasksDTO = tasks
                 .stream()
                 .sorted(Comparator.comparing(Task::getEndDate).reversed())
-                .map(task -> new TaskDTO(task.getIdTaskGroup(), task.getLevel(), task.getCategory()))
+                .map(task -> new TaskDTO(task.getIdTaskGroup(), task.getLevel(), task.getCategory(), task.getEndDate()))
                 .collect(Collectors.toList());
         return new ResolutionTaskDTO(p.getIdPhoneme(), p.getNamePhoneme(), tasksDTO);
     }
@@ -129,5 +133,15 @@ public class ResolveExerciseService {
                 .collect(Collectors.toList());
 
         this.taskRepository.saveAll(tasks);
+    }
+
+    public void manualCorrection(Long idTaskItem, ResultExercise result) {
+        TaskItem taskItem = this.taskItemRepository
+                .findById(idTaskItem)
+                .orElseThrow(() -> new NotFoundElementException("Not found task item " + idTaskItem))
+                ;
+
+        taskItem.setResult(result);
+        this.taskItemRepository.save(taskItem);
     }
 }

@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.guba.spring.speakappbackend.enums.ResultExercise.*;
+
 @Component
 @RequiredArgsConstructor
 public class ResolveWordMatchSelection implements ResolveStrategy {
@@ -33,11 +35,11 @@ public class ResolveWordMatchSelection implements ResolveStrategy {
                 .collect(Collectors.toList());
 
         boolean isResolveSuccess = result.stream().allMatch(r -> r);
-        ResultExercise resultExercise = ResultExercise.FAILURE;
+        ResultExercise resultExercise = FAILURE;
         if (isResolveSuccess)
-            resultExercise = ResultExercise.SUCCESS;
+            resultExercise = SUCCESS;
 
-        taskItem.setResult(resultExercise.name());
+        taskItem.setResult(resultExercise);
         return taskItem;
     }
 

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.guba.spring.speakappbackend.enums.ResultExercise.*;
+
 @Component
 @RequiredArgsConstructor
 public class ResolveSyllableMatchSelection implements ResolveStrategy {
@@ -31,13 +33,13 @@ public class ResolveSyllableMatchSelection implements ResolveStrategy {
                 .map( imageSelected -> idsImageCorrect.contains(imageSelected.getIdImage()))
                 .collect(Collectors.toList());
 
-        //TODAS LAS IMAGES SELECCIONADAS SON CORRECTAS Y LA CANTIDAD DE CORRECTAS ES EXPERADA
+        //TODAS LAS IMAGES SELECCIONADAS SON CORRECTAS Y LA CANTIDAD DE CORRECTAS ES LA EXPERADA
         boolean isResolveSuccess = result.stream().allMatch(r -> r) && result.size() == idsImageCorrect.size();
-        ResultExercise resultExercise = ResultExercise.FAILURE;
+        ResultExercise resultExercise = FAILURE;
         if (isResolveSuccess)
-            resultExercise = ResultExercise.SUCCESS;
+            resultExercise = SUCCESS;
 
-        taskItem.setResult(resultExercise.name());
+        taskItem.setResult(resultExercise);
         return taskItem;
     }
 }

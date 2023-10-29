@@ -1,5 +1,6 @@
 package com.guba.spring.speakappbackend.storages.database.models;
 
+import com.guba.spring.speakappbackend.enums.ResultExercise;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,9 +31,10 @@ public class TaskItem {
     private String urlAudio;
 
     @Column(name = "result")
-    private String result;
+    @Enumerated(value = EnumType.STRING)
+    private ResultExercise result;
 
-    public TaskItem(Task task, Exercise exercise, String urlAudio, String result) {
+    public TaskItem(Task task, Exercise exercise, String urlAudio, ResultExercise result) {
         this.task = task;
         this.exercise = exercise;
         this.urlAudio = urlAudio;

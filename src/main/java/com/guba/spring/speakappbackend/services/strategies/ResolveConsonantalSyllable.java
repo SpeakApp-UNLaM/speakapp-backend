@@ -6,6 +6,8 @@ import com.guba.spring.speakappbackend.web.schemas.ResultExerciseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import static com.guba.spring.speakappbackend.enums.ResultExercise.*;
+
 @Component
 @RequiredArgsConstructor
 public class ResolveConsonantalSyllable implements ResolveStrategy {
@@ -19,11 +21,11 @@ public class ResolveConsonantalSyllable implements ResolveStrategy {
                 .stream()
                 .allMatch(imageSelected -> resultExpected.equalsIgnoreCase(imageSelected.getName()));
 
-        ResultExercise resultExercise = ResultExercise.FAILURE;
+        ResultExercise resultExercise = FAILURE;
         if (isResolveSuccess)
-            resultExercise = ResultExercise.SUCCESS;
+            resultExercise = SUCCESS;
 
-        taskItem.setResult(resultExercise.name());
+        taskItem.setResult(resultExercise);
         return taskItem;
     }
 

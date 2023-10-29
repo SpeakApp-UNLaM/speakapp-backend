@@ -7,6 +7,8 @@ import com.guba.spring.speakappbackend.web.schemas.ResultExerciseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import static com.guba.spring.speakappbackend.enums.ResultExercise.*;
+
 @Component
 @RequiredArgsConstructor
 public class ResolveOrder implements ResolveStrategy {
@@ -21,11 +23,11 @@ public class ResolveOrder implements ResolveStrategy {
                 .orElseThrow(() -> new IllegalArgumentException("The exercise have not images"));
 
         boolean isResolveSuccess = image.getDividedName().equalsIgnoreCase(resultExerciseDTO.getAudio());
-        ResultExercise resultExercise = ResultExercise.FAILURE;
+        ResultExercise resultExercise = FAILURE;
         if (isResolveSuccess)
-            resultExercise = ResultExercise.SUCCESS;
+            resultExercise = SUCCESS;
 
-        taskItem.setResult(resultExercise.name());
+        taskItem.setResult(resultExercise);
         return taskItem;
     }
 }

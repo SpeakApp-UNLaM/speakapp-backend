@@ -134,8 +134,8 @@ CREATE TABLE IF NOT EXISTS public.tm_task_group_detail
     id_task                     BIGINT NOT NULL,
     id_task_group               BIGINT NOT NULL,
     id_exercise                 BIGINT NOT NULL,
-    url_audio                   varchar(250) NOT NULL,--variable?
-    result                      varchar(150) NOT NULL,
+    url_audio                   varchar(255),
+    result                      varchar(255),
     PRIMARY KEY (id_task),
     FOREIGN KEY (id_task_group) REFERENCES tm_task_group (id_task_group),
     FOREIGN KEY (id_exercise) REFERENCES tm_exercise (id_exercise)

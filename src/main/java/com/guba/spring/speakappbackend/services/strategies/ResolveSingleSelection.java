@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.guba.spring.speakappbackend.enums.ResultExercise.*;
+
 @Component
 @RequiredArgsConstructor
 public class ResolveSingleSelection implements ResolveStrategy {
@@ -32,11 +34,11 @@ public class ResolveSingleSelection implements ResolveStrategy {
                 .orElseThrow(() -> new IllegalArgumentException("The resul exercise have not image"));
 
         boolean isResolveSuccess = resultExpected.equalsIgnoreCase(imageSelected.getName());
-        ResultExercise resultExercise = ResultExercise.FAILURE;
+        ResultExercise resultExercise = FAILURE;
         if (isResolveSuccess)
-            resultExercise = ResultExercise.SUCCESS;
+            resultExercise = SUCCESS;
 
-        taskItem.setResult(resultExercise.name());
+        taskItem.setResult(resultExercise);
         return taskItem;
     }
 }
