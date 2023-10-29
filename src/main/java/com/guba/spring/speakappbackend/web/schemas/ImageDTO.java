@@ -2,12 +2,10 @@ package com.guba.spring.speakappbackend.web.schemas;
 
 import com.guba.spring.speakappbackend.storages.database.models.Image;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ImageDTO {

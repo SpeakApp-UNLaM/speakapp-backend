@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -31,7 +31,6 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskItemRepository taskItemRepository;
     private final PatientRepository patientRepository;
-    private final ProfessionalRepository professionalRepository;
     private final SelectionService selectionService;
     private final CustomUserDetailService customUserDetailService;
 
@@ -41,10 +40,8 @@ public class TaskService {
                 .findById(idPatient)
                 .orElseThrow( () -> new NotFoundElementException("Not found patient for the id " + idPatient));
 
-        UserAbstract user = this.customUserDetailService.getUserCurrent();
-        Professional professional = (Professional) user;
-        professional.setIdProfessional(user.getId());
-        LocalDate now = LocalDate.now();
+        Professional professional = this.customUserDetailService.getUserCurrent(Professional.class);
+        LocalDateTime now = LocalDateTime.now();
 
         var tasks = request
                 .getCategories()
@@ -83,9 +80,9 @@ public class TaskService {
         List<Exercise> exercises = exerciseRepository.findAllByCategoriesAndLevelAndPhoneme(request.getCategories(), request.getLevel(), request.getIdPhoneme());
 
         List<Exercise> exerciseSelected = selectionService.selectionExercisesByPhonemeAndLevelAndCategory(exercises);
-        UserAbstract patient = this.customUserDetailService.getUserCurrent();
+        Patient patient = this.customUserDetailService.getUserCurrent(Patient.class);
 
-        List<Task> tasks = this.taskRepository.findAllByPatientAndPhonemeStatusAndBetween(patient.getId(), request.getIdPhoneme(), TaskStatus.CREATED, LocalDate.now())
+        List<Task> tasks = this.taskRepository.findAllByPatientAndPhonemeStatusAndBetween(patient.getIdPatient(), request.getIdPhoneme(), TaskStatus.CREATED, LocalDateTime.now())
                 .stream()
                 .filter(t -> request.getCategories().contains(t.getCategory()))
                 .filter(t -> request.getLevel() == t.getLevel())
@@ -122,7 +119,7 @@ public class TaskService {
     @Transactional
     public List<GenerateExerciseResponse> getTaskItemsByPhoneme(Long idPatient, Long idPhoneme) {
         return this.taskRepository
-                .findAllByPatientAndPhonemeStatusAndBetween(idPatient, idPhoneme, TaskStatus.CREATED, LocalDate.now())
+                .findAllByPatientAndPhonemeStatusAndBetween(idPatient, idPhoneme, TaskStatus.CREATED, LocalDateTime.now())
                 .stream()
                 .flatMap(t -> t.getTaskItems().stream())
                 .map(GenerateExerciseResponse::new)
@@ -131,7 +128,7 @@ public class TaskService {
 
     public Set<PhonemeCategoryDTO> getTasksByPatient(Long idPatient) {
         return this.taskRepository
-                .findAllByPatientAndStatusAndBetween(idPatient, TaskStatus.CREATED, LocalDate.now())
+                .findAllByPatientAndStatusAndBetween(idPatient, TaskStatus.CREATED, LocalDateTime.now())
                 .stream()
                 .collect(Collectors.groupingBy(
                         Task::getPhoneme,
@@ -162,10 +159,8 @@ public class TaskService {
                 .findById(1L)
                 .orElseThrow( () -> new NotFoundElementException("Not found patient for the id " + 1));
 
-        UserAbstract user = this.customUserDetailService.getUserCurrent();
-        Professional professional = (Professional) user;
-        professional.setIdProfessional(user.getId());
-        LocalDate now = LocalDate.now();
+        Professional professional = this.customUserDetailService.getUserCurrent(Professional.class);
+        LocalDateTime now = LocalDateTime.now();
         List<Exercise> exercises = this.exerciseRepository
                 .findAllByCategoriesAndPhonemesAndTypes(categories, idsPhoneme, typesExercise)
                 .stream()
@@ -209,14 +204,7 @@ public class TaskService {
                     var taskItems = entry
                             .getValue()
                             .stream()
-                            .map(e-> {
-                                TaskItem item = new TaskItem();
-                                item.setExercise(e);
-                                item.setTask(taskCreated);
-                                item.setUrlAudio("url");
-                                item.setResult("result");
-                                return item;
-                            })
+                            .map(e-> new TaskItem(taskCreated, e, "url", "result"))
                             .collect(Collectors.toSet());
                     taskCreated.setTaskItems(taskItems);
                     this.taskItemRepository.saveAll(taskItems);

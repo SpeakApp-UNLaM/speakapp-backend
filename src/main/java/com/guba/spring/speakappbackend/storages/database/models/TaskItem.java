@@ -31,4 +31,11 @@ public class TaskItem {
 
     @Column(name = "result")
     private String result;
+
+    public TaskItem(Task task, Exercise exercise, String urlAudio, String result) {
+        this.task = task;
+        this.exercise = exercise;
+        this.urlAudio = urlAudio;
+        this.result = result;
+    }
 }

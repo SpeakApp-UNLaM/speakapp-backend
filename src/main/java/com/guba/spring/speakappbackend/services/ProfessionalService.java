@@ -1,5 +1,6 @@
 package com.guba.spring.speakappbackend.services;
 
+import com.guba.spring.speakappbackend.security.services.CustomUserDetailService;
 import com.guba.spring.speakappbackend.storages.database.models.Professional;
 import com.guba.spring.speakappbackend.storages.database.models.Role;
 import com.guba.spring.speakappbackend.storages.database.repositories.ProfessionalRepository;
@@ -29,6 +30,7 @@ public class ProfessionalService {
     private final ProfessionalRepository professionalRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final CustomUserDetailService customUserDetailService;
 
     public ProfessionalDTO saveProfessional(SignUpDTO signUpDTO) {
 
@@ -54,10 +56,9 @@ public class ProfessionalService {
     }
 
     public ProfessionalDTO updateProfessionalById(ProfessionalDTO professionalDTO) {
-        //TODO ADD id Professional
         final LocalDateTime updateAt = LocalDateTime.now();
-        return this.professionalRepository
-                .findById(professionalDTO.getIdProfessional())
+        return Optional
+                .ofNullable(this.customUserDetailService.getUserCurrent(Professional.class))
                 .map(pOld -> new Professional(professionalDTO, pOld.getPassword(), pOld.getRole(), pOld.getCreatedAt(), updateAt, pOld.getPatients()))
                 .map(this.professionalRepository::save)
                 .map(ProfessionalDTO::create)

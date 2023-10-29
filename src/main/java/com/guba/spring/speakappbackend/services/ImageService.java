@@ -30,7 +30,7 @@ public class ImageService {
     private static final String DIR_IMAGES_CSV = "D:\\guido\\repos\\speakapp-backend/csv/tm_image.csv";
 
 
-    private final ConverterImage converterImage;
+    private final ConverterServiceBase64 converterServiceBase64;
 
     private final ImageRepository imageRepository;
 
@@ -73,7 +73,7 @@ public class ImageService {
             image.setName(imageCSV.getName());
             image.setDividedName(imageCSV.getDividedName());
             //encode
-            image.setImageData(converterImage.getEncoded(bytesFileSystem));
+            image.setImageData(converterServiceBase64.getEncoded(bytesFileSystem));
             return image;
         } catch (IOException e) {
             throw new IllegalArgumentException("error in read images from filesystem",e);

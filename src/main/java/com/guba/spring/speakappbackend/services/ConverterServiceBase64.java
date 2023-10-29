@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.Base64;
 
 @Service
-public class ConverterImage {
+public class ConverterServiceBase64 {
 
     public byte[] getDecoded(String imageBase64) {
         return Base64

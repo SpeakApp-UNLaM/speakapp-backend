@@ -1,25 +1,21 @@
 package com.guba.spring.speakappbackend.services;
 
+import com.guba.spring.speakappbackend.enums.RoleEnum;
+import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
+import com.guba.spring.speakappbackend.exceptions.NotSavedElementException;
+import com.guba.spring.speakappbackend.security.dtos.SignUpDTO;
+import com.guba.spring.speakappbackend.security.services.CustomUserDetailService;
 import com.guba.spring.speakappbackend.storages.database.models.Patient;
 import com.guba.spring.speakappbackend.storages.database.models.Professional;
 import com.guba.spring.speakappbackend.storages.database.models.Role;
 import com.guba.spring.speakappbackend.storages.database.repositories.PatientRepository;
-import com.guba.spring.speakappbackend.storages.database.repositories.ProfessionalRepository;
 import com.guba.spring.speakappbackend.storages.database.repositories.RoleRepository;
-import com.guba.spring.speakappbackend.enums.RoleEnum;
-import com.guba.spring.speakappbackend.exceptions.NotFoundElementException;
-import com.guba.spring.speakappbackend.exceptions.NotSavedElementException;
 import com.guba.spring.speakappbackend.web.schemas.PatientDTO;
-import com.guba.spring.speakappbackend.security.dtos.SignUpDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -34,7 +30,7 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
-    private final ProfessionalRepository professionalRepository;
+    private final CustomUserDetailService customUserDetailService;
 
     public PatientDTO savePatient(SignUpDTO signUpDTO) {
         final Patient patient = this.patientRepository.findByUsernameOrEmail(signUpDTO.getUsername(), signUpDTO.getEmail());
@@ -53,9 +49,9 @@ public class PatientService {
     }
 
     public PatientDTO updatePatient(PatientDTO patientDTO) {
-        //TODO OBTENER EL Patient DE LA SESSION
-        final Professional professional = this.professionalRepository
-                .findByCode(patientDTO.getCodeProfessional())
+        final Professional professional = Optional
+                .ofNullable(this.customUserDetailService.getUserCurrent(Patient.class))
+                .map(Patient::getProfessional)
                 .orElse(null);
         final LocalDateTime updateAt = LocalDateTime.now();
 
@@ -69,11 +65,7 @@ public class PatientService {
 
     public Set<PatientDTO> getPatientAll() {
         return Optional
-                .ofNullable(SecurityContextHolder.getContext())
-                .map(SecurityContext::getAuthentication)
-                .map(auth -> (UserDetails) auth.getPrincipal())
-                .map(UserDetails::getUsername)
-                .map(username -> this.professionalRepository.findByUsernameOrEmail(username, null))
+                .ofNullable(this.customUserDetailService.getUserCurrent(Professional.class))
                 .stream()
                 .flatMap(p -> p.getPatients().stream())
                 .map(PatientDTO::create)

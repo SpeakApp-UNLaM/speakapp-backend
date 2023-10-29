@@ -6,7 +6,7 @@ import com.guba.spring.speakappbackend.storages.database.repositories.ExerciseRe
 import com.guba.spring.speakappbackend.storages.database.repositories.ImageRepository;
 import com.guba.spring.speakappbackend.storages.database.repositories.ImageTempRepository;
 import com.guba.spring.speakappbackend.storages.database.repositories.PhonemeRepository;
-import com.guba.spring.speakappbackend.services.ConverterImage;
+import com.guba.spring.speakappbackend.services.ConverterServiceBase64;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,13 +28,12 @@ public class ImageController {
     private long idImage = 0;
     private long idImageTemp = 0;
 
-
     private final PhonemeRepository phonemeRepository;
     private final ImageRepository imageRepository;
     private final ExerciseRepository exerciseRepository;
     private final ImageTempRepository imageTempRepository;
 
-    private final ConverterImage converterImage;
+    private final ConverterServiceBase64 converterServiceBase64;
 
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -46,14 +45,14 @@ public class ImageController {
             var image = new Image();
             image.setIdImage(idImage++);
             image.setName(nameFile);
-            image.setImageData(converterImage.getEncoded(file.getBytes()));
+            image.setImageData(converterServiceBase64.getEncoded(file.getBytes()));
             this.imageRepository.save(image);
 
             byte[] bytesFileSystem = Files.readAllBytes(Path.of(PATH,nameFile));
             var imageFileSystem = new Image();
             imageFileSystem.setIdImage(idImage++);
             imageFileSystem.setName(nameFile);
-            imageFileSystem.setImageData(converterImage.getEncoded(bytesFileSystem));
+            imageFileSystem.setImageData(converterServiceBase64.getEncoded(bytesFileSystem));
             this.imageRepository.save(imageFileSystem);
 
             //SAVE IMAGEN WITH byte
@@ -88,7 +87,7 @@ public class ImageController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .contentType(MediaType.valueOf(MediaType.IMAGE_PNG_VALUE))
-                .body(converterImage.getDecoded(image.getImageData()));
+                .body(converterServiceBase64.getDecoded(image.getImageData()));
     }
 
 }
