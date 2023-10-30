@@ -8,6 +8,7 @@ import com.guba.spring.speakappbackend.services.strategies.ResolveStrategy;
 import com.guba.spring.speakappbackend.storages.database.models.Phoneme;
 import com.guba.spring.speakappbackend.storages.database.models.Task;
 import com.guba.spring.speakappbackend.storages.database.models.TaskItem;
+import com.guba.spring.speakappbackend.storages.database.repositories.TaskItemDetailRepository;
 import com.guba.spring.speakappbackend.storages.database.repositories.TaskItemRepository;
 import com.guba.spring.speakappbackend.storages.database.repositories.TaskRepository;
 import com.guba.spring.speakappbackend.storages.filesystems.AudioStorageRepository;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 
 import static com.guba.spring.speakappbackend.enums.ResultExercise.*;
 import static com.guba.spring.speakappbackend.enums.TaskStatus.*;
-import static com.guba.spring.speakappbackend.enums.TypeExercise.SPEAK;
+import static com.guba.spring.speakappbackend.enums.TypeExercise.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class ResolveExerciseService {
     private final TaskItemRepository taskItemRepository;
     private final TaskRepository taskRepository;
     private final AudioStorageRepository audioStorageRepository;
+    private final TaskItemDetailRepository taskItemDetailRepository;
 
     public void resolve(List<ResultExerciseDTO> exercisesDTO) {
         //task, set taskStatus to PROGRESSING
@@ -51,9 +53,12 @@ public class ResolveExerciseService {
     }
 
     private TaskItem resolveExercise(ResultExerciseDTO resultExerciseDTO) {
+        //delete task item detail previous
+        this.taskItemDetailRepository.deleteByIdTaskItem(resultExerciseDTO.getIdTaskItem());
         return taskItemRepository
                 .findById(resultExerciseDTO.getIdTaskItem())
                 .map(taskItem -> {
+                    taskItem.getTaskItemDetails().clear();
                     taskItem.setResult(FAILURE);
                     TypeExercise type = taskItem.getExercise().getType();
                     try {
@@ -143,5 +148,36 @@ public class ResolveExerciseService {
 
         taskItem.setResult(result);
         this.taskItemRepository.save(taskItem);
+    }
+
+    public List<TaskItemDetailDTO> getTaskItemDetail(Long idTaskItem) {
+        Optional<TaskItem> taskItem = this.taskItemRepository.findById(idTaskItem);
+        if(taskItem.isEmpty())
+            return List.of();
+        TypeExercise type = taskItem.get().getExercise().getType();
+
+        return taskItem
+                .stream()
+                .flatMap(ti -> ti.getTaskItemDetails().stream())
+                .map(detail -> {
+                    var resultExpected = detail.getResultSelected();
+                    var resultSelected = detail.getImageSelected().getName();
+                    if (type == ORDER_SYLLABLE) {
+                        resultExpected = detail.getImageSelected().getDividedName();
+                        resultSelected = detail.getResultSelected();
+                    } else if (type == CONSONANTAL_SYLLABLE) {
+                        resultExpected = Optional
+                                .ofNullable(detail.getResultSelected())
+                                .map(s-> detail.getImageSelected().getName())
+                                .orElse(null);
+                        resultSelected = Optional
+                                .ofNullable(detail.getResultSelected())
+                                .filter(r-> r.equals(taskItem.get().getExercise().getResultExpected()))
+                                .map(s -> taskItem.get().getExercise().getResultExpected())
+                                .orElse(taskItem.get().getExercise().getIncorrect());
+                    }
+                    return new TaskItemDetailDTO(resultExpected, resultSelected);
+                })
+                .collect(Collectors.toList());
     }
 }
