@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tm_task_group_detail")
@@ -33,6 +35,9 @@ public class TaskItem {
     @Column(name = "result")
     @Enumerated(value = EnumType.STRING)
     private ResultExercise result;
+
+    @OneToMany(mappedBy="taskItem", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.EAGER)
+    private Set<TaskItemDetail> taskItemDetails = new HashSet<>();
 
     public TaskItem(Task task, Exercise exercise, String urlAudio, ResultExercise result) {
         this.task = task;
