@@ -18,7 +18,7 @@ public class PatientController {
 
     private final PatientService patientService;
 
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<PatientDTO> updatePatient(@RequestBody PatientDTO patientDTO) {
 
         PatientDTO patientDTOSaved = this.patientService.updatePatient(patientDTO);
