@@ -15,4 +15,6 @@ public class AuthorDTO {
     private String firstName;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String lastName;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String imageData;
 }

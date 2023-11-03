@@ -86,13 +86,15 @@ public class ChatMessageService {
                     Long id = chat.getPatient().getIdPatient();
                     String firstName = chat.getPatient().getFirstName();
                     String lastName = chat.getPatient().getLastName();
+                    String imageData = chat.getPatient().getImageData();
                     if (isUserPatient) {
                         id = chat.getProfessional().getIdProfessional();
                         firstName = chat.getProfessional().getFirstName();
                         lastName = chat.getProfessional().getLastName();
+                        imageData = chat.getProfessional().getImageData();
                     }
                    return new ChatContactDTO(
-                            new AuthorDTO(id, firstName, lastName),
+                            new AuthorDTO(id, firstName, lastName, imageData),
                             chat.getLastMessage().getMessage(),
                             chat.getLastMessage().getCreatedAt()
                     );
@@ -129,17 +131,19 @@ public class ChatMessageService {
         Long idAuthor = message.getChat().getProfessional().getIdProfessional();
         String firstName = message.getChat().getProfessional().getFirstName();
         String lastName = message.getChat().getProfessional().getLastName();
+        String imageData = message.getChat().getProfessional().getImageData();
 
         if (message.isPatient()) {
             idAuthor = message.getChat().getPatient().getIdPatient();
             firstName = message.getChat().getPatient().getFirstName();
             lastName = message.getChat().getPatient().getLastName();
+            imageData = message.getChat().getPatient().getImageData();
         }
 
         return new ChatMessageDTO(
                 message.getStatus(), message.getMessage(), message.getType(),
                 message.getCreatedAt().toInstant(ZoneOffset.UTC).toEpochMilli(), message.getId(),
-                new AuthorDTO(idAuthor, firstName, lastName)
+                new AuthorDTO(idAuthor, firstName, lastName, imageData)
                 );
     }
 
