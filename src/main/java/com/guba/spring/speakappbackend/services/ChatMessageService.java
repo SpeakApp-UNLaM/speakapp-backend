@@ -5,6 +5,8 @@ import com.guba.spring.speakappbackend.security.services.CustomUserDetailService
 import com.guba.spring.speakappbackend.storages.database.models.*;
 import com.guba.spring.speakappbackend.storages.database.repositories.ChatMessageRepository;
 import com.guba.spring.speakappbackend.storages.database.repositories.ChatRepository;
+import com.guba.spring.speakappbackend.web.schemas.AuthorDTO;
+import com.guba.spring.speakappbackend.web.schemas.ChatContactDTO;
 import com.guba.spring.speakappbackend.web.schemas.ChatMessageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,12 +14,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.guba.spring.speakappbackend.web.schemas.ChatMessageDTO.AuthorDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +65,39 @@ public class ChatMessageService {
                 .map(this::createMessageDTO)
                 .sorted(Comparator.comparing(ChatMessageDTO::getCreatedAt).reversed())
                 .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    public List<ChatContactDTO> getContacts() {
+        List<Chat> chats = new ArrayList<>();
+        boolean isUserPatient = this.customUserDetailService.getUserCurrent().isUserPatient();
+        if (!isUserPatient) {
+            chats = this.chatRepository.findChatMessageByProfessional(getProfessional());
+        } else {
+            Patient patient = getPatient(0L);
+            this.chatRepository
+                    .findChatMessageByPatientAndProfessional(patient, patient.getProfessional())
+                    .ifPresent(chats::add);
+        }
+
+        return chats
+                .stream()
+                .map(chat -> {
+                    Long id = chat.getPatient().getIdPatient();
+                    String firstName = chat.getPatient().getFirstName();
+                    String lastName = chat.getPatient().getLastName();
+                    if (isUserPatient) {
+                        id = chat.getProfessional().getIdProfessional();
+                        firstName = chat.getProfessional().getFirstName();
+                        lastName = chat.getProfessional().getLastName();
+                    }
+                   return new ChatContactDTO(
+                            new AuthorDTO(id, firstName, lastName),
+                            chat.getLastMessage().getMessage(),
+                            chat.getLastMessage().getCreatedAt()
+                    );
+                })
+                .sorted(Comparator.comparing(ChatContactDTO::getLastDateMessage))
                 .collect(Collectors.toList());
     }
 

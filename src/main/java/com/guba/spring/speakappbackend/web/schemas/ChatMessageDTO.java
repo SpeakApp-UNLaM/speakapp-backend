@@ -17,13 +17,13 @@ public class ChatMessageDTO {
     private Long fromUser;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long toUser;
-    @NotEmpty(message = "The password is required.")
+    @NotEmpty(message = "The status is required.")
     @NotNull
     private String status;
-    @NotEmpty(message = "The password is required.")
+    @NotEmpty(message = "The text is required.")
     @NotNull
     private String text;//MESSAGE
-    @NotEmpty(message = "The password is required.")
+    @NotEmpty(message = "The type is required.")
     @NotNull
     private String type;
 
@@ -45,16 +45,5 @@ public class ChatMessageDTO {
         this.createdAt = createdAt;
         this.id = id;
         this.author = author;
-    }
-
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class AuthorDTO {
-        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-        private Long id;
-        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-        private String firstName;
-        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-        private String lastName;
     }
 }

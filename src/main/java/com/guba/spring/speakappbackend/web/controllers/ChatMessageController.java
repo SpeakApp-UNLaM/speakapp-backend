@@ -1,6 +1,7 @@
 package com.guba.spring.speakappbackend.web.controllers;
 
 import com.guba.spring.speakappbackend.services.ChatMessageService;
+import com.guba.spring.speakappbackend.web.schemas.ChatContactDTO;
 import com.guba.spring.speakappbackend.web.schemas.ChatMessageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,5 +38,12 @@ public class ChatMessageController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.chatMessageService.getMessages(idToUser, limit));
+    }
+
+    @GetMapping(path = "/contacts")
+    public ResponseEntity<List<ChatContactDTO>> getContacts() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.chatMessageService.getContacts());
     }
 }

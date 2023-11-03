@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,5 +38,12 @@ public class Chat {
         this.patient = patient;
         this.professional = professional;
         this.chatMessages = new HashSet<>();
+    }
+
+    public ChatMessage getLastMessage() {
+        return chatMessages
+                .stream()
+                .max(Comparator.comparing(ChatMessage::getCreatedAt))
+                .orElse(new ChatMessage());
     }
 }
