@@ -1,12 +1,8 @@
 package com.guba.spring.speakappbackend.web.controllers;
 
-import com.guba.spring.speakappbackend.storages.database.models.Image;
-import com.guba.spring.speakappbackend.storages.database.models.ImageTemp;
-import com.guba.spring.speakappbackend.storages.database.repositories.ExerciseRepository;
-import com.guba.spring.speakappbackend.storages.database.repositories.ImageRepository;
-import com.guba.spring.speakappbackend.storages.database.repositories.ImageTempRepository;
-import com.guba.spring.speakappbackend.storages.database.repositories.PhonemeRepository;
 import com.guba.spring.speakappbackend.services.ConverterServiceBase64;
+import com.guba.spring.speakappbackend.storages.database.models.Image;
+import com.guba.spring.speakappbackend.storages.database.repositories.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,13 +22,8 @@ public class ImageController {
 
     private static final String PATH = "/Users/work/guido/repo/speakapp-backend/src/main/resources";
     private long idImage = 0;
-    private long idImageTemp = 0;
 
-    private final PhonemeRepository phonemeRepository;
     private final ImageRepository imageRepository;
-    private final ExerciseRepository exerciseRepository;
-    private final ImageTempRepository imageTempRepository;
-
     private final ConverterServiceBase64 converterServiceBase64;
 
 
@@ -54,19 +45,6 @@ public class ImageController {
             imageFileSystem.setName(nameFile);
             imageFileSystem.setImageData(converterServiceBase64.getEncoded(bytesFileSystem));
             this.imageRepository.save(imageFileSystem);
-
-            //SAVE IMAGEN WITH byte
-            var imageByte = new ImageTemp();
-            imageByte.setIdImage(idImageTemp++);
-            imageByte.setName(nameFile);
-            imageByte.setImageData(file.getBytes());
-            this.imageTempRepository.save(imageByte);
-
-            var imageByteFileSystem = new ImageTemp();
-            imageByteFileSystem.setIdImage(idImageTemp++);
-            imageByteFileSystem.setName(nameFile);
-            imageByteFileSystem.setImageData(bytesFileSystem);
-            this.imageTempRepository.save(imageByteFileSystem);
 
             //SAVE  FILE-SYSTEM
             Files.write(Path.of(PATH,"api-rest_" + nameFile), file.getBytes());

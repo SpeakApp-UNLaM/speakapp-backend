@@ -41,9 +41,8 @@ public class ProcessBatch {
     void callApiWhisper() throws FileNotFoundException {
         log.info("batch");
         log.info("url whisper api {}", env.getProperty("speak-backend.client.whisper.url"));
-
-        //this.fileStorageService.save("hola".getBytes(), "12/folder-new", "hola.txt");
         //this.imageService.loadImagesToDatabase();
+        //this.imageService.loadArticulationToDatabase();
     }
 
     private void something() {
