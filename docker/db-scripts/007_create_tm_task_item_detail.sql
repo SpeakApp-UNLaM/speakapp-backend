@@ -1,3 +1,9 @@
+ALTER TABLE tm_task_group
+ALTER COLUMN start_date TYPE TIMESTAMP;
+
+ALTER TABLE tm_task_group
+ALTER COLUMN end_date TYPE TIMESTAMP;
+
 ALTER TABLE tm_task_group_detail ALTER COLUMN url_audio TYPE varchar(255);
 ALTER TABLE tm_task_group_detail ALTER COLUMN result TYPE varchar(255);
 
@@ -21,4 +27,4 @@ CREATE TABLE IF NOT EXISTS public.tm_task_item_detail
     PRIMARY KEY (id_task_item_detail),
     FOREIGN KEY (id_task_item) REFERENCES tm_task_group_detail (id_task),
     FOREIGN KEY (id_image_selected) REFERENCES tm_image (id_image)
-)
+);
