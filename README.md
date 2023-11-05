@@ -42,27 +42,19 @@ Parar/showdown de los container de docker
 * [link swagger](http://localhost:9292/speak-app/swagger-ui/index.html)
 
 
-## Test Example
+## Dump Postgres
 
-Crear los careers:
+*  Dump de la bbdd ***speak_db***
 ```
-curl --location 'http://localhost:9292/speak-app/careers' \
---header 'Content-Type: application/json' \
---data '{
-"name": "martin",
-"description": "description"
-}'
+docker exec -i postgres_speak /usr/bin/pg_dump -U <username> speak_db > 003_dump_speak_app_data.sql
 ```
-Obtener los careers:
+
+*  Dump de la bbdd ***speak_db*** solo la tabla ***tm_image***
 ```
-curl --location 'http://localhost:9292/speak-app/careers'
+docker exec -i postgres_speak /usr/bin/pg_dump -U <username> -d speak_db -t tm_image > 003_dump_table_image.sql
 ```
-Obtener los careers por nombre martin:
+
+*  Dump de la bbdd ***speak_db*** sin la tabla ***tm_image***
 ```
-curl --location 'http://localhost:9292/speak-app/careers/martin'
-```
-Obtener el reconocimiento de vos:
-```
-curl --location 'http://localhost:9292/speak-app/speech-recognition/transcription' \
---form 'file=@"/C:/Users/guidobarra/Downloads/carla.wav"'
+docker exec -i postgres_speak /usr/bin/pg_dump -U <username> speak_db --exclude-table '*tm_image' > 004_dump_database_speak_db_without_image.sql
 ```

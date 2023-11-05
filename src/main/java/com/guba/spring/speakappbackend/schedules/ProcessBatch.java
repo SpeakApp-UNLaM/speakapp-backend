@@ -1,12 +1,7 @@
 package com.guba.spring.speakappbackend.schedules;
 
 import com.guba.spring.speakappbackend.clients.ClientWhisperApiCustom;
-import com.guba.spring.speakappbackend.storages.database.repositories.ExerciseRepository;
-import com.guba.spring.speakappbackend.enums.TypeExercise;
-import com.guba.spring.speakappbackend.services.FileStorageService;
 import com.guba.spring.speakappbackend.services.ImageService;
-import com.guba.spring.speakappbackend.services.strategies.ResolveStrategy;
-import com.guba.spring.speakappbackend.storages.database.repositories.RFIRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +15,6 @@ import reactor.core.scheduler.Schedulers;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -31,10 +25,6 @@ public class ProcessBatch {
 
     private final ClientWhisperApiCustom clientWhisperApiCustom;
     private final ImageService imageService;
-    private final ExerciseRepository exerciseRepository;
-    private final Map<TypeExercise, ResolveStrategy> resolveStrategyByType;
-    private final FileStorageService fileStorageService;
-    private final RFIRepository rfiRepository;
     private final Environment env;
 
     @Scheduled(initialDelay = 0, fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
@@ -51,12 +41,12 @@ public class ProcessBatch {
                 .fromIterable(List.of("guba", "reactor", "example"))
                 //.parallel(4)
                 .publishOn(Schedulers.newParallel("parallel-publish", 4))
-                .flatMap(elem -> callService(elem))
+                .flatMap(this::callService)
                 .subscribeOn(Schedulers.newParallel("parallel-subcribe", 4))
                 .subscribe(
-                        data -> onNext(data), // onNext
-                        err -> onError(err),  // onError
-                        () -> onComplete() // onComplete
+                        ProcessBatch::onNext, // onNext
+                        ProcessBatch::onError,  // onError
+                        ProcessBatch::onComplete // onComplete
                 );
         var end = System.currentTimeMillis();
         log.error("time total {} second", (end - start)/1000);
@@ -74,22 +64,23 @@ public class ProcessBatch {
 
     private static <T> void onNext(T data) {
         delay();
-        System.out.println("onNext: Data received: " + data);
+        log.info("onNext: Data received: " + data);
     }
 
     private static <T> void onError(Throwable err) {
-        System.out.println("onError: Exception occurred: " + err.getMessage());
+        log.info("onError: Exception occurred: " + err.getMessage());
     }
 
     private static <T> void onComplete() {
-        System.out.println("onComplete: Completed!");
+        log.info("onComplete: Completed!");
     }
 
     private static void delay() {
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            Thread.currentThread().interrupt();
+            log.error("error thread", e);
         }
     }
     
