@@ -38,4 +38,23 @@ public class ReportController {
                 .status(HttpStatus.OK)
                 .body(this.reportService.getReports(idPatient, limit));
     }
+
+    @PutMapping(path = "/{idReport}")
+    public ResponseEntity<ReportDTO> updateReports(
+            @PathVariable(name = "idReport") Long idReport,
+            @RequestBody @Valid ReportDTO reportDTO) {
+        log.info("update reports of idReport {}", idReport);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.reportService.update(idReport, reportDTO));
+    }
+
+    @DeleteMapping(path = "/{idReport}")
+    public ResponseEntity<List<ReportDTO>> deleteReport(@PathVariable(name = "idReport") Long idReport) {
+        log.info("delete reports of idReport {}", idReport);
+        this.reportService.deleteById(idReport);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
+    }
 }

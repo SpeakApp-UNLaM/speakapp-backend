@@ -55,4 +55,23 @@ public class ReportService {
                 .limit(limit)
                 .collect(Collectors.toList());
     }
+
+    public ReportDTO update(Long idReport, ReportDTO reportDTO) {
+        return this.reportRepository
+                .findById(idReport)
+                .map(report -> {
+                    report.setBody(reportDTO.getBody());
+                    report.setTitle(report.getTitle());
+                    report.setCreatedAt(LocalDateTime.now());
+                    return report;
+                })
+                .map(this.reportRepository::save)
+                .map(ReportDTO::new)
+                .orElseThrow(() -> new NotFoundElementException("not found report id " + idReport))
+                ;
+    }
+
+    public void deleteById(Long idReport) {
+        this.reportRepository.deleteById(idReport);
+    }
 }

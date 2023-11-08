@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ReportDTO {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Long id;
+
     @NotEmpty(message = "The title is required.")
     @NotNull
     private String title;
@@ -28,5 +31,6 @@ public class ReportDTO {
         this.body = r.getBody();
         this.title = r.getTitle();
         this.createdAt = r.getCreatedAt();
+        this.id = r.getId();
     }
 }
