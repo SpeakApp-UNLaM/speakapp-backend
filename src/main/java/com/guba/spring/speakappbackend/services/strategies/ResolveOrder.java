@@ -27,9 +27,12 @@ public class ResolveOrder implements ResolveStrategy {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("The exercise have not images"));
 
-        boolean isResolveSuccess = image.getDividedName().equalsIgnoreCase(resultExerciseDTO.getAudio());
+        final String resultExpected = image.getDividedName().replace("-", " ");
+        final String result = resultExerciseDTO.getAudio().replace("-", " ");
+
+        boolean isResolveSuccess = resultExpected.equalsIgnoreCase(result);
         Set<TaskItemDetail> taskItemDetails = new HashSet<>();
-        taskItemDetails.add(new TaskItemDetail(image.getIdImage(), taskItem.getIdTask(), resultExerciseDTO.getAudio()));
+        taskItemDetails.add(new TaskItemDetail(image.getIdImage(), taskItem.getIdTask(), result));
         ResultExercise resultExercise = FAILURE;
         if (isResolveSuccess)
             resultExercise = SUCCESS;

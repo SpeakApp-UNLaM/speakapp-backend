@@ -25,8 +25,9 @@ public class SpeakAppConfig {
                 TypeExercise.MULTIPLE_SELECTION, ResolveSyllableMatchSelection.class,
                 TypeExercise.SINGLE_SELECTION_SYLLABLE, ResolveSyllableMatchSelection.class,
                 TypeExercise.SINGLE_SELECTION_WORD, ResolveSingleSelection.class,
+                TypeExercise.CONSONANTAL_SYLLABLE, ResolveConsonantalSyllable.class,
                 TypeExercise.ORDER_SYLLABLE, ResolveOrder.class,
-                TypeExercise.CONSONANTAL_SYLLABLE, ResolveConsonantalSyllable.class
+                TypeExercise.ORDER_WORD, ResolveOrder.class
                 );
 
         return classResolverByTypeExercise

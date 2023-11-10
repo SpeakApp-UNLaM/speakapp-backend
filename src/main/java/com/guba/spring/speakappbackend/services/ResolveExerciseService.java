@@ -162,8 +162,8 @@ public class ResolveExerciseService {
                 .map(detail -> {
                     var resultExpected = detail.getResultSelected();
                     var resultSelected = detail.getImageSelected().getName();
-                    if (type == ORDER_SYLLABLE) {
-                        resultExpected = detail.getImageSelected().getDividedName();
+                    if (type == ORDER_SYLLABLE || type == ORDER_WORD) {
+                        resultExpected = detail.getImageSelected().getDividedName().replace("-", " ");
                         resultSelected = detail.getResultSelected();
                     } else if (type == CONSONANTAL_SYLLABLE) {
                         resultExpected = Optional
