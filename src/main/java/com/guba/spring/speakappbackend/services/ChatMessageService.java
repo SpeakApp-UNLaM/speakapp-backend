@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -70,17 +71,38 @@ public class ChatMessageService {
 
     public List<ChatContactDTO> getContacts() {
         List<Chat> chats = new ArrayList<>();
+        List<ChatContactDTO> chatContactsWithOutMessage = new ArrayList<>();
         boolean isUserPatient = this.customUserDetailService.getUserCurrent().isUserPatient();
         if (!isUserPatient) {
-            chats = this.chatRepository.findChatMessageByProfessional(getProfessional());
+            Professional professional = getProfessional();
+            chats = this.chatRepository.findChatMessageByProfessional(professional);
+            List<Chat> chatsAux = chats;
+            chatContactsWithOutMessage = professional
+                    .getPatients()
+                    .stream()
+                    .filter(p-> chatsAux.stream().noneMatch(chat -> chat.getPatient().getIdPatient().equals(p.getIdPatient())))
+                    .map(p-> new ChatContactDTO(
+                            new AuthorDTO(p.getIdPatient(), p.getFirstName(), p.getLastName(), p.getImageData()),
+                            null,
+                            null
+                    )).collect(Collectors.toList());
         } else {
-            Patient patient = getPatient(0L);
+            Patient patient = getPatient(-1L);
+            Professional professional = patient.getProfessional();
             this.chatRepository
-                    .findChatMessageByPatientAndProfessional(patient, patient.getProfessional())
+                    .findChatMessageByPatientAndProfessional(patient, professional)
                     .ifPresent(chats::add);
+            boolean thereIsChat = chats
+                    .stream()
+                    .anyMatch(chat->chat.getProfessional().getIdProfessional().equals(professional.getIdProfessional()));
+            if (thereIsChat)
+                chatContactsWithOutMessage.add(new ChatContactDTO(
+                        new AuthorDTO(professional.getIdProfessional(), professional.getFirstName(), professional.getLastName(), professional.getImageData()),
+                        null,
+                        null));
         }
 
-        return chats
+        List<ChatContactDTO> chatContactsWithMessage = chats
                 .stream()
                 .map(chat -> {
                     Long id = chat.getPatient().getIdPatient();
@@ -99,7 +121,19 @@ public class ChatMessageService {
                             chat.getLastMessage().getCreatedAt()
                     );
                 })
-                .sorted(Comparator.comparing(ChatContactDTO::getLastDateMessage))
+                .collect(Collectors.toList());
+
+        //FIXME
+        Comparator<ChatContactDTO> comparator = (c1, c2) -> {
+            if (c1.getLastDateMessage() != null && c2.getLastDateMessage() != null)
+                return c1.getLastDateMessage().compareTo(c2.getLastDateMessage());
+            return 0;
+        };
+        return Stream
+                .concat(chatContactsWithMessage.stream(), chatContactsWithOutMessage.stream())
+                .sorted(comparator
+                        .thenComparing(c -> c.getAuthor().getFirstName())
+                        .thenComparing(c -> c.getAuthor().getLastName()))
                 .collect(Collectors.toList());
     }
 

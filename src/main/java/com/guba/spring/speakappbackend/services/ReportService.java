@@ -61,7 +61,7 @@ public class ReportService {
                 .findById(idReport)
                 .map(report -> {
                     report.setBody(reportDTO.getBody());
-                    report.setTitle(report.getTitle());
+                    report.setTitle(reportDTO.getTitle());
                     report.setCreatedAt(LocalDateTime.now());
                     return report;
                 })

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.guba.spring.speakappbackend.enums.ResultExercise.FAILURE;
@@ -20,19 +21,26 @@ public class ResolveOrder implements ResolveStrategy {
 
     @Override
     public TaskItem resolve(TaskItem taskItem, ResultExerciseDTO resultExerciseDTO) {
-        Image image = taskItem
+        Optional<Image> image = taskItem
                 .getExercise()
                 .getImages()
                 .stream()
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("The exercise have not images"));
+                .findFirst();
+                //.orElseThrow(() -> new IllegalArgumentException("The exercise have not images"));
 
-        final String resultExpected = image.getDividedName().replace("-", " ");
+        //FIXME PLIS
+        final String resultExpected = image
+                .map(Image::getDividedName)
+                .orElse(taskItem.getExercise().getResultExpected())
+                .replace("-", " ");
+        final Long idImage = image
+                .map(Image::getIdImage)
+                .orElse(1L);
         final String result = resultExerciseDTO.getAudio().replace("-", " ");
 
         boolean isResolveSuccess = resultExpected.equalsIgnoreCase(result);
         Set<TaskItemDetail> taskItemDetails = new HashSet<>();
-        taskItemDetails.add(new TaskItemDetail(image.getIdImage(), taskItem.getIdTask(), result));
+        taskItemDetails.add(new TaskItemDetail(idImage, taskItem.getIdTask(), result));
         ResultExercise resultExercise = FAILURE;
         if (isResolveSuccess)
             resultExercise = SUCCESS;
