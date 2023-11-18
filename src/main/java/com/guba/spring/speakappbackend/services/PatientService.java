@@ -84,4 +84,9 @@ public class PatientService {
          this.patientRepository.deleteById(idPatient);
     }
 
+    public void unlinkProfessional() {
+        Patient patient = this.customUserDetailService.getUserCurrent(Patient.class);
+        patient.setProfessional(null);
+        this.patientRepository.save(patient);
+    }
 }

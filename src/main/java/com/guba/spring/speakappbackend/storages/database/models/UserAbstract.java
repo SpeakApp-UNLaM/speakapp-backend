@@ -37,6 +37,9 @@ public abstract class UserAbstract {
     @Column(name = "gender")
     private String gender;
 
+    @Column(name = "phone")
+    private String phone;
+
     @Column(name = "image_data", columnDefinition = "TEXT")
     private String imageData;
 

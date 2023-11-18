@@ -52,4 +52,12 @@ public class PatientController {
                 .noContent()
                 .build();
     }
+
+    @PutMapping("/unlink")
+    public ResponseEntity<Void> unlink() {
+        this.patientService.unlinkProfessional();
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
 }

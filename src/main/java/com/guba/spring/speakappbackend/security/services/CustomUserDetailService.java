@@ -45,7 +45,15 @@ public class CustomUserDetailService implements UserDetailsService {
 
     public LoginResponse getUserWithJWT(String usernameOrEmail) throws UsernameNotFoundException {
         final UserAbstract user = getUser(usernameOrEmail, usernameOrEmail);
-
+        final String tutor = Optional
+                .of(user)
+                .map(u -> {
+                    if (u.isUserPatient())
+                        return (Patient) u;
+                    return null;
+                })
+                .map(Patient::getTutor)
+                .orElse(null);
         UserDetails userdetails = this.loadUserByUsername(usernameOrEmail);
         String token = jwtService.generateJwt(userdetails, user.getRole());
 
@@ -57,6 +65,11 @@ public class CustomUserDetailService implements UserDetailsService {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .imageData(user.getImageData())
+                .phone(user.getPhone())
+                .gender(user.getGender())
+                .age(user.getAge())
+                .createAt(user.getCreatedAt())
+                .tutor(tutor)
                 .token(token)
                 .build();
     }
