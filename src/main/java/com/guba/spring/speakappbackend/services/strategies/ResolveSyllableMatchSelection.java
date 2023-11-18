@@ -1,6 +1,8 @@
 package com.guba.spring.speakappbackend.services.strategies;
 
 import com.guba.spring.speakappbackend.enums.ResultExercise;
+import com.guba.spring.speakappbackend.services.transforms.ReplaceAccentDecorator;
+import com.guba.spring.speakappbackend.services.transforms.TransformLowerCase;
 import com.guba.spring.speakappbackend.storages.database.models.Image;
 import com.guba.spring.speakappbackend.storages.database.models.TaskItem;
 import com.guba.spring.speakappbackend.storages.database.models.TaskItemDetail;
@@ -20,6 +22,8 @@ import static com.guba.spring.speakappbackend.enums.ResultExercise.SUCCESS;
 @RequiredArgsConstructor
 public class ResolveSyllableMatchSelection implements ResolveStrategy {
 
+    private ReplaceAccentDecorator replaceAccent = new ReplaceAccentDecorator(new TransformLowerCase());
+
     @Override
     public TaskItem resolve(TaskItem taskItem, ResultExerciseDTO resultExerciseDTO) {
         final String resultExpected = taskItem.getExercise().getResultExpected();
@@ -27,7 +31,7 @@ public class ResolveSyllableMatchSelection implements ResolveStrategy {
                 .getExercise()
                 .getImages()
                 .stream()
-                .filter(image -> image.getName().contains(resultExpected))//TODO MIRAR LA FRASE CON FLAN,
+                .filter(image -> containsIgnoreCaseAccent(image.getName(), resultExpected))//TODO MIRAR LA FRASE CON FLAN,
                 .map(Image::getIdImage)
                 .collect(Collectors.toList());
         Set<TaskItemDetail> taskItemDetails = new HashSet<>();
@@ -57,5 +61,11 @@ public class ResolveSyllableMatchSelection implements ResolveStrategy {
         taskItem.setResult(resultExercise);
         taskItem.setTaskItemDetails(taskItemDetails);
         return taskItem;
+    }
+
+    private boolean containsIgnoreCaseAccent(String word, String syllable) {
+        var wordWithOutAccent = this.replaceAccent.transform(word);
+        var syllableWithOutAccent = this.replaceAccent.transform(syllable);
+        return wordWithOutAccent.contains(syllableWithOutAccent);
     }
 }
