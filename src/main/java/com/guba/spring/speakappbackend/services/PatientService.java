@@ -9,6 +9,7 @@ import com.guba.spring.speakappbackend.storages.database.models.Patient;
 import com.guba.spring.speakappbackend.storages.database.models.Professional;
 import com.guba.spring.speakappbackend.storages.database.models.Role;
 import com.guba.spring.speakappbackend.storages.database.repositories.PatientRepository;
+import com.guba.spring.speakappbackend.storages.database.repositories.ProfessionalRepository;
 import com.guba.spring.speakappbackend.storages.database.repositories.RoleRepository;
 import com.guba.spring.speakappbackend.web.schemas.PatientDTO;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 public class PatientService {
 
     private final PatientRepository patientRepository;
+    private final ProfessionalRepository professionalRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final CustomUserDetailService customUserDetailService;
@@ -37,12 +39,13 @@ public class PatientService {
         if(patient != null) {
             throw new UsernameNotFoundException("User exists with username or email");
         }
+        final Professional professional = this.professionalRepository.findByCode(signUpDTO.getCode()).orElse(null);
         final String passEncode = passwordEncoder.encode(signUpDTO.getPassword());
         final Role role = roleRepository.findByName(RoleEnum.PATIENT);
         final LocalDateTime now = LocalDateTime.now();
 
         return Optional
-                .of(new Patient(signUpDTO, passEncode, role, now, now, null))
+                .of(new Patient(signUpDTO, passEncode, role, now, now, professional))
                 .map(this.patientRepository::save)
                 .map(PatientDTO::create)
                 .orElseThrow(() -> new NotSavedElementException("Not saved Patient " + signUpDTO));
@@ -87,6 +90,15 @@ public class PatientService {
     public void unlinkProfessional() {
         Patient patient = this.customUserDetailService.getUserCurrent(Patient.class);
         patient.setProfessional(null);
+        this.patientRepository.save(patient);
+    }
+
+    public void linkProfessional(String code) {
+        Patient patient = customUserDetailService.getUserCurrent(Patient.class);
+        Professional professional = this.professionalRepository
+                .findByCode(code)
+                .orElseThrow(() -> new NotFoundElementException("Not found professional with code " + code));
+        patient.setProfessional(professional);
         this.patientRepository.save(patient);
     }
 }

@@ -57,7 +57,15 @@ public class PatientController {
     public ResponseEntity<Void> unlink() {
         this.patientService.unlinkProfessional();
         return ResponseEntity
-                .noContent()
+                .ok()
+                .build();
+    }
+
+    @PutMapping("/link/{code}")
+    public ResponseEntity<Void> link(@PathVariable String code) {
+        this.patientService.linkProfessional(code);
+        return ResponseEntity
+                .ok()
                 .build();
     }
 }
