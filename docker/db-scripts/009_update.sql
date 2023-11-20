@@ -28,6 +28,7 @@ SET first_name = 'Camila',
     image_data = ''
 WHERE id_professional = 2;
 
+
 DELETE from tm_patient where id_patient <> 1;
 INSERT INTO public.tm_patient (id_professional, id_role, phone, username, email, first_name, last_name, age, gender, tutor, password, image_data, created_at, updated_at)
 VALUES
