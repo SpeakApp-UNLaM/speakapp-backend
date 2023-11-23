@@ -2,10 +2,13 @@ package com.guba.spring.speakappbackend.schedules;
 
 import com.guba.spring.speakappbackend.clients.ClientWhisperApiCustom;
 import com.guba.spring.speakappbackend.services.ImageService;
-import lombok.AllArgsConstructor;
+import com.guba.spring.speakappbackend.services.transforms.TransformerText;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -20,12 +23,21 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@Getter
 public class ProcessBatch {
 
     private final ClientWhisperApiCustom clientWhisperApiCustom;
     private final ImageService imageService;
     private final Environment env;
+    private final TransformerText transformerText;
+
+    @Autowired
+    public ProcessBatch(ClientWhisperApiCustom clientWhisperApiCustom, ImageService imageService, Environment env, @Qualifier("replaceMoreTwoConsecutiveCharacterDecorator") TransformerText transformerText) {
+        this.clientWhisperApiCustom = clientWhisperApiCustom;
+        this.imageService = imageService;
+        this.env = env;
+        this.transformerText = transformerText;
+    }
 
     @Scheduled(initialDelay = 0, fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     void callApiWhisper() throws FileNotFoundException {

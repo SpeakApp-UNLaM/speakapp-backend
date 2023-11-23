@@ -50,8 +50,14 @@ public class SpeakAppConfig {
     }
 
     @Bean
+    @Qualifier("removeCharacterHDecorator")
+    TransformerTextDecorator removeCharacterHDecorator(@Qualifier("transformLowerCase") final TransformerText transformerText) {
+        return new RemoveCharacterHDecorator(transformerText);
+    }
+
+    @Bean
     @Qualifier("removeComaTransformerDecorator")
-    TransformerTextDecorator removeComaTransformerDecorator(@Qualifier("transformLowerCase") final TransformerText transformerText) {
+    TransformerTextDecorator removeComaTransformerDecorator(@Qualifier("removeCharacterHDecorator") final TransformerText transformerText) {
         return new FilterAlfaNumericDecorator(transformerText);
     }
 
