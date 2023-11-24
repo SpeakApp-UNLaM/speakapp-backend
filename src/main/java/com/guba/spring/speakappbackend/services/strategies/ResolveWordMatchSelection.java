@@ -36,8 +36,12 @@ public class ResolveWordMatchSelection implements ResolveStrategy {
                 .map( imagesResult -> {
                     var image = imagesById.get(imagesResult.getIdImage());
                     var resultExpected = (type == MULTIPLE_MATCH_SELECTION) ? image.getName(): taskItem.getExercise().getResultExpected();
-                    taskItemDetails.add(new TaskItemDetail(image.getIdImage(), taskItem.getIdTask(), imagesResult.getName()));
-                    return resultExpected.equalsIgnoreCase(imagesResult.getName());
+                    var resultSelected = (type == MULTIPLE_MATCH_SELECTION) ? imagesResult.getName(): image.getName();
+                    var resultExpected2 = (type == MULTIPLE_MATCH_SELECTION) ? imagesResult.getName(): taskItem.getExercise().getResultExpected();
+
+                    //todo fixme
+                    taskItemDetails.add(new TaskItemDetail(image.getIdImage(), taskItem.getIdTask(), resultExpected2));
+                    return resultExpected.equalsIgnoreCase(resultSelected);
                 })
                 .collect(Collectors.toList());
 
