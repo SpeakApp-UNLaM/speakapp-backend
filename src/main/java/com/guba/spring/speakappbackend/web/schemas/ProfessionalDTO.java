@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,8 @@ public class ProfessionalDTO {
     private String code;
     private String imageData;
     private String gender;
+    private String phone;
+    private LocalDateTime createAt;
     private Set<PatientDTO> patients;
 
     public static ProfessionalDTO create(Professional p) {
@@ -37,6 +40,8 @@ public class ProfessionalDTO {
                 .email(p.getEmail())
                 .username(p.getUsername())
                 .gender(p.getGender())
+                .phone(p.getPhone())
+                .createAt(p.getCreatedAt())
                 .imageData(p.getImageData())
                 .patients(
                         p.getPatients()

@@ -39,6 +39,8 @@ public class SignUpDTO {
     @Size(min = 6, max = 50, message = "The length of lastName must be between 6 and 50 characters.")
     private String lastName;
 
+    private String code;
+
     @Valid
     @NotNull(message = "The type is required")
     private RoleEnum type;

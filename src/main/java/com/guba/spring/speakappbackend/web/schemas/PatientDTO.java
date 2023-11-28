@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Data
@@ -21,8 +22,11 @@ public class PatientDTO {
     private String lastName;
     private int age;
     private String gender;
+    private String tutor;
+    private String phone;
     private String codeProfessional;
     private String imageData;
+    private LocalDateTime createAt;
 
     public static PatientDTO create(Patient p) {
         final String code = Optional
@@ -38,6 +42,9 @@ public class PatientDTO {
                 .lastName(p.getLastName())
                 .age(p.getAge())
                 .gender(p.getGender())
+                .phone(p.getPhone())
+                .tutor(p.getTutor())
+                .createAt(p.getCreatedAt())
                 .imageData(p.getImageData())
                 .codeProfessional(code)
                 .build();

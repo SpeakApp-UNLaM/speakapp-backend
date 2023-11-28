@@ -1,10 +1,8 @@
 package com.guba.spring.speakappbackend.web.controllers;
 
+import com.guba.spring.speakappbackend.enums.ResultExercise;
 import com.guba.spring.speakappbackend.services.ResolveExerciseService;
-import com.guba.spring.speakappbackend.web.schemas.PhonemeDTO;
-import com.guba.spring.speakappbackend.web.schemas.ResolutionTaskDTO;
-import com.guba.spring.speakappbackend.web.schemas.ResultExerciseDTO;
-import com.guba.spring.speakappbackend.web.schemas.TaskItemDTO;
+import com.guba.spring.speakappbackend.web.schemas.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -25,6 +23,17 @@ public class ResolveExerciseController {
     public ResponseEntity<Void> resolveExercises(@RequestBody List<ResultExerciseDTO> resolveExercises) {
         log.info("resolve exercises: {}", resolveExercises);
         resolveExerciseService.resolve(resolveExercises);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    @PutMapping(path = "/{idTaskItem}")
+    public ResponseEntity<Void> manualCorrectionExercises(
+            @PathVariable Long idTaskItem,
+            @RequestParam(name = "result") ResultExercise result) {
+        log.info("manual Correction exercises: {}", idTaskItem);
+        resolveExerciseService.manualCorrection(idTaskItem, result);
         return ResponseEntity
                 .ok()
                 .build();
@@ -52,5 +61,13 @@ public class ResolveExerciseController {
         return ResponseEntity
                 .ok()
                 .body(resolveExerciseService.getExercisesResolvedByTask(idTask));
+    }
+
+    @GetMapping(path = "/task-item/detail/{idTaskItem}")
+    public ResponseEntity<List<TaskItemDetailDTO>> getDetailTaskItem(@PathVariable Long idTaskItem) {
+        log.info("get task item detail of task item: {}", idTaskItem);
+        return ResponseEntity
+                .ok()
+                .body(resolveExerciseService.getTaskItemDetail(idTaskItem));
     }
 }

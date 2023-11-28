@@ -4,7 +4,6 @@ import com.guba.spring.speakappbackend.storages.database.models.Exercise;
 import com.guba.spring.speakappbackend.storages.database.models.TaskItem;
 import com.guba.spring.speakappbackend.enums.TypeExercise;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +11,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenerateExerciseResponse {

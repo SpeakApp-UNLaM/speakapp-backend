@@ -1,10 +1,13 @@
 package com.guba.spring.speakappbackend.security.controllers;
 
+import com.guba.spring.speakappbackend.enums.RoleEnum;
 import com.guba.spring.speakappbackend.exceptions.AuthenticationException;
 import com.guba.spring.speakappbackend.security.services.CustomUserDetailService;
 import com.guba.spring.speakappbackend.security.dtos.LoginResponse;
 import com.guba.spring.speakappbackend.security.dtos.LoginDTO;
 import com.guba.spring.speakappbackend.security.dtos.SignUpDTO;
+import com.guba.spring.speakappbackend.services.PatientService;
+import com.guba.spring.speakappbackend.services.ProfessionalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,6 +30,8 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final CustomUserDetailService customUserDetailService;
+    private final PatientService patientService;
+    private final ProfessionalService professionalService;
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/signin")
@@ -45,7 +50,13 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@RequestBody @Valid SignUpDTO signUpDTO){
-        customUserDetailService.save(signUpDTO);
+        if (signUpDTO.getType() == RoleEnum.PROFESSIONAL) {
+            this.professionalService.saveProfessional(signUpDTO);
+        } else if (signUpDTO.getType() == RoleEnum.PATIENT){
+            this.patientService.savePatient(signUpDTO);
+        } else {
+            throw new IllegalArgumentException("the type no is professional o patient");
+        }
         return new ResponseEntity<>("User is registered successfully!", HttpStatus.CREATED);
     }
 }

@@ -6,6 +6,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+import static com.guba.spring.speakappbackend.enums.RoleEnum.PATIENT;
+
 @Setter
 @Getter
 @MappedSuperclass
@@ -35,6 +37,9 @@ public abstract class UserAbstract {
     @Column(name = "gender")
     private String gender;
 
+    @Column(name = "phone")
+    private String phone;
+
     @Column(name = "image_data", columnDefinition = "TEXT")
     private String imageData;
 
@@ -48,4 +53,7 @@ public abstract class UserAbstract {
     @JoinColumn(name="id_role", nullable=false)
     private Role role;
 
+    public boolean isUserPatient() {
+        return role.getName() == PATIENT;
+    }
 }

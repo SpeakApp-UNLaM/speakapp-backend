@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -43,11 +43,11 @@ public class Task {
     @Column(name = "category")
     private Category category;
 
-    @Column(name = "start_date", columnDefinition = "DATE")
-    private LocalDate startDate;
+    @Column(name = "start_date", columnDefinition = "TIMESTAMP")
+    private LocalDateTime startDate;
 
-    @Column(name = "end_date", columnDefinition = "DATE")
-    private LocalDate endDate;
+    @Column(name = "end_date", columnDefinition = "TIMESTAMP")
+    private LocalDateTime endDate;
 
     @Convert(converter = TaskStatusJpaConverter.class)
     @Column(name = "status")

@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -18,13 +19,13 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "and t.phoneme.idPhoneme = :idPhoneme " +
             "and t.status = :status " +
             "and :now BETWEEN t.startDate and t.endDate")
-    List<Task> findAllByPatientAndPhonemeStatusAndBetween(@Param("idPatient") Long idPatient, @Param("idPhoneme") Long idPhoneme,  @Param("status") TaskStatus status, @Param("now") LocalDate now);
+    List<Task> findAllByPatientAndPhonemeStatusAndBetween(@Param("idPatient") Long idPatient, @Param("idPhoneme") Long idPhoneme,  @Param("status") TaskStatus status, @Param("now") LocalDateTime now);
 
     @Query("Select t From Task t " +
             "Where t.patient.idPatient = :idPatient " +
             "and t.status = :status " +
             "and :now BETWEEN t.startDate and t.endDate")
-    List<Task> findAllByPatientAndStatusAndBetween(@Param("idPatient") Long idPatient, @Param("status") TaskStatus status, @Param("now") LocalDate now);
+    List<Task> findAllByPatientAndStatusAndBetween(@Param("idPatient") Long idPatient, @Param("status") TaskStatus status, @Param("now") LocalDateTime now);
 
     @Query("Select t From Task t " +
             "Where t.patient.idPatient = :idPatient " +

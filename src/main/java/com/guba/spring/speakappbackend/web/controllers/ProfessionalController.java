@@ -59,4 +59,13 @@ public class ProfessionalController {
                 .noContent()
                 .build();
     }
+
+    @PutMapping(value = "/unlink/{idPatient}")
+    public ResponseEntity<Void> unLink(@PathVariable Long idPatient) {
+
+        this.professionalService.unlink(idPatient);
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
 }

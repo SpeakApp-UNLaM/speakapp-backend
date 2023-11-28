@@ -18,6 +18,7 @@ public enum TypeExercise {
     ORDER_SYLLABLE("order_syllable"),
     SINGLE_SELECTION_WORD("single_selection_word"),
     CONSONANTAL_SYLLABLE("consonantal_syllable"),
+    ORDER_WORD("order_word")
     ;
 
     private static final Map<String, TypeExercise> TYPE_EXERCISE_BY_NAME = Arrays

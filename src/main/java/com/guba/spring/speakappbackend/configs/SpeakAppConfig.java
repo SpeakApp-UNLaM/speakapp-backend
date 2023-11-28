@@ -25,8 +25,9 @@ public class SpeakAppConfig {
                 TypeExercise.MULTIPLE_SELECTION, ResolveSyllableMatchSelection.class,
                 TypeExercise.SINGLE_SELECTION_SYLLABLE, ResolveSyllableMatchSelection.class,
                 TypeExercise.SINGLE_SELECTION_WORD, ResolveSingleSelection.class,
+                TypeExercise.CONSONANTAL_SYLLABLE, ResolveConsonantalSyllable.class,
                 TypeExercise.ORDER_SYLLABLE, ResolveOrder.class,
-                TypeExercise.CONSONANTAL_SYLLABLE, ResolveConsonantalSyllable.class
+                TypeExercise.ORDER_WORD, ResolveOrder.class
                 );
 
         return classResolverByTypeExercise
@@ -49,8 +50,14 @@ public class SpeakAppConfig {
     }
 
     @Bean
+    @Qualifier("removeCharacterHDecorator")
+    TransformerTextDecorator removeCharacterHDecorator(@Qualifier("transformLowerCase") final TransformerText transformerText) {
+        return new RemoveCharacterHDecorator(transformerText);
+    }
+
+    @Bean
     @Qualifier("removeComaTransformerDecorator")
-    TransformerTextDecorator removeComaTransformerDecorator(@Qualifier("transformLowerCase") final TransformerText transformerText) {
+    TransformerTextDecorator removeComaTransformerDecorator(@Qualifier("removeCharacterHDecorator") final TransformerText transformerText) {
         return new FilterAlfaNumericDecorator(transformerText);
     }
 

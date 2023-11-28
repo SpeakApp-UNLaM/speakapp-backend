@@ -15,7 +15,7 @@ public class MatchingAlgorithmCustom implements MatchingAlgorithm {
 
     private final TransformerText transformerText;
 
-    public MatchingAlgorithmCustom(@Qualifier("removeTransformerDecorator") TransformerText transformerText) {
+    public MatchingAlgorithmCustom(@Qualifier("replaceMoreTwoConsecutiveCharacterDecorator") TransformerText transformerText) {
         this.transformerText = transformerText;
     }
 

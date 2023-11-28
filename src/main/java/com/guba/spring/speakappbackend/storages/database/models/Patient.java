@@ -21,6 +21,9 @@ public class Patient extends UserAbstract {
     @Column(name = "id_patient")
     private Long idPatient;
 
+    @Column(name = "tutor")
+    private String tutor;
+
     @ManyToOne
     @JoinColumn(name="id_professional")
     private Professional professional;

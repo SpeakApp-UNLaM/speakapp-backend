@@ -35,7 +35,6 @@ public class Exercise {
     @Column(name = "level")
     private int level;
 
-    //@Enumerated(EnumType.STRING)
     @Convert(converter = CategoryJpaConverter.class)
     @Column(name = "category")
     private Category category;

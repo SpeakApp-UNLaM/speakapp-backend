@@ -35,7 +35,7 @@ public class RFIService {
 
     public List<RegisterPhonologicalInducedDTO> getResolvedRFI(Long idPatient) {
         return this.rfiResolutionRepository
-                .findAllByIdPatient(idPatient)
+                .findRFIResolutionsByIdPatient(idPatient)
                 .stream()
                 .map(rfiResolution -> new RegisterPhonologicalInducedDTO(
                         rfiResolution.getIdRfi(),
@@ -46,6 +46,7 @@ public class RFIService {
     }
 
     public List<RegisterPhonologicalInducedDTO> resolveRFI(Long idPatient, List<RegisterPhonologicalInducedDTO> rfiDTOs) {
+        this.rfiResolutionRepository.deleteRFIResolutionsByIdPatient(idPatient);
         this.rfiResolutionRepository
                 .saveAll(rfiDTOs
                         .stream()

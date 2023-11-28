@@ -1,10 +1,13 @@
 package com.guba.spring.speakappbackend.storages.database.models;
 
+import com.guba.spring.speakappbackend.enums.ResultExercise;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tm_task_group_detail")
@@ -30,5 +33,16 @@ public class TaskItem {
     private String urlAudio;
 
     @Column(name = "result")
-    private String result;
+    @Enumerated(value = EnumType.STRING)
+    private ResultExercise result;
+
+    @OneToMany(mappedBy="taskItem", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.EAGER)
+    private Set<TaskItemDetail> taskItemDetails = new HashSet<>();
+
+    public TaskItem(Task task, Exercise exercise, String urlAudio, ResultExercise result) {
+        this.task = task;
+        this.exercise = exercise;
+        this.urlAudio = urlAudio;
+        this.result = result;
+    }
 }

@@ -18,7 +18,7 @@ public class PatientController {
 
     private final PatientService patientService;
 
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<PatientDTO> updatePatient(@RequestBody PatientDTO patientDTO) {
 
         PatientDTO patientDTOSaved = this.patientService.updatePatient(patientDTO);
@@ -50,6 +50,22 @@ public class PatientController {
         this.patientService.removePatient(idPatient);
         return ResponseEntity
                 .noContent()
+                .build();
+    }
+
+    @PutMapping("/unlink")
+    public ResponseEntity<Void> unlink() {
+        this.patientService.unlinkProfessional();
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    @PutMapping("/link/{code}")
+    public ResponseEntity<Void> link(@PathVariable String code) {
+        this.patientService.linkProfessional(code);
+        return ResponseEntity
+                .ok()
                 .build();
     }
 }
